@@ -1,0 +1,41 @@
+# Node dependencies
+/node_modules/
+**/node_modules/
+
+# Build outputs
+/dist/
+frontend/dist/
+*.log
+
+# Electron builder output (AppImage, EXE, etc.)
+*.AppImage
+*.exe
+*.dmg
+*.deb
+*.rpm
+*.snap
+
+# Mac system files
+.DS_Store
+
+# VS Code
+.vscode/
+
+# dotenv
+*.env
+**/.env
+**/.env.*
+
+# Prisma generated files
+/backend/prisma/dev.db
+/backend/prisma/dev.db-journal
+/backend/prisma/migrations/
+
+# Optional npm debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Others
+*.local
+*.cache
