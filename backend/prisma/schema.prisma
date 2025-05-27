@@ -1,0 +1,265 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./testdb.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String?  @default("breeder") // Default role if not provided
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activityLogs ActivityLog[] // One-to-Many relation with ActivityLog
+}
+
+model ActivityLog {
+  id               Int       @id @default(autoincrement())
+  activityDatetime DateTime?
+  userId           Int?
+  user             User?     @relation(fields: [userId], references: [id])
+  activityName     String?
+  moduleId         Int?
+  userIp           String?
+  userAgent        String?
+  description      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Breed {
+  id            Int      @id @default(autoincrement())
+  groupId       Int?
+  breed         String?
+  friendlyUrl   String?
+  description   String?
+  image         String?
+  breedStandard String?
+  redirect      String?
+  status        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  isDeleted     Boolean  @default(false)
+
+  Dog              Dog[]
+  studCertificates StudCertificate[]
+  litter           Litter[]
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  countryId Int
+  city      String?
+  status    String?
+  // Define relation
+  country   Country  @relation(fields: [countryId], references: [idCountry], onDelete: Cascade)
+  dogs      Dog[]
+  Litter    Litter[]
+}
+
+model Country {
+  idCountry    Int     @id @default(autoincrement())
+  countryCode  String?
+  countryName  String?
+  currencyCode String?
+  continent    String?
+  // Relationships
+  cities       City[]
+  dogs         Dog[]
+}
+
+model Dog {
+  id          Int       @id @default(autoincrement())
+  showTitle   String?
+  dogName     String
+  friendlyUrl String?
+  kennel      String?
+  breeder     String?
+  breedId     Int?
+  sireId      Int? // Foreign key for father
+  damId       Int? // Foreign key for mother
+  dob         DateTime?
+  isDeath     Boolean   @default(false)
+  deathDate   String?
+  isSold      Boolean   @default(false)
+  soldDate    String?
+  isLoan   Boolean @default(false)
+  loanDate String?
+  isTransfer   Boolean @default(false)
+  transferDate String?
+  CDN          Boolean? @default(false)
+  CNS          Boolean? @default(false)
+  sex          String
+  achievements String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  status       String?
+  countryId    Int? // Foreign key reference (instead of string)
+  cityId       Int?
+  categoryId   Int?
+  KP           String?  @unique
+  location     String?
+  microchipId  Int?     @unique
+  HD           String?
+  ED           String?
+  hair         String?
+  color        String?
+
+  // 🆕 Textarea Fields
+  virtuesAndFaults      String? // Particular Virtues and Faults
+  breedingAdvice        String? // Advice, Recommendation & Warning for Breeding Partner
+  miscellaneousComments String? // Miscellaneous Comments
+  progenyTrainability   String? // Working / Trainability of Progeny
+
+  // Define relationships
+  breed          Breed?   @relation(fields: [breedId], references: [id], onDelete: Cascade) // Link breedId to Breed model
+  sire           Dog?     @relation("DogSire", fields: [sireId], references: [id]) // Self-referencing relation for sire (father)
+  dam            Dog?     @relation("DogDam", fields: [damId], references: [id]) // Self-referencing relation for dam (mother)
+  country        Country? @relation(fields: [countryId], references: [idCountry], onDelete: Cascade)
+  city           City?    @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  offspringSired Dog[]    @relation("DogSire") // Reverse relation for children sired by this dog
+  offspringDam   Dog[]    @relation("DogDam") // Reverse relation for children birthed by this dog
+
+  DogImage DogImage[]
+
+  DogOwner DogOwner[]
+
+  littersSired        Litter[]          @relation("LitterSire") // Unique name for sire relation
+  littersBirthed      Litter[]          @relation("LitterDam") // Unique name for dam relation
+  category            DogCategory?      @relation(fields: [categoryId], references: [id])
+  microchip           Microchip?        @relation(fields: [microchipId], references: [id])
+  StudCertificateSire StudCertificate[] @relation("StudSire")
+
+  StudCertificateDam StudCertificate[] @relation("StudDam")
+}
+
+model DogImage {
+  id        Int      @id @default(autoincrement())
+  dogId     Int
+  image     String
+  default   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Define relation
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+}
+
+model DogOwner {
+  id        Int       @id @default(autoincrement())
+  dogId     Int
+  ownerId   Int
+  type      String
+  dateFrom  DateTime?
+  dateTo    DateTime?
+  remarks   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Define relation
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+}
+
+model Litter {
+  id                 Int      @id @default(autoincrement())
+  ownerId            Int?
+  kennelId           Int?
+  breedId            Int
+  location           String?
+  dob                DateTime
+  matingDate         DateTime
+  registeredDogs     Int?
+  noOfPuppies        Int
+  sireId             Int
+  damId              Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  status             String?
+  cityId             Int?
+  noOfFemale         Int?
+  noOfMale           Int?
+  noOfExpired        Int?
+  conditionOfDam     String?
+  conditionOfPuppies String?
+  uniformFeature     String?
+  Remarks            String?
+
+  // Define relations
+  sire  Dog   @relation("LitterSire", fields: [sireId], references: [id])
+  dam   Dog   @relation("LitterDam", fields: [damId], references: [id])
+  city  City? @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  breed Breed @relation(fields: [breedId], references: [id])
+
+  LitterDetail LitterDetail[]
+}
+
+model LitterDetail {
+  id          Int        @id @default(autoincrement())
+  litterId    Int
+  name        String
+  location    String?
+  sex         String
+  color       String?
+  hair        String?
+  dnaTaken    Boolean    @default(false)
+  microchipId Int?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  KP          String?    @unique
+  status      String?
+  matingDate  String?
+  dob        String?
+  // Define relation
+  litter      Litter     @relation(fields: [litterId], references: [id], onDelete: Cascade)
+  microchip   Microchip? @relation(fields: [microchipId], references: [id])
+}
+
+model StudCertificate {
+  id         Int      @id @default(autoincrement())
+  sireId     Int
+  damId      Int
+  breedId    Int
+  matingDate DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  status     String?
+  isDeleted  Boolean  @default(false)
+  // Define relations
+  sire       Dog      @relation("StudSire", fields: [sireId], references: [id])
+  dam        Dog      @relation("StudDam", fields: [damId], references: [id])
+  breed      Breed    @relation(fields: [breedId], references: [id])
+}
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  description String
+  refId       Int
+  refModel    String
+  reminder    String
+  dismissTime DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model DogCategory {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  Dog Dog[]
+}
+
+model Microchip {
+  id        Int      @id @default(autoincrement())
+  chipId    String   @unique
+  createdAt DateTime @default(now())
+
+  Dog          Dog?
+  LitterDetail LitterDetail[]
+}
