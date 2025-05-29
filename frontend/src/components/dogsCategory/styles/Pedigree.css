@@ -1,0 +1,283 @@
+/* PedigreeTree.css */
+:root {
+  --bg-light-start: #f3f4f6;
+  --bg-light-end: #e5e7eb;
+  --bg-dark-start: #1f2937;
+  --bg-dark-end: #111827;
+  --card-bg-light: #ffffff;
+  --card-bg-dark: #1f2937;
+  --card-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --main-dog-bg-light: linear-gradient(to right, #e0e7ff, #bfdbfe);
+  --main-dog-bg-dark: linear-gradient(to right, #3730a3, #1e40af);
+  --text-primary-light: #1e3a8a;
+  --text-primary-dark: #e0e7ff;
+  --text-secondary-light: #0369a1;
+  --text-secondary-dark: #7dd3fc;
+  --text-muted-light: #4b5563;
+  --text-muted-dark: #9ca3af;
+  --error-light: #dc2626;
+  --error-dark: #f87171;
+  --button-bg: #16a34a;
+  --button-bg-hover: #15803d;
+  --button-text: #ffffff;
+  --retry-button-bg: #4f46e5;
+  --retry-button-bg-hover: #4338ca;
+  --sire-title-light: #3730a3;
+  --sire-title-dark: #a5b4fc;
+  --dam-title-light: #9d174d;
+  --dam-title-dark: #f9a8d4;
+  --tree-bg-light: #ffffff;
+  --tree-bg-dark: #374151;
+  --tree-border-light: #e5e7eb;
+  --tree-border-dark: #4b5563;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pedigree-container {
+    background: linear-gradient(to bottom, var(--bg-dark-start), var(--bg-dark-end));
+  }
+  .pedigree-card {
+    background: var(--card-bg-dark);
+  }
+  .main-dog-card {
+    background: var(--main-dog-bg-dark);
+  }
+  .main-dog-title {
+    color: var(--text-primary-dark);
+  }
+  .main-dog-acc {
+    color: var(--text-secondary-dark);
+  }
+  .main-dog-label {
+    color: var(--text-muted-dark);
+  }
+  .sex-icon.male {
+    color: #60a5fa;
+  }
+  .sex-icon.female {
+    color: #f472b6;
+  }
+  .loading-text,
+  .no-data-text {
+    color: var(--text-muted-dark);
+  }
+  .error-text {
+    color: var(--error-dark);
+  }
+  .lineage-title.sire {
+    color: var(--sire-title-dark);
+  }
+  .lineage-title.dam {
+    color: var(--dam-title-dark);
+  }
+  .tree-container {
+    background: var(--tree-bg-dark);
+    border-color: var(--tree-border-dark);
+  }
+}
+
+
+
+
+
+
+
+
+
+.pedigree-container {
+    width: 1080px;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, var(--bg-light-start), var(--bg-light-end));
+  padding: 3rem 1rem;
+  transition: background 0.5s;
+}
+
+.pedigree-card {
+  max-width: 1280px;
+  /* margin: 0 auto; */
+  background: var(--card-bg-light);
+  box-shadow: var(--card-shadow);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.export-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  padding: 0 1.5rem;
+}
+
+.export-button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.export-button:hover:not(:disabled) {
+  background: var(--button-bg-hover);
+}
+
+.export-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.export-icon {
+  margin-right: 0.5rem;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  font-size: 2.5rem;
+  color: #4f46e5;
+}
+
+.loading-text {
+  margin-left: 1rem;
+  font-size: 1.125rem;
+  color: var(--text-muted-light);
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+.error-text {
+  font-size: 1.125rem;
+  color: var(--error-light);
+}
+
+.retry-button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--retry-button-bg);
+  color: var(--button-text);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.retry-button:hover {
+  background: var(--retry-button-bg-hover);
+}
+
+.main-dog-card {
+  text-align: center;
+  max-width: 28rem;
+  margin: 0 auto 2.5rem;
+  padding: 1.5rem;
+  background: var(--main-dog-bg-light);
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.5s;
+}
+
+.main-dog-card:hover {
+  transform: scale(1.02);
+}
+
+.main-dog-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary-light);
+  margin-bottom: 0.75rem;
+}
+
+.main-dog-acc {
+  font-size: 1.125rem;
+  color: var(--text-secondary-light);
+  margin-bottom: 0.5rem;
+}
+
+.main-dog-label {
+  font-size: 0.875rem;
+  color: var(--text-muted-light);
+  font-style: italic;
+}
+
+.main-dog-sex {
+  margin-top: 0.5rem;
+}
+
+.sex-icon {
+  font-size: 1.5rem;
+}
+
+.sex-icon.male {
+  color: #2563eb;
+}
+
+.sex-icon.female {
+  color: #db2777;
+}
+
+.lineage-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 0 1.5rem;
+}
+
+.lineage-section {
+  flex: 1;
+}
+
+.lineage-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.lineage-title.sire {
+  color: var(--sire-title-light);
+}
+
+.lineage-title.dam {
+  color: var(--dam-title-light);
+}
+
+.tree-container {
+  height: 80vh;
+  background: var(--tree-bg-light);
+  border: 1px solid var(--tree-border-light);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+.no-data-text {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-muted-light);
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .tree-container {
+    height: 70vh;
+  }
+}   

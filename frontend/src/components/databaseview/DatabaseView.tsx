@@ -135,7 +135,7 @@ const DatabaseView = () => {
     }
   }, [breeds]);
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+    <div className="p-2 bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 min-h-[30vh]">
       <Button
         // variant="contained"
         // color="primary"
@@ -268,7 +268,7 @@ const DatabaseView = () => {
                 No Image
               </div>
             )}
-            <div className="text-gray-700 dark:text-gray-300 space-y-2">
+            <div className="text-gray-700 dark:text-gray-300 space-y-2 pt-5">
               {selectedSection === "Basic Data" && (
                 <>
                   <div className="w-full md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-3">
