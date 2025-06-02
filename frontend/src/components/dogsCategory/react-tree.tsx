@@ -613,6 +613,7 @@ import jsPDF from 'jspdf';
 import ComponentCard from '../common/ComponentCard';
 import { FaMars, FaVenus, FaSpinner, FaFilePdf } from 'react-icons/fa';
 import './styles/Pedigree.css'; // Import custom CSS
+import { BASE_URL } from '../../config/constant';
 
 interface CustomTreeNodeDatum extends TreeNodeDatum {
   __rd3t: {
@@ -781,8 +782,8 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
     const fetchPedigree = async () => {
       setIsLoading(true);
       try {
-        const API_URL = 'http://localhost:3000';
-        const response = await axios.get(`${API_URL}/api/dog/pedigree/${dogId}`);
+        // const API_URL = 'http://localhost:3000';
+        const response = await axios.get(`${BASE_URL}/dog/pedigree/${dogId}`);
         const mainDog = {
           id: response.data.id,
           name: response.data.name,
