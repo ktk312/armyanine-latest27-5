@@ -603,7 +603,7 @@
 
 
 
-
+// Correcl UI by GROK
 
 import { useEffect, useState, useRef } from 'react';
 import Tree, { CustomNodeElementProps, TreeNodeDatum } from 'react-d3-tree';
@@ -643,7 +643,9 @@ interface ApiNode {
 const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
   const customNode = nodeDatum as CustomTreeNodeDatum;
   const isMale = customNode.sex === 'Male';
-  const fillColor = isMale ? 'url(#maleGradient)' : 'url(#femaleGradient)';
+  // const fillColor = isMale ? 'url(#maleGradient)' : 'url(#femaleGradient)';
+    const fillColor = 'transparent'; // or use 'none'
+
   const fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
   const width = 300; // Increased node width (from 220 to 300)
   const height = 120;
@@ -671,21 +673,25 @@ const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
         x={-width / 2}
         y={-height / 2}
         fill={fillColor}
-        stroke={isMale ? '#2563eb' : '#db2777'}
-        strokeWidth={2}
+        // stroke={isMale ? '#2563eb' : '#db2777'}
+        // strokeWidth={2}
         rx="16"
         ry="16"
-        className="transition-shadow duration-300 group-hover:shadow-lg"
+        // className="transition-shadow duration-300 group-hover:shadow-lg"
       />
       <text
         x="0"
         y={-height / 4}
         textAnchor="middle"
-        fontSize={22}
-        fontWeight="600"
-        fill="#ffffff"
-        style={{ fontFamily, textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
-        aria-hidden="true"
+        fontSize={24}
+        fontWeight="700"
+        // fill="#ffffff"
+        fill={fillColor}
+         style={{
+    fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif',
+    textShadow: '0 0 3px rgba(0, 0, 0, 0.7)', // subtle black shadow
+  }}
+  aria-hidden="true"
       >
         {customNode.name}
       </text>
@@ -695,7 +701,8 @@ const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
           y="0"
           textAnchor="middle"
           fontSize={14}
-          fill="#ffffff"
+          // fill="#ffffff"
+             fill="#000"
           style={{ fontFamily }}
           aria-hidden="true"
         >
@@ -708,7 +715,9 @@ const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
           y={height / 4}
           textAnchor="middle"
           fontSize={12}
-          fill="#ffffff"
+          // fill="#ffffff"
+            fill="#000"
+          strokeWidth={0.7}
           fontStyle="italic"
           style={{ fontFamily }}
           aria-hidden="true"
@@ -718,9 +727,14 @@ const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
       )}
       <g transform={`translate(${width / 2 - 30}, ${-height / 2 + 10})`}>
         {isMale ? (
-          <FaMars size={20} color="#ffffff" aria-label="Male" />
+          <FaMars size={20} 
+          // color="#ffffff" 
+          color="#000" 
+          aria-label="Male" />
         ) : (
-          <FaVenus size={20} color="#ffffff" aria-label="Female" />
+          <FaVenus size={20} 
+          // color="#ffffff"
+             color="#000" aria-label="Female" />
         )}
       </g>
     </g>
@@ -758,22 +772,96 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
     }
   }, [sireData, damData]);
 
-  const transformTree = (node: ApiNode, depth = 0, counterRef: { current: number }): CustomTreeNodeDatum => {
-    const id = `node-${counterRef.current++}`;
+  const MAX_GENERATIONS = 4;
+  const getNodeStyle = (sex: string, isPlaceholder: boolean) => {
+    if (isPlaceholder) {
+      return {
+        color: sex === "Male" ? "#93c5fd" : "#f9a8d4", // lighter for unknown
+        symbol: sex === "Male" ? "♂" : "♀",
+      };
+    }
+
     return {
-      name: node.name,
-      accNumber: node.accNumber,
-      sex: node.sex,
+      color: sex === "Male" ? "#1d4ed8" : "#db2777", // bold blue/pink
+      symbol: sex === "Male" ? "♂" : "♀",
+    };
+  };
+  const transformTree = (
+    node: ApiNode,
+    depth = 0,
+    counterRef: { current: number }
+  ): CustomTreeNodeDatum => {
+    const id = `node-${counterRef.current++}`;
+    const sex = node.sex || (node.role === "Sire" ? "Male" : "Female");
+    const isPlaceholder = !node.name || node.name.toLowerCase() === "unknown";
+
+    let children: CustomTreeNodeDatum[] = [];
+
+    if (depth < MAX_GENERATIONS - 1) {
+      if (node.children && node.children.length > 0) {
+        children = node.children.map((child) =>
+          transformTree(child, depth + 1, counterRef)
+        );
+      } else {
+        children = [
+          createPlaceholderNode(depth + 1, counterRef, "Sire"),
+          createPlaceholderNode(depth + 1, counterRef, "Dam"),
+        ];
+      }
+    }
+
+    const { color, symbol } = getNodeStyle(sex, isPlaceholder);
+
+    return {
+      name: `${symbol} ${node.name || "Unknown"}`,
+      accNumber: node.accNumber || "",
+      sex,
       attributes: {
         role: node.role || "",
         ...(node.accNumber && { accNumber: node.accNumber }),
         ...(node.sex && { sex: node.sex }),
       },
-      children: node.children?.map((child) => transformTree(child, depth + 1, counterRef)) || [],
+      children,
       __rd3t: {
         id,
         depth,
-        collapsed: false, // Ensure all nodes are expanded by default
+        collapsed: false,
+
+      },
+    };
+  };
+
+  const createPlaceholderNode = (
+    depth: number,
+    counterRef: { current: number },
+    role: string
+  ): CustomTreeNodeDatum => {
+    const id = `node-placeholder-${counterRef.current++}`;
+    const sex = role === "Sire" ? "Male" : "Female";
+
+    let children: CustomTreeNodeDatum[] = [];
+    if (depth < MAX_GENERATIONS - 1) {
+      children = [
+        createPlaceholderNode(depth + 1, counterRef, "Sire"),
+        createPlaceholderNode(depth + 1, counterRef, "Dam"),
+      ];
+    }
+
+    const { color, symbol } = getNodeStyle(sex, true);
+
+    return {
+      name: `${symbol} Unknown`,
+      accNumber: "",
+      sex,
+      attributes: {
+        role,
+      },
+      children,
+      __rd3t: {
+        id,
+        depth,
+        collapsed: false,
+
       },
     };
   };
@@ -920,12 +1008,12 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
                     translate={translate}
                     orientation="horizontal"
                     pathFunc="elbow"
-                    zoomable
+                    zoomable={false}
                     scaleExtent={{ min: 0.5, max: 2 }}
                     enableLegacyTransitions
                     renderCustomNodeElement={renderRectNode}
                     collapsible
-                    nodeSize={{ x: 350, y: 200 }} // Increased x to accommodate wider nodes
+                    nodeSize={{ x: 350, y: 150 }} // Increased x to accommodate wider nodes
                     separation={{ siblings: 1.2, nonSiblings: 1.2 }} // Adjusted separation
                     pathClassFunc={() => 'stroke-indigo-400 dark:stroke-indigo-200 stroke-2'}
                   />
@@ -947,14 +1035,14 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
                     translate={translate}
                     orientation="horizontal"
                     pathFunc="elbow"
-                    zoomable
+                    zoomable={false}
                     scaleExtent={{ min: 0.5, max: 2 }}
                     enableLegacyTransitions
                     renderCustomNodeElement={renderRectNode}
                     collapsible
-                    nodeSize={{ x: 350, y: 200 }} // Increased x to accommodate wider nodes
+                    nodeSize={{ x: 350, y: 150 }} // Increased x to accommodate wider nodes
                     separation={{ siblings: 1.2, nonSiblings: 1.2 }} // Adjusted separation
-                    pathClassFunc={() => 'stroke-pink-400 dark:stroke-pink-200 stroke-2'}
+                    pathClassFunc={() => 'stroke-pink-400 dark:stroke-pink-200 '}
                   />
                 </div>
               ) : (
@@ -969,6 +1057,16 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
 };
 
 export default PedigreeTree;
+
+
+
+
+
+
+
+
+
+
 
 
 

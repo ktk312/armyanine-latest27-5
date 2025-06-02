@@ -281,3 +281,70 @@
     height: 70vh;
   }
 }   
+
+
+
+/* Style for empty/no-data nodes */
+.pedigree-node.no-data {
+  background: var(--tree-bg-light);
+  border: 2px dashed var(--tree-border-light);
+  color: var(--text-muted-light);
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: none;
+  cursor: default;
+  user-select: none;
+}
+
+/* Dark mode for no-data nodes */
+@media (prefers-color-scheme: dark) {
+  .pedigree-node.no-data {
+    background: var(--tree-bg-dark);
+    border: 2px dashed var(--tree-border-dark);
+    color: var(--text-muted-dark);
+  }
+}
+
+.pedigree-node {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  padding: 1rem; /* to give space inside */
+  background: var(--card-bg-light);
+  border-radius: 0.75rem;
+  z-index: 1;
+}
+
+.line {
+  position: absolute;
+  background-color: var(--tree-border-light);
+  width: 2px;
+  z-index: 0;
+}
+
+/* Vertical line from bottom edge of node */
+.line.vertical {
+  top: 100%;  /* start exactly at node bottom */
+  left: 50%;  /* middle horizontally */
+  transform: translateX(-50%);
+  height: 20px;
+}
+
+/* Horizontal line at node side */
+.line.horizontal-left {
+  top: 50%;
+  left: 0;  /* start at left edge */
+  width: 20px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.line.horizontal-right {
+  top: 50%;
+  right: 0; /* start at right edge */
+  width: 20px;
+  height: 2px;
+  transform: translateY(-50%);
+}

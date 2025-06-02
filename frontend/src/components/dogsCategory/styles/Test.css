@@ -1,0 +1,49 @@
+.pedigree-container {
+  padding: 1rem;
+}
+
+.pedigree-card {
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.export-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.export-button {
+  display: flex;
+  align-items: center;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  border: none;
+}
+
+.export-button:hover {
+  background-color: #dc2626;
+}
+
+.export-button:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+}
+
+.tree-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 1rem 0;
+}
+
+.sire-tree-container,
+.dam-tree-container {
+  flex: 1;
+  min-width: 50%;
+}
