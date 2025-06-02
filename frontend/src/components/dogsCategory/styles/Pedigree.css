@@ -1,4 +1,4 @@
-/* PedigreeTree.css */
+PedigreeTree.css
 :root {
   --bg-light-start: #f3f4f6;
   --bg-light-end: #e5e7eb;
@@ -283,68 +283,182 @@
 }   
 
 
+.custom-node {
+  transition: all 0.3s ease;
+}
 
-/* Style for empty/no-data nodes */
-.pedigree-node.no-data {
-  background: var(--tree-bg-light);
-  border: 2px dashed var(--tree-border-light);
-  color: var(--text-muted-light);
-  font-style: italic;
-  text-align: center;
+.custom-node:hover .node-box {
+  stroke-width: 2;
+}
+
+.custom-node.male-hover:hover .node-box {
+  fill: #dbeafe; /* light blue */
+  stroke: #3b82f6;
+}
+
+.custom-node.female-hover:hover .node-box {
+  fill: #fce7f3; /* light pink */
+  stroke: #ec4899;
+}
+
+.node-box {
+  fill: #fff;
+  stroke: #d1d5db;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+.hover-male:hover {
+  fill: #e0f2fe !important;
+  cursor: pointer;
+}
+
+.hover-female:hover {
+  fill: #fce7f3 !important;
+  cursor: pointer;
+}
+.tab-button {
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button:hover {
+  filter: brightness(90%);
+}
+
+
+
+.custom-node.male-hover:hover rect.node-box {
+  fill: #bfdbfe; /* light blue */
+  cursor: pointer;
+  transition: fill 0.3s ease;
+}
+
+.custom-node.female-hover:hover rect.node-box {
+  fill: #fbcfe8; /* light pink */
+  cursor: pointer;
+  transition: fill 0.3s ease;
+}
+
+/* Basic styling for buttons */
+.tab-btn {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-btn:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.export-buttons button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.export-buttons button:focus {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+
+/* Scrollbar for overflow */
+.tree-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tree-container::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 114, 128, 0.5);
+  border-radius: 4px;
+}
+
+
+.custom-node.male-hover rect.node-box:hover {
+  fill: #bfdbfe; /* light blue */
+}
+
+.custom-node.female-hover rect.node-box:hover {
+  fill: #fbcfe8; /* light pink */
+}
+
+.node-box {
+  fill: #f3f4f6;
+  stroke: #9ca3af;
+  stroke-width: 1.8;
+  cursor: pointer;
+  transition: fill 0.2s ease;
+}
+
+/* Add any additional styling you want here */
+.male-hover:hover rect.node-box {
+  fill: #bfdbfe; /* light blue on hover for male */
+}
+
+.female-hover:hover rect.node-box {
+  fill: #fecdd3; /* light pink on hover for female */
+}
+
+/* Tab fade animations */
+.tree-container.fade-in {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.tree-container.fade-out {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+.pedigree-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: none;
-  cursor: default;
-  user-select: none;
 }
 
-/* Dark mode for no-data nodes */
-@media (prefers-color-scheme: dark) {
-  .pedigree-node.no-data {
-    background: var(--tree-bg-dark);
-    border: 2px dashed var(--tree-border-dark);
-    color: var(--text-muted-dark);
-  }
+.pedigree-container {
+  width: 100%;
+  max-width: 1280px; /* Matches max-w-7xl */
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.pedigree-node {
-  position: relative;
-  width: 200px;
-  height: 100px;
-  padding: 1rem; /* to give space inside */
-  background: var(--card-bg-light);
-  border-radius: 0.75rem;
-  z-index: 1;
+.tree-container {
+  width: 100%;
+  height: 80vh;
+  overflow: auto; /* Enables both horizontal and vertical scrolling */
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin: 1rem;
 }
 
-.line {
-  position: absolute;
-  background-color: var(--tree-border-light);
-  width: 2px;
-  z-index: 0;
+.tree-wrapper {
+  min-width: 2000px; /* Ensure large canvas for tree */
+  min-height: 1000px;
 }
 
-/* Vertical line from bottom edge of node */
-.line.vertical {
-  top: 100%;  /* start exactly at node bottom */
-  left: 50%;  /* middle horizontally */
-  transform: translateX(-50%);
-  height: 20px;
+.node-box {
+  fill: #fff;
+  stroke: #4b5563;
+  stroke-width: 2;
 }
 
-/* Horizontal line at node side */
-.line.horizontal-left {
-  top: 50%;
-  left: 0;  /* start at left edge */
-  width: 20px;
-  height: 2px;
-  transform: translateY(-50%);
+.male-hover:hover {
+  fill: #dbeafe;
 }
 
-.line.horizontal-right {
-  top: 50%;
-  right: 0; /* start at right edge */
-  width: 20px;
-  height: 2px;
-  transform: translateY(-50%);
+.female-hover:hover {
+  fill: #fce7f3;
 }
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0.3;
+}
+
