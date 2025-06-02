@@ -1115,6 +1115,9 @@ import './styles/Pedigree.css';
 interface CustomTreeNodeDatum extends TreeNodeDatum {
   accNumber?: string;
   sex?: string;
+    role?: 'Sire' | 'Dam' | 'Unknown';
+     depth?: number;
+
 }
 
 interface ApiNode {
@@ -1123,6 +1126,33 @@ interface ApiNode {
   sex?: string;
   children?: ApiNode[];
 }
+const MAX_GENERATIONS = 4;
+// Placeholder creator for missing ancestors
+const createPlaceholderNode = (
+  depth: number,
+  role: 'Sire' | 'Dam' | 'Unknown' = 'Unknown'
+): CustomTreeNodeDatum => {
+  const sex = role === 'Sire' ? 'Male' : role === 'Dam' ? 'Female' : 'Unknown';
+
+  // If not yet at max depth, add placeholder children
+  const children =
+    depth < MAX_GENERATIONS - 1
+      ? [
+          createPlaceholderNode(depth + 1, 'Sire'),
+          createPlaceholderNode(depth + 1, 'Dam'),
+        ]
+      : [];
+
+  return {
+    name: 'No record',
+    accNumber: '',
+    sex,
+    role,
+    children,
+    __rd3t: { id: `placeholder-${role}-${depth}`, depth, collapsed: false },
+  };
+};
+
 
 const renderRectNode = ({ nodeDatum }: CustomNodeElementProps) => {
   const customNode = nodeDatum as CustomTreeNodeDatum;
@@ -1148,11 +1178,12 @@ const renderRectNode = ({ nodeDatum }: CustomNodeElementProps) => {
         fontSize="16"
         fontWeight="600"
         fill="#1f2937"
+        stroke='none'
       >
         {customNode.name}
       </text>
       {customNode.accNumber && (
-        <text x={0} y={14} textAnchor="middle" fontSize="13" fill="#4b5563">
+        <text x={0} y={14} textAnchor="middle" fontSize="13" fill="#4b5563" stroke='none'>
           ACC#: {customNode.accNumber}
         </text>
       )}
@@ -1179,18 +1210,63 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
   const [activeTab, setActiveTab] = useState<'sire' | 'dam'>('sire');
 
   // Transform API node to TreeNodeDatum type for react-d3-tree
-  const transformTree = (node: ApiNode): CustomTreeNodeDatum => ({
+  // const transformTree = (node: ApiNode): CustomTreeNodeDatum => ({
+  //   name: node.name,
+  //   accNumber: node.accNumber,
+  //   sex: node.sex,
+  //   children: node.children?.map(transformTree),
+  //   __rd3t: {
+  //     id: '',
+  //     depth: 0,
+  //     collapsed: false
+  //   }
+  // });
+// Transform API node to tree node with placeholders
+const transformTree = (
+  node: ApiNode | null,
+  depth = 0,
+  role: 'Sire' | 'Dam' | 'Unknown' = 'Unknown'
+): CustomTreeNodeDatum => {
+  if (!node || !node.name || node.name.toLowerCase() === 'unknown') {
+    // Return a placeholder if node is missing or unknown
+    return createPlaceholderNode(depth, role);
+  }
+
+  // Transform children, filling placeholders where missing
+  let children: CustomTreeNodeDatum[] = [];
+  if (depth < MAX_GENERATIONS - 1) {
+    if (node.children && node.children.length > 0) {
+      children = node.children.map((child, idx) =>
+        transformTree(child, depth + 1, idx === 0 ? 'Sire' : 'Dam')
+      );
+
+      // If children less than 2, fill with placeholder
+      if (children.length < 2) {
+        if (!children[0]) children[0] = createPlaceholderNode(depth + 1, 'Sire');
+        if (!children[1]) children[1] = createPlaceholderNode(depth + 1, 'Dam');
+      }
+    } else {
+      // No children present, add placeholders
+      children = [
+        createPlaceholderNode(depth + 1, 'Sire'),
+        createPlaceholderNode(depth + 1, 'Dam'),
+      ];
+    }
+  }
+
+  return {
     name: node.name,
     accNumber: node.accNumber,
     sex: node.sex,
-    children: node.children?.map(transformTree),
+    role,
+    children,
     __rd3t: {
-      id: '',
-      depth: 0,
-      collapsed: false
-    }
-  });
-
+      id: `${node.accNumber || node.name}-${depth}`,
+      depth,
+      collapsed: false,
+    },
+  };
+};
   useEffect(() => {
     const fetchPedigree = async () => {
       try {
