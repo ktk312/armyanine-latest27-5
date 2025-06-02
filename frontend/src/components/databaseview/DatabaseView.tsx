@@ -326,6 +326,8 @@ const DatabaseView = () => {
               )}
               {/* {selectedSection === "Pedigree" && <Pedigree />} */}
               {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog.id} />}
+              {/* {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog.id} lineage={"sire"} />} */}
+
               {selectedSection === "Progeny" && <Progeny dogId={selectedDog.id} />}
               {/* {selectedSection === "Breed Survey" && <div>Breed survey data goes here.</div>} */}
               {selectedSection === "Siblings" && <DogList dogId={selectedDog.id} />}
