@@ -5,6 +5,7 @@ export interface TransferredDog{
     soldTo: string;
     KP: number;
     status: string;
+    transferDate: string;
     // Add other fields from your API response
   }
   
