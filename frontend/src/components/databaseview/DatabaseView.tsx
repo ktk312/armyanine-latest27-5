@@ -11,6 +11,7 @@ import { useFilteredDogs } from "../dogsCategory/hooks/useFetchDogs";
 import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 
+
 interface MappedDog {
   id: number;
   title: string;
@@ -43,8 +44,10 @@ const DatabaseView = () => {
   const [selectedBreed, setSelectedBreed] = useState<{ value: string; label: string } | null>(null);
   const [selectedCity, setSelectedCity] = useState<{ value: string; label: string } | null>(null);
 
-  const { dogs, loading, error } = useFilteredDogs(String(selectedBreed?.value), String(selectedCity?.value))
+  const { dogs, loading, error } = useFilteredDogs(String(selectedBreed?.value ), String(selectedCity?.value))
   const [selectedDog, setSelectedDog] = useState<null | MappedDog>(null);
+  const [selectedPedigreeDog, setselectedPedigreeDog] = useState<null | MappedDog>(null);
+
   const [selectedSection, setSelectedSection] = useState("Basic Data");
   const [searchQuery, setSearchQuery] = useState("");
   const [breedFilter, setBreedFilter] = useState("");
@@ -113,6 +116,16 @@ const DatabaseView = () => {
   }, [city]);
 
 
+  const handleDogSelect = (dog: MappedDog) => {
+    console.log("Selected dog from pedigreee 2:", dog);
+    // You can now open a modal, set state, etc.
+    // setSelectedDog(null);
+    // setSelectedSection("Basic Data");
+    // setselectedPedigreeDog(dog)
+
+  };
+
+  console.log(selectedDog, selectedSection, "dogggggggggggggggggggggggg")
   // Fetch Breeds from store 
   const { breeds, getAllBreeds, loading: breedLoading } = useBreedStore();
   const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
@@ -150,59 +163,57 @@ const DatabaseView = () => {
             🐾 Army Canine Centre
           </h1>
 
-{/* Filters */}
-<div className="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-10 px-2 space-y-4 md:space-y-0 md:space-x-0">
-  {/* Breed Selector */}
-  <div className="w-full md:w-1/3 pr-2">
-    <SelectInputs
-      title="Select Breed"
-      placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
-      options={breedOptions}
-      onChange={(val) => setSelectedBreed({ value: val, label: val })}
-      className="w-full dark:bg-gray-700 dark:text-white"
-    />
-  </div>
+          {/* Filters */}
+          <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-10 px-2 space-y-4 md:space-y-0 md:space-x-0">
+            {/* Breed Selector */}
+            <div className="w-full md:w-1/3 pr-2">
+              <SelectInputs
+                title="Select Breed"
+                placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
+                options={breedOptions}
+                onChange={(val) => setSelectedBreed({ value: val, label: val })}
+                className="w-full dark:bg-gray-700 dark:text-white"
+              />
+            </div>
 
-  {/* City Selector */}
-  <div className="w-full md:w-1/3 px-1">
-    <SelectInputs
-      title="Select City"
-      placeholder={CityLoading ? "Loading Cities..." : "Select City"}
-      options={cityOptions}
-      onChange={(val) => setSelectedCity({ value: val, label: val })}
-      className="w-full dark:bg-gray-700 dark:text-white"
-    />
-  </div>
+            {/* City Selector */}
+            <div className="w-full md:w-1/3 px-1">
+              <SelectInputs
+                title="Select City"
+                placeholder={CityLoading ? "Loading Cities..." : "Select City"}
+                options={cityOptions}
+                onChange={(val) => setSelectedCity({ value: val, label: val })}
+                className="w-full dark:bg-gray-700 dark:text-white"
+              />
+            </div>
 
-  {/* Search Bar */}
-  <div className="w-full md:w-1/3 pl-2">
-    <div className="flex items-center w-full backdrop-blur-md bg-white/30 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2 shadow-md focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-300">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-3"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1116.65 2a7.5 7.5 0 010 15z"
-        />
-      </svg>
-      <Input
-        type="text"
-        placeholder="Search by Name, Microchip, ACC #"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 text-sm sm:text-base"
-      />
-    </div>
-  </div>
-</div>
-
-
+            {/* Search Bar */}
+            <div className="w-full md:w-1/3 pl-2">
+              <div className="flex items-center w-full backdrop-blur-md bg-white/30 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2 shadow-md focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-300">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1116.65 2a7.5 7.5 0 010 15z"
+                  />
+                </svg>
+                <Input
+                  type="text"
+                  placeholder="Search by Name, Microchip, ACC #"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 text-sm sm:text-base"
+                />
+              </div>
+            </div>
+          </div>
 
           {/* Loading */}
           {loading && (
@@ -281,11 +292,11 @@ const DatabaseView = () => {
           {/* Dog Detail View */}
           <div className="w-full md:w-3/4 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
             <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
-              {selectedDog.title} (ACC no# {selectedDog.registrationNumber})
+              {selectedDog?.title || selectedPedigreeDog?.title} (ACC no# {selectedDog?.registrationNumber || selectedPedigreeDog?.registrationNumber})
             </h2>
-            {selectedDog.imageUrl ? (
+            {selectedDog?.imageUrl || selectedPedigreeDog?.imageUrl ? (
               <img
-                src={selectedDog.imageUrl}
+                src={selectedDog?.imageUrl || selectedPedigreeDog?.imageUrl}
                 className="w-32 h-32 rounded-lg object-cover border border-gray-200"
               />
             ) : (
@@ -297,40 +308,51 @@ const DatabaseView = () => {
               {selectedSection === "Basic Data" && (
                 <>
                   <div className="w-full md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-3">
-                    <p><strong>Breed:</strong> {selectedDog.breed}</p>
-                    <p><strong>Location:</strong> {selectedDog.location}</p>
-                    <p><strong>Country:</strong> {selectedDog.country}</p>
-                    <p><strong>Sex:</strong> {selectedDog.sex}</p>
-                    <p><strong>Microchip:</strong> {selectedDog.microchip}</p>
-                    <p><strong>Date of Birth:</strong>  {new Date(selectedDog.birthDate).toISOString().split("T")[0]}
+                    <p><strong>Breed:</strong> {selectedDog?.breed || selectedPedigreeDog?.breed}</p>
+                    <p><strong>Location:</strong> {selectedDog?.location || selectedPedigreeDog?.location}</p>
+                    <p><strong>Country:</strong> {selectedDog?.country || selectedPedigreeDog?.country}</p>
+                    <p><strong>Sex:</strong> {selectedDog?.sex || selectedPedigreeDog?.sex}</p>
+                    <p><strong>Microchip:</strong> {selectedDog?.microchip || selectedPedigreeDog?.microchip}</p>
+                    <p><strong>Date of Birth:</strong> {selectedDog?.birthDate && !isNaN(new Date(selectedDog?.birthDate).getTime())
+                      ? new Date(selectedDog.birthDate).toISOString().split("T")[0]
+                      : selectedPedigreeDog && selectedPedigreeDog.birthDate && !isNaN(new Date(selectedPedigreeDog.birthDate).getTime())
+                        ? new Date(selectedPedigreeDog.birthDate).toISOString().split("T")[0]
+                        : ""}
+
+
+                      {/* {new Date(selectedDog.birthDate).toISOString().split("T")[0]} */}
                     </p>
-                    <p><strong>Sire:</strong> {selectedDog.sire}</p>
-                    <p><strong>Dam:</strong> {selectedDog.dam}</p>
+                    <p><strong>Sire:</strong> {selectedDog?.sire || selectedPedigreeDog?.sire}</p>
+                    <p><strong>Dam:</strong> {selectedDog?.dam || selectedPedigreeDog?.dam}</p>
                     <p>
                       <strong>Death or Alive:</strong>{" "}
-                      {selectedDog?.isDeath ? "Death" : "Alive"}
+                      {selectedDog
+                        ? (selectedDog.isDeath ? "Death" : "Alive")
+                        : selectedPedigreeDog
+                          ? (selectedPedigreeDog.isDeath ? "Death" : "Alive")
+                          : "Unknown"}
                     </p>
-                    <p><strong>Death Date:</strong> {selectedDog?.deathDate}</p>
-                    <p><strong>Category:</strong> {selectedDog?.category}</p>
-                    <p><strong>chestDepth:</strong> {selectedDog?.chestDepth}</p>
-                    <p><strong>Chest Circumference:</strong> {selectedDog?.chestCircumference}</p>
-                    <p><strong>Field Achievements:</strong> {selectedDog?.fieldAchievements}</p>
-                    <p><strong>Weight:</strong> {selectedDog?.weight}</p>
-                    <p><strong>City:</strong> {selectedDog?.city}</p>
-                    <p><strong>Virtues And Faults:</strong> {selectedDog?.virtuesAndFaults}</p>
-                    <p><strong>Breeding Advice:</strong> {selectedDog?.breedingAdvice}</p>
-                    <p><strong>Miscellaneous Comments:</strong> {selectedDog?.miscellaneousComments}</p>
-                    <p><strong>Progeny Trainability:</strong> {selectedDog?.progenyTrainability}</p>
+                    <p><strong>Death Date:</strong> {selectedDog?.deathDate || selectedPedigreeDog?.deathDate}</p>
+                    <p><strong>Category:</strong> {selectedDog?.category || selectedPedigreeDog?.category}</p>
+                    <p><strong>chestDepth:</strong> {selectedDog?.chestDepth || selectedPedigreeDog?.chestDepth}</p>
+                    <p><strong>Chest Circumference:</strong> {selectedDog?.chestCircumference || selectedPedigreeDog?.chestCircumference}</p>
+                    <p><strong>Field Achievements:</strong> {selectedDog?.fieldAchievements || selectedPedigreeDog?.fieldAchievements}</p>
+                    <p><strong>Weight:</strong> {selectedDog?.weight || selectedPedigreeDog?.weight}</p>
+                    <p><strong>City:</strong> {selectedDog?.city || selectedPedigreeDog?.city}</p>
+                    <p><strong>Virtues And Faults:</strong> {selectedDog?.virtuesAndFaults || selectedPedigreeDog?.virtuesAndFaults}</p>
+                    <p><strong>Breeding Advice:</strong> {selectedDog?.breedingAdvice || selectedPedigreeDog?.breedingAdvice}</p>
+                    <p><strong>Miscellaneous Comments:</strong> {selectedDog?.miscellaneousComments || selectedPedigreeDog?.miscellaneousComments}</p>
+                    <p><strong>Progeny Trainability:</strong> {selectedDog?.progenyTrainability || selectedPedigreeDog?.progenyTrainability}</p>
                   </div>
                 </>
               )}
               {/* {selectedSection === "Pedigree" && <Pedigree />} */}
-              {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog.id} />}
+              {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog?.id || Number(selectedPedigreeDog?.id)} onDogSelect={handleDogSelect} />}
               {/* {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog.id} lineage={"sire"} />} */}
 
-              {selectedSection === "Progeny" && <Progeny dogId={selectedDog.id} />}
+              {selectedSection === "Progeny" && <Progeny dogId={selectedDog?.id || Number(selectedPedigreeDog?.id)} />}
               {/* {selectedSection === "Breed Survey" && <div>Breed survey data goes here.</div>} */}
-              {selectedSection === "Siblings" && <DogList dogId={selectedDog.id} />}
+              {selectedSection === "Siblings" && <DogList dogId={selectedDog?.id || Number(selectedPedigreeDog?.id)} />}
               {selectedSection === "Virtual Breeding" && <VirtualBreeding />}
               {/* {selectedSection === "Medical Data" && <div>Medical history data goes here.</div>} */}
             </div>

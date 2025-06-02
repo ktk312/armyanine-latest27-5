@@ -1108,19 +1108,24 @@
 import { useEffect, useRef, useState } from 'react';
 import Tree, { TreeNodeDatum, CustomNodeElementProps } from 'react-d3-tree';
 import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
 import { FaMars, FaVenus } from 'react-icons/fa';
 import { BASE_URL } from '../../config/constant';
 import './styles/Pedigree.css';
+import { DogDetailsModal } from '../ui/modal/dogModals/dogProfileModal';
+import { Dog } from './types/dog';
 
 interface CustomTreeNodeDatum extends TreeNodeDatum {
+  id?: string;
   accNumber?: string;
   sex?: string;
-    role?: 'Sire' | 'Dam' | 'Unknown';
-     depth?: number;
+  role?: 'Sire' | 'Dam' | 'Unknown';
+  depth?: number;
 
 }
 
 interface ApiNode {
+  id: string;
   name: string;
   accNumber?: string;
   sex?: string;
@@ -1138,12 +1143,13 @@ const createPlaceholderNode = (
   const children =
     depth < MAX_GENERATIONS - 1
       ? [
-          createPlaceholderNode(depth + 1, 'Sire'),
-          createPlaceholderNode(depth + 1, 'Dam'),
-        ]
+        createPlaceholderNode(depth + 1, 'Sire'),
+        createPlaceholderNode(depth + 1, 'Dam'),
+      ]
       : [];
 
   return {
+    id: "",
     name: 'No record',
     accNumber: '',
     sex,
@@ -1153,61 +1159,114 @@ const createPlaceholderNode = (
   };
 };
 
+export const renderRectNode = (
+  onNodeClick: (node: CustomTreeNodeDatum) => void
+) => {
+  return function RenderNode({ nodeDatum }: CustomNodeElementProps) {
+    const customNode = nodeDatum as CustomTreeNodeDatum;
+    const isMale = customNode.sex === 'Male';
+    const iconColor = isMale ? '#2563eb' : '#db2777';
+    const hoverClass = isMale ? 'male-hover' : 'female-hover';
 
-const renderRectNode = ({ nodeDatum }: CustomNodeElementProps) => {
-  const customNode = nodeDatum as CustomTreeNodeDatum;
-  const isMale = customNode.sex === 'Male';
-  const iconColor = isMale ? '#2563eb' : '#db2777';
-  const hoverClass = isMale ? 'male-hover' : 'female-hover';
-
-  return (
-    <g className={`custom-node ${hoverClass}`}>
-      <rect
-        width={220}
-        height={80}
-        x={-110}
-        y={-40}
-        rx={10}
-        ry={10}
-        className="node-box"
-      />
-      <text
-        x={0}
-        y={-8}
-        textAnchor="middle"
-        fontSize="16"
-        fontWeight="600"
-        fill="#1f2937"
-        stroke='none'
-      >
-        {customNode.name}
-      </text>
-      {customNode.accNumber && (
-        <text x={0} y={14} textAnchor="middle" fontSize="13" fill="#4b5563" stroke='none'>
-          ACC#: {customNode.accNumber}
+    return (
+      <g className={`custom-node ${hoverClass}`} onClick={() => onNodeClick(customNode)} style={{ cursor: 'pointer' }}>
+        <rect width={220} height={80} x={-110} y={-40} rx={10} ry={10} className="node-box" />
+        <text x={0} y={-8} textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937" stroke="none">
+          {customNode.name}
         </text>
-      )}
-      <g transform="translate(85, -30)">
-        {isMale ? (
-          <FaMars size={16} color={iconColor} />
-        ) : (
-          <FaVenus size={16} color={iconColor} />
+        {customNode.accNumber && (
+          <text x={0} y={14} textAnchor="middle" fontSize="13" fill="#4b5563" stroke="none">
+            ACC#: {customNode.accNumber}
+          </text>
         )}
+        <g transform="translate(85, -30)">
+          {isMale ? <FaMars size={16} color={iconColor} /> : <FaVenus size={16} color={iconColor} />}
+        </g>
       </g>
-    </g>
-  );
+    );
+  };
 };
-
 type DogPedigreeProps = {
   dogId: number;
+  onDogSelect?: (dog: MappedDog) => void; // 👈 Add this
 };
+interface MappedDog {
+  id: number;
+  title: string;
+  registrationNumber: string;
+  imageUrl: string;
+  breed: string;
+  country: string;
+  location: string;
+  sex: string;
+  microchip: string | null;
+  birthDate: string;
+  sire: string;
+  dam: string;
+  isDeath: boolean;
+  deathDate: string;
+  category: string;
+  chestDepth: string;
+  chestCircumference: string;
+  fieldAchievements: string;
+  weight: string
+  city: string;
+  virtuesAndFaults: string;
+  breedingAdvice: string;
+  miscellaneousComments: string;
+  progenyTrainability: string;
+}
 
-const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
+const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId, onDogSelect }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const [sireTree, setSireTree] = useState<TreeNodeDatum | null>(null);
   const [damTree, setDamTree] = useState<TreeNodeDatum | null>(null);
   const [activeTab, setActiveTab] = useState<'sire' | 'dam'>('sire');
+const [selectedDog, setSelectedDog] = useState<null | MappedDog>(null);
+const [IdDog, setDogId] = useState<string | null>(null);
+
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewDog, setViewDog] = useState<Dog | null>(null);
+console.log("--selected Dog inside pedigree", selectedDog);
+
+
+const handleNodeClick = (node: CustomTreeNodeDatum) => {
+  console.log('--this is the node--->', node);
+  if (node.id) {
+    console.log('--this is the node ID--->', node.id);
+    setDogId(node.id); // ✅ triggers the useEffect correctly
+  }
+};
+
+const closeViewModal = () => {
+    setIsViewModalOpen(false);
+    setViewDog(null);
+  };
+useEffect(() => {
+  const fetchDogDetails = async () => {
+    if (!IdDog) return;
+
+    try {
+      console.log("------Fetching dog with ID:", IdDog);
+      const { data } = await axios.get(`${BASE_URL}/dog/${IdDog}`);
+      console.log("Fetched dog data:", data);
+      setSelectedDog(data);
+ // Open modal after data is fetched
+      setViewDog(data);
+      setIsViewModalOpen(true);
+      if (onDogSelect) {
+        onDogSelect(data);
+      }
+    } catch (error) {
+      console.error("Error fetching dog details:", error);
+    }
+  };
+
+  fetchDogDetails();
+}, [IdDog]); 
+
+
 
   // Transform API node to TreeNodeDatum type for react-d3-tree
   // const transformTree = (node: ApiNode): CustomTreeNodeDatum => ({
@@ -1221,57 +1280,58 @@ const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
   //     collapsed: false
   //   }
   // });
-// Transform API node to tree node with placeholders
-const transformTree = (
-  node: ApiNode | null,
-  depth = 0,
-  role: 'Sire' | 'Dam' | 'Unknown' = 'Unknown'
-): CustomTreeNodeDatum => {
-  if (!node || !node.name || node.name.toLowerCase() === 'unknown') {
-    // Return a placeholder if node is missing or unknown
-    return createPlaceholderNode(depth, role);
-  }
-
-  // Transform children, filling placeholders where missing
-  let children: CustomTreeNodeDatum[] = [];
-  if (depth < MAX_GENERATIONS - 1) {
-    if (node.children && node.children.length > 0) {
-      children = node.children.map((child, idx) =>
-        transformTree(child, depth + 1, idx === 0 ? 'Sire' : 'Dam')
-      );
-
-      // If children less than 2, fill with placeholder
-      if (children.length < 2) {
-        if (!children[0]) children[0] = createPlaceholderNode(depth + 1, 'Sire');
-        if (!children[1]) children[1] = createPlaceholderNode(depth + 1, 'Dam');
-      }
-    } else {
-      // No children present, add placeholders
-      children = [
-        createPlaceholderNode(depth + 1, 'Sire'),
-        createPlaceholderNode(depth + 1, 'Dam'),
-      ];
+  // Transform API node to tree node with placeholders
+  const transformTree = (
+    node: ApiNode | null,
+    depth = 0,
+    role: 'Sire' | 'Dam' | 'Unknown' = 'Unknown'
+  ): CustomTreeNodeDatum => {
+    if (!node || !node.name || node.name.toLowerCase() === 'unknown') {
+      // Return a placeholder if node is missing or unknown
+      return createPlaceholderNode(depth, role);
     }
-  }
 
-  return {
-    name: node.name,
-    accNumber: node.accNumber,
-    sex: node.sex,
-    role,
-    children,
-    __rd3t: {
-      id: `${node.accNumber || node.name}-${depth}`,
-      depth,
-      collapsed: false,
-    },
+    // Transform children, filling placeholders where missing
+    let children: CustomTreeNodeDatum[] = [];
+    if (depth < MAX_GENERATIONS - 1) {
+      if (node.children && node.children.length > 0) {
+        children = node.children.map((child, idx) =>
+          transformTree(child, depth + 1, idx === 0 ? 'Sire' : 'Dam')
+        );
+
+        // If children less than 2, fill with placeholder
+        if (children.length < 2) {
+          if (!children[0]) children[0] = createPlaceholderNode(depth + 1, 'Sire');
+          if (!children[1]) children[1] = createPlaceholderNode(depth + 1, 'Dam');
+        }
+      } else {
+        // No children present, add placeholders
+        children = [
+          createPlaceholderNode(depth + 1, 'Sire'),
+          createPlaceholderNode(depth + 1, 'Dam'),
+        ];
+      }
+    }
+
+    return {
+      id: node.id,
+      name: node.name,
+      accNumber: node.accNumber,
+      sex: node.sex,
+      role,
+      children,
+      __rd3t: {
+        id: `${node.accNumber || node.name}-${depth}`,
+        depth,
+        collapsed: false,
+      },
+    };
   };
-};
   useEffect(() => {
     const fetchPedigree = async () => {
       try {
         const { data } = await axios.get(`${BASE_URL}/dog/pedigree/${dogId}`);
-
+        console.log("----the dog detail are", data)
         // data.children assumed to have [sire, dam]
         const sireNode = data.children && data.children[0] ? data.children[0] : null;
         const damNode = data.children && data.children[1] ? data.children[1] : null;
@@ -1302,11 +1362,11 @@ const transformTree = (
         data={dataToRender}
         orientation="horizontal"
         translate={translate}
-        renderCustomNodeElement={renderRectNode}
+        renderCustomNodeElement={renderRectNode(handleNodeClick)}
         nodeSize={{ x: 260, y: 120 }}
         separation={{ siblings: 1.2, nonSiblings: 1.8 }}
         pathFunc="step"
-        zoomable = {false}
+        zoomable={false}
         scaleExtent={{ min: 0.4, max: 2 }}
       />
     );
@@ -1316,17 +1376,15 @@ const transformTree = (
     <div className="pedigree-container">
       <div className="tabs-container mb-4 flex justify-center gap-4">
         <button
-          className={`tab-button px-4 py-2 rounded ${
-            activeTab === 'sire' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`tab-button px-4 py-2 rounded ${activeTab === 'sire' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
+            }`}
           onClick={() => setActiveTab('sire')}
         >
           Sire Lineage
         </button>
         <button
-          className={`tab-button px-4 py-2 rounded ${
-            activeTab === 'dam' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`tab-button px-4 py-2 rounded ${activeTab === 'dam' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-gray-700'
+            }`}
           onClick={() => setActiveTab('dam')}
         >
           Dam Lineage
@@ -1339,6 +1397,14 @@ const transformTree = (
       >
         {renderTree()}
       </div>
+{/* Render the dog detail modal */}
+      {isViewModalOpen && viewDog && (
+        <DogDetailsModal
+          isOpen={isViewModalOpen}
+          onClose={closeViewModal}
+          dog={viewDog}
+        />
+      )}
     </div>
   );
 };
