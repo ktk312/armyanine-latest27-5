@@ -150,34 +150,59 @@ const DatabaseView = () => {
             🐾 Army Canine Centre
           </h1>
 
-          {/* Filters */}
-          <div className="flex flex-col md:flex-row flex-wrap gap-6 justify-center mb-10">
-            <SelectInputs
-              title="Select Breed"
-              placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
-              options={breedOptions}
-              onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              className="min-w-[420px] md:max-w-[300px] dark:bg-gray-700 dark:text-white"
-            />
+{/* Filters */}
+<div className="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-10 px-2 space-y-4 md:space-y-0 md:space-x-0">
+  {/* Breed Selector */}
+  <div className="w-full md:w-1/3 pr-2">
+    <SelectInputs
+      title="Select Breed"
+      placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
+      options={breedOptions}
+      onChange={(val) => setSelectedBreed({ value: val, label: val })}
+      className="w-full dark:bg-gray-700 dark:text-white"
+    />
+  </div>
 
-            <SelectInputs
-              title="Select City"
-              placeholder={CityLoading ? "Loading Cities..." : "Select City"}
-              options={cityOptions}
-              onChange={(val) => setSelectedCity({ value: val, label: val })}
-              className="min-w-[420px] md:max-w-[300px] dark:bg-gray-700 dark:text-white"
-            />
+  {/* City Selector */}
+  <div className="w-full md:w-1/3 px-1">
+    <SelectInputs
+      title="Select City"
+      placeholder={CityLoading ? "Loading Cities..." : "Select City"}
+      options={cityOptions}
+      onChange={(val) => setSelectedCity({ value: val, label: val })}
+      className="w-full dark:bg-gray-700 dark:text-white"
+    />
+  </div>
 
-            <div className="flex items-center w-full md:max-w-[450px] border-b border-gray-400 dark:border-gray-600">
-              <Input
-                type="text"
-                placeholder="Search by Name, Microchip, ACC #"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent p-2 border-none outline-none focus:ring-0 text-gray-800 dark:text-white"
-              />
-            </div>
-          </div>
+  {/* Search Bar */}
+  <div className="w-full md:w-1/3 pl-2">
+    <div className="flex items-center w-full backdrop-blur-md bg-white/30 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-2 shadow-md focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-300">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-3"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-4.35-4.35M16.65 16.65A7.5 7.5 0 1116.65 2a7.5 7.5 0 010 15z"
+        />
+      </svg>
+      <Input
+        type="text"
+        placeholder="Search by Name, Microchip, ACC #"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full bg-transparent border-none outline-none text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 text-sm sm:text-base"
+      />
+    </div>
+  </div>
+</div>
+
+
 
           {/* Loading */}
           {loading && (
