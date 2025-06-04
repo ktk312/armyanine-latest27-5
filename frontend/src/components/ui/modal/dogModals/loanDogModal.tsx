@@ -148,7 +148,7 @@ export const LoanDogListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "SOLD TO", "ACC NO", "LOAN DATE", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC NO", "LOAN DATE", "Status"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -172,7 +172,7 @@ export const LoanDogListModal: React.FC<ModalProps> = ({
                                         >
                                             <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
-                                            <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell>
+                                            {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.loanDate || ""}</TableCell>
 

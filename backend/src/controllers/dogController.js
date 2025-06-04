@@ -178,7 +178,11 @@ const getDogById = async (req, res) => {
       include: {
         sire: true, // Include sire details
         dam: true, // Include dam details
-        microchip: true
+        microchip: true,
+        city: true,
+        country: true,
+        breed: true,
+        category: true
       },
     });
 
