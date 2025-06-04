@@ -1,4 +1,3 @@
-PedigreeTree.css
 :root {
   --bg-light-start: #f3f4f6;
   --bg-light-end: #e5e7eb;
@@ -32,6 +31,7 @@ PedigreeTree.css
   --tree-border-dark: #4b5563;
 }
 
+/* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
   .pedigree-container {
     background: linear-gradient(to bottom, var(--bg-dark-start), var(--bg-dark-end));
@@ -48,15 +48,7 @@ PedigreeTree.css
   .main-dog-acc {
     color: var(--text-secondary-dark);
   }
-  .main-dog-label {
-    color: var(--text-muted-dark);
-  }
-  .sex-icon.male {
-    color: #60a5fa;
-  }
-  .sex-icon.female {
-    color: #f472b6;
-  }
+  .main-dog-label,
   .loading-text,
   .no-data-text {
     color: var(--text-muted-dark);
@@ -74,33 +66,33 @@ PedigreeTree.css
     background: var(--tree-bg-dark);
     border-color: var(--tree-border-dark);
   }
+  .sex-icon.male {
+    color: #60a5fa;
+  }
+  .sex-icon.female {
+    color: #f472b6;
+  }
 }
 
-
-
-
-
-
-
-
-
+/* Base containers */
 .pedigree-container {
-    width: 1080px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
   min-height: 100vh;
   background: linear-gradient(to bottom, var(--bg-light-start), var(--bg-light-end));
-  padding: 3rem 1rem;
   transition: background 0.5s;
 }
 
 .pedigree-card {
-  max-width: 1280px;
-  /* margin: 0 auto; */
   background: var(--card-bg-light);
   box-shadow: var(--card-shadow);
   border-radius: 1rem;
   overflow: hidden;
 }
 
+/* Buttons */
 .export-button-container {
   display: flex;
   justify-content: flex-end;
@@ -108,16 +100,20 @@ PedigreeTree.css
   padding: 0 1.5rem;
 }
 
-.export-button {
+.export-button,
+.retry-button {
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: var(--button-bg);
-  color: var(--button-text);
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
+  color: var(--button-text);
   transition: background 0.3s;
+}
+
+.export-button {
+  background: var(--button-bg);
 }
 
 .export-button:hover:not(:disabled) {
@@ -129,11 +125,22 @@ PedigreeTree.css
   cursor: not-allowed;
 }
 
+.retry-button {
+  margin-left: 1rem;
+  background: var(--retry-button-bg);
+}
+
+.retry-button:hover {
+  background: var(--retry-button-bg-hover);
+}
+
 .export-icon {
   margin-right: 0.5rem;
 }
 
-.loading-container {
+/* Loading & Error */
+.loading-container,
+.error-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,17 +153,11 @@ PedigreeTree.css
   color: #4f46e5;
 }
 
-.loading-text {
+.loading-text,
+.no-data-text {
   margin-left: 1rem;
   font-size: 1.125rem;
   color: var(--text-muted-light);
-}
-
-.error-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2.5rem;
 }
 
 .error-text {
@@ -164,20 +165,7 @@ PedigreeTree.css
   color: var(--error-light);
 }
 
-.retry-button {
-  margin-left: 1rem;
-  padding: 0.5rem 1rem;
-  background: var(--retry-button-bg);
-  color: var(--button-text);
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-
-.retry-button:hover {
-  background: var(--retry-button-bg-hover);
-}
-
+/* Main Dog Card */
 .main-dog-card {
   text-align: center;
   max-width: 28rem;
@@ -212,10 +200,6 @@ PedigreeTree.css
   font-style: italic;
 }
 
-.main-dog-sex {
-  margin-top: 0.5rem;
-}
-
 .sex-icon {
   font-size: 1.5rem;
 }
@@ -228,15 +212,12 @@ PedigreeTree.css
   color: #db2777;
 }
 
+/* Tree & Lineage */
 .lineage-container {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
   padding: 0 1.5rem;
-}
-
-.lineage-section {
-  flex: 1;
 }
 
 .lineage-title {
@@ -255,114 +236,18 @@ PedigreeTree.css
 }
 
 .tree-container {
-  height: 80vh;
+  width: 100%;
+  /* height: 80vh; */
+  height: 100vh;
+  overflow: auto;
   background: var(--tree-bg-light);
   border: 1px solid var(--tree-border-light);
   border-radius: 1rem;
-  padding: 1rem;
+  /* padding: 1.5rem; */
   box-shadow: var(--card-shadow);
+  /* margin: 1rem; */
 }
 
-.no-data-text {
-  text-align: center;
-  padding: 2.5rem;
-  color: var(--text-muted-light);
-  font-size: 1rem;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (min-width: 1024px) {
-  .tree-container {
-    height: 70vh;
-  }
-}   
-
-
-.custom-node {
-  transition: all 0.3s ease;
-}
-
-.custom-node:hover .node-box {
-  stroke-width: 2;
-}
-
-.custom-node.male-hover:hover .node-box {
-  fill: #dbeafe; /* light blue */
-  stroke: #3b82f6;
-}
-
-.custom-node.female-hover:hover .node-box {
-  fill: #fce7f3; /* light pink */
-  stroke: #ec4899;
-}
-
-.node-box {
-  fill: #fff;
-  stroke: #d1d5db;
-  transition: fill 0.3s ease, stroke 0.3s ease;
-}
-.hover-male:hover {
-  fill: #e0f2fe !important;
-  cursor: pointer;
-}
-
-.hover-female:hover {
-  fill: #fce7f3 !important;
-  cursor: pointer;
-}
-.tab-button {
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-
-.tab-button:hover {
-  filter: brightness(90%);
-}
-
-
-
-.custom-node.male-hover:hover rect.node-box {
-  fill: #bfdbfe; /* light blue */
-  cursor: pointer;
-  transition: fill 0.3s ease;
-}
-
-.custom-node.female-hover:hover rect.node-box {
-  fill: #fbcfe8; /* light pink */
-  cursor: pointer;
-  transition: fill 0.3s ease;
-}
-
-/* Basic styling for buttons */
-.tab-btn {
-  outline: none;
-  border: none;
-  cursor: pointer;
-}
-
-.tab-btn:focus {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
-}
-
-.export-buttons button {
-  outline: none;
-  border: none;
-  cursor: pointer;
-}
-
-.export-buttons button:focus {
-  outline: 2px solid #22c55e;
-  outline-offset: 2px;
-}
-
-/* Scrollbar for overflow */
 .tree-container::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -373,92 +258,84 @@ PedigreeTree.css
   border-radius: 4px;
 }
 
-
-.custom-node.male-hover rect.node-box:hover {
-  fill: #bfdbfe; /* light blue */
+.tree-wrapper {
+  min-width: 2000px;
+  min-height: 1000px;
 }
 
-.custom-node.female-hover rect.node-box:hover {
-  fill: #fbcfe8; /* light pink */
-}
-
+/* Node Styling */
 .node-box {
-  fill: #f3f4f6;
-  stroke: #9ca3af;
-  stroke-width: 1.8;
+  /* fill: #fff;
+  stroke: #4b5563;
+  stroke-width: 2; */
+  fill: #f9fafb;
+  stroke: #d1d5db;
+  stroke-width: 1;
   cursor: pointer;
-  transition: fill 0.2s ease;
+  transition: fill 0.3s ease, stroke 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Add any additional styling you want here */
+.custom-node {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-node:hover .node-box {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.custom-node.male-hover:hover .node-box,
 .male-hover:hover rect.node-box {
-  fill: #bfdbfe; /* light blue on hover for male */
+  fill: #dbeafe;
+  stroke: #3b82f6;
 }
 
+.custom-node.female-hover:hover .node-box,
 .female-hover:hover rect.node-box {
-  fill: #fecdd3; /* light pink on hover for female */
+  fill: #fce7f3;
+  stroke: #ec4899;
 }
 
-/* Tab fade animations */
+/* Tab styling */
+.tab-button,
+.tab-btn,
+.export-buttons button {
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button:hover {
+  filter: brightness(90%);
+}
+
+.tab-btn:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.export-buttons button:focus {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .tree-container.fade-in {
   opacity: 1;
   transition: opacity 0.3s ease;
 }
+
 .tree-container.fade-out {
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-
-.pedigree-container {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.pedigree-container {
-  width: 100%;
-  max-width: 1280px; /* Matches max-w-7xl */
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.tree-container {
-  width: 100%;
-  height: 80vh;
-  overflow: auto; /* Enables both horizontal and vertical scrolling */
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin: 1rem;
-}
-
-.tree-wrapper {
-  min-width: 2000px; /* Ensure large canvas for tree */
-  min-height: 1000px;
-}
-
-.node-box {
-  fill: #fff;
-  stroke: #4b5563;
-  stroke-width: 2;
-}
-
-.male-hover:hover {
-  fill: #dbeafe;
-}
-
-.female-hover:hover {
-  fill: #fce7f3;
-}
-
-.fade-in {
-  opacity: 1;
-}
-
-.fade-out {
-  opacity: 0.3;
 }
 

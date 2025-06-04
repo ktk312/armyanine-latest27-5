@@ -15,12 +15,15 @@
     "dependencies": {
         "express": "^5.1.0",
         "file-saver": "^2.0.5",
+        "framer-motion": "^12.15.0",
         "html-to-image": "^1.11.13",
         "html2canvas": "^1.4.1",
         "jspdf": "^3.0.1",
-        "react-d3-tree": "^3.6.6"
+        "react-d3-tree": "^3.6.6",
+        "react-router-dom": "^7.6.1"
     },
     "devDependencies": {
+        "@types/lodash": "^4.17.17",
         "concurrently": "^9.1.2",
         "electron": "^25.3.0",
         "electron-builder": "^26.0.12"
