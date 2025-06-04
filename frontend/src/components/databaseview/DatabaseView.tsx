@@ -2637,7 +2637,6 @@ const DetailItem = ({
   </Box>
 );
 
-<<<<<<< HEAD
 const DatabaseView = () => {
   const [selectedBreed, setSelectedBreed] = useState<{
     value: string;
@@ -2651,9 +2650,6 @@ const DatabaseView = () => {
     String(selectedBreed?.value),
     String(selectedCity?.value)
   );
-=======
-  const { dogs, loading, error } = useFilteredDogs(String(selectedBreed?.value ), String(selectedCity?.value))
->>>>>>> 1f09fc7cdda925494f9cd7d9fd100b1ff2fc65c0
   const [selectedDog, setSelectedDog] = useState<null | MappedDog>(null);
   const [selectedPedigreeDog, setselectedPedigreeDog] = useState<null | MappedDog>(null);
 
@@ -2737,21 +2733,6 @@ const DatabaseView = () => {
     }
   }, [city]);
 
-<<<<<<< HEAD
-=======
-
-  const handleDogSelect = (dog: MappedDog) => {
-    console.log("Selected dog from pedigreee 2:", dog);
-    // You can now open a modal, set state, etc.
-    // setSelectedDog(null);
-    // setSelectedSection("Basic Data");
-    // setselectedPedigreeDog(dog)
-
-  };
-
-  console.log(selectedDog, selectedSection, "dogggggggggggggggggggggggg")
-  // Fetch Breeds from store 
->>>>>>> 1f09fc7cdda925494f9cd7d9fd100b1ff2fc65c0
   const { breeds, getAllBreeds, loading: breedLoading } = useBreedStore();
   const [breedOptions, setBreedOptions] = useState<
     { value: string; label: string }[]
@@ -2781,7 +2762,6 @@ const DatabaseView = () => {
             font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
           }
 
-<<<<<<< HEAD
           .dark .database-view {
             background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
           }
@@ -2797,20 +2777,6 @@ const DatabaseView = () => {
                padding: 3rem;
             }
           }
-=======
-          {/* Filters */}
-          <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-10 px-2 space-y-4 md:space-y-0 md:space-x-0">
-            {/* Breed Selector */}
-            <div className="w-full md:w-1/3 pr-2">
-              <SelectInputs
-                title="Select Breed"
-                placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
-                options={breedOptions}
-                onChange={(val) => setSelectedBreed({ value: val, label: val })}
-                className="w-full dark:bg-gray-700 dark:text-white"
-              />
-            </div>
->>>>>>> 1f09fc7cdda925494f9cd7d9fd100b1ff2fc65c0
 
             {/* City Selector */}
             <div className="w-full md:w-1/3 px-1">
@@ -3163,7 +3129,6 @@ const DatabaseView = () => {
               </Typography>
             </Box>
 
-<<<<<<< HEAD
             <Box className="filter-section">
               <Box>
                 <SelectInputs
@@ -3399,75 +3364,6 @@ const DatabaseView = () => {
                 </Button>
               ))}
             </Box>
-=======
-          {/* Dog Detail View */}
-          <div className="w-full md:w-3/4 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
-            <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
-              {selectedDog?.title || selectedPedigreeDog?.title} (ACC no# {selectedDog?.registrationNumber || selectedPedigreeDog?.registrationNumber})
-            </h2>
-            {selectedDog?.imageUrl || selectedPedigreeDog?.imageUrl ? (
-              <img
-                src={selectedDog?.imageUrl || selectedPedigreeDog?.imageUrl}
-                className="w-32 h-32 rounded-lg object-cover border border-gray-200"
-              />
-            ) : (
-              <div className="w-32 h-32 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400">
-                No Image
-              </div>
-            )}
-            <div className="text-gray-700 dark:text-gray-300 space-y-2 pt-5">
-              {selectedSection === "Basic Data" && (
-                <>
-                  <div className="w-full md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-3">
-                    <p><strong>Breed:</strong> {selectedDog?.breed || selectedPedigreeDog?.breed}</p>
-                    <p><strong>Location:</strong> {selectedDog?.location || selectedPedigreeDog?.location}</p>
-                    <p><strong>Country:</strong> {selectedDog?.country || selectedPedigreeDog?.country}</p>
-                    <p><strong>Sex:</strong> {selectedDog?.sex || selectedPedigreeDog?.sex}</p>
-                    <p><strong>Microchip:</strong> {selectedDog?.microchip || selectedPedigreeDog?.microchip}</p>
-                    <p><strong>Date of Birth:</strong> {selectedDog?.birthDate && !isNaN(new Date(selectedDog?.birthDate).getTime())
-                      ? new Date(selectedDog.birthDate).toISOString().split("T")[0]
-                      : selectedPedigreeDog && selectedPedigreeDog.birthDate && !isNaN(new Date(selectedPedigreeDog.birthDate).getTime())
-                        ? new Date(selectedPedigreeDog.birthDate).toISOString().split("T")[0]
-                        : ""}
-
-
-                      {/* {new Date(selectedDog.birthDate).toISOString().split("T")[0]} */}
-                    </p>
-                    <p><strong>Sire:</strong> {selectedDog?.sire || selectedPedigreeDog?.sire}</p>
-                    <p><strong>Dam:</strong> {selectedDog?.dam || selectedPedigreeDog?.dam}</p>
-                    <p>
-                      <strong>Death or Alive:</strong>{" "}
-                      {selectedDog
-                        ? (selectedDog.isDeath ? "Death" : "Alive")
-                        : selectedPedigreeDog
-                          ? (selectedPedigreeDog.isDeath ? "Death" : "Alive")
-                          : "Unknown"}
-                    </p>
-                    <p><strong>Death Date:</strong> {selectedDog?.deathDate || selectedPedigreeDog?.deathDate}</p>
-                    <p><strong>Category:</strong> {selectedDog?.category || selectedPedigreeDog?.category}</p>
-                    <p><strong>chestDepth:</strong> {selectedDog?.chestDepth || selectedPedigreeDog?.chestDepth}</p>
-                    <p><strong>Chest Circumference:</strong> {selectedDog?.chestCircumference || selectedPedigreeDog?.chestCircumference}</p>
-                    <p><strong>Field Achievements:</strong> {selectedDog?.fieldAchievements || selectedPedigreeDog?.fieldAchievements}</p>
-                    <p><strong>Weight:</strong> {selectedDog?.weight || selectedPedigreeDog?.weight}</p>
-                    <p><strong>City:</strong> {selectedDog?.city || selectedPedigreeDog?.city}</p>
-                    <p><strong>Virtues And Faults:</strong> {selectedDog?.virtuesAndFaults || selectedPedigreeDog?.virtuesAndFaults}</p>
-                    <p><strong>Breeding Advice:</strong> {selectedDog?.breedingAdvice || selectedPedigreeDog?.breedingAdvice}</p>
-                    <p><strong>Miscellaneous Comments:</strong> {selectedDog?.miscellaneousComments || selectedPedigreeDog?.miscellaneousComments}</p>
-                    <p><strong>Progeny Trainability:</strong> {selectedDog?.progenyTrainability || selectedPedigreeDog?.progenyTrainability}</p>
-                  </div>
-                </>
-              )}
-              {/* {selectedSection === "Pedigree" && <Pedigree />} */}
-              {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog?.id || Number(selectedPedigreeDog?.id)} onDogSelect={handleDogSelect} />}
-              {/* {selectedSection == "Pedigree" && <PedigreeTree dogId={selectedDog.id} lineage={"sire"} />} */}
-
-              {selectedSection === "Progeny" && <Progeny dogId={selectedDog?.id || Number(selectedPedigreeDog?.id)} />}
-              {/* {selectedSection === "Breed Survey" && <div>Breed survey data goes here.</div>} */}
-              {selectedSection === "Siblings" && <DogList dogId={selectedDog?.id || Number(selectedPedigreeDog?.id)} />}
-              {selectedSection === "Virtual Breeding" && <VirtualBreeding />}
-              {/* {selectedSection === "Medical Data" && <div>Medical history data goes here.</div>} */}
-            </div>
->>>>>>> 1f09fc7cdda925494f9cd7d9fd100b1ff2fc65c0
 
             {selectedSection === "Basic Data" && (
               <Box>
