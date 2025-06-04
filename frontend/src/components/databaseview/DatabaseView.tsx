@@ -3562,7 +3562,7 @@ import DogList from "../dogsCategory/DogSiblingsList";
 import PedigreeTree from "../dogsCategory/react-tree";
 import VirtualBreeding from "../dogsCategory/virtualBreeding";
 import Progeny from "../progeny/Progeny";
-import { useFilteredDogs } from "../dogsCategory/hooks/useFetchDogs";
+import { useFetchDogs, useFilteredDogs } from "../dogsCategory/hooks/useFetchDogs";
 import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 import {
@@ -3684,9 +3684,7 @@ const DatabaseView = () => {
     value: string;
     label: string;
   } | null>(null);
-  const { dogs, loading, error } = useFilteredDogs(
-    selectedBreed?.value || "",
-    selectedCity?.value || ""
+  const { dogs, loading, error } = useFetchDogs(
   );
   const [selectedDog, setSelectedDog] = useState<null | MappedDog>(null);
   const [selectedSection, setSelectedSection] = useState("Basic Data");

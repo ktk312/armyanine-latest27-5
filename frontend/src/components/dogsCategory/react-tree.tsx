@@ -6387,7 +6387,7 @@ interface ApiNode {
   children?: ApiNode[];
 }
 
-const MAX_GENERATIONS = 4;
+const MAX_GENERATIONS = 3;
 
 const createPlaceholderNode = (
   depth: number,
@@ -6457,6 +6457,28 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
     linkColor: isDark ? "#4b5563" : "#d1d5db",
     activeLink: isDark ? "#60a5fa" : "#3b82f6",
   };
+  useEffect(() => {
+    const fetchPedigree = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const { data } = await axios.get(`${BASE_URL}/dog/pedigree/${dogId}`);
+        setDogName(data.name || "Unknown");
+        const sireNode = data.children?.[0] || null;
+        const damNode = data.children?.[1] || null;
+
+        setSireTree(sireNode ? transformTree(sireNode, 0, "Sire") : null);
+        setDamTree(damNode ? transformTree(damNode, 0, "Dam") : null);
+      } catch (err) {
+        console.error("Error loading pedigree data:", err);
+        setError("Failed to load pedigree data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPedigree();
+  }, [dogId]);
+
 
   const transformTree = (
     node: ApiNode | null,
@@ -6500,27 +6522,7 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
     };
   };
 
-  useEffect(() => {
-    const fetchPedigree = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const { data } = await axios.get(`${BASE_URL}/dog/pedigree/${dogId}`);
-        setDogName(data.name || "Unknown");
-        const sireNode = data.children?.[0] || null;
-        const damNode = data.children?.[1] || null;
 
-        setSireTree(sireNode ? transformTree(sireNode, 0, "Sire") : null);
-        setDamTree(damNode ? transformTree(damNode, 0, "Dam") : null);
-      } catch (err) {
-        console.error("Error loading pedigree data:", err);
-        setError("Failed to load pedigree data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPedigree();
-  }, [dogId]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -6630,7 +6632,9 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
             <FaVenus size={nodeDimensions.iconSize} color={iconColor} />
           )}
         </g>
-        {customNode.depth !== undefined && (
+
+        {/* when we hover on node this show the generation */}
+        {/* {customNode.depth !== undefined && (
           <text
             x={-nodeDimensions.width / 2 + 8}
             y={-nodeDimensions.height / 2 + 12}
@@ -6641,7 +6645,7 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
           >
             Gen {customNode.depth + 1}
           </text>
-        )}
+        )} */}
       </g>
     );
   };
@@ -6694,8 +6698,8 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
         translate={translate}
         renderCustomNodeElement={renderRectNode}
         nodeSize={{ 
-          x: nodeDimensions.width + (isMobile ? 60 : 40), 
-          y: nodeDimensions.height + (isMobile ? 80 : 50) 
+          x: nodeDimensions.width + (isMobile ? 40 : 20), 
+          y: nodeDimensions.height + (isMobile ? 60 : 30) 
         }}
         separation={{ 
           siblings: isMobile ? 1.2 : 0.9, 
@@ -6715,8 +6719,8 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
   const getTreeHeight = (treeData: TreeNodeDatum | null): string => {
     if (!treeData || loading) return isMobile ? "40vh" : "45vh";
     const nodeCount = countNodes(treeData);
-    const baseHeight = isMobile ? 40 : 45;
-    return `${Math.max(baseHeight, nodeCount * (isMobile ? 12 : 10))}vh`;
+    const baseHeight = isMobile ? 25 : 40;
+    return `${Math.max(baseHeight, nodeCount * (isMobile ? 12 : 6))}vh`;
   };
 
   return (
@@ -6726,7 +6730,7 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
         maxWidth: "100%",
         margin: 0,
         padding: { xs: "0.5rem", sm: "1rem" },
-        minHeight: "100vh",
+        minHeight: "50vh",
         backgroundColor: isDark ? "#0f172a" : "#f1f5f9",
         color: nodeColors.textPrimary,
         transition: "background-color 0.3s, color 0.3s",
@@ -6817,15 +6821,16 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
           overflow: "auto",
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? "1.5rem" : "2rem",
+          gap: isMobile ? "0.5rem" : "1rem",
         }}
         className="scrollbar-hide"
       >
         <div
           style={{
             minHeight: getTreeHeight(sireTree),
-            padding: isMobile ? "0.8rem 0.4rem" : "1rem 0.5rem",
+            padding: isMobile ? "0.3rem 0.4rem" : "0rem 0.5rem",
             borderBottom: `1px solid ${isDark ? "#1e293b" : "#cbd5e1"}`,
+            overflow: "hidden"
           }}
         >
           <h2
@@ -6842,7 +6847,7 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
         <div
           style={{
             minHeight: getTreeHeight(damTree),
-            padding: isMobile ? "0.8rem 0.4rem" : "1rem 0.5rem",
+            padding: isMobile ? "0.3rem 0.4rem" : "0rem 0.5rem",
           }}
         >
           <h2
