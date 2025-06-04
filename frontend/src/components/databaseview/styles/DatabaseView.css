@@ -33,11 +33,11 @@
 .database-view {
   min-height: 100vh;
   padding: var(--spacing-large);
-  background: linear-gradient(
+  /* background: linear-gradient(
     135deg,
     var(--background-default) 0%,
     #e4e7eb 100%
-  );
+  ); */
   position: relative;
   overflow: hidden;
 }
@@ -98,7 +98,7 @@
   gap: var(--spacing-medium);
   margin-bottom: var(--spacing-large);
   padding: var(--spacing-medium);
-  background: rgba(255, 255, 255, 0.95);
+  /* background: rgba(255, 255, 255, 0.95); */
   backdrop-filter: blur(8px);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-small);
@@ -178,7 +178,7 @@
 
 /* Dog card */
 .dog-card {
-  background: var(--background-paper);
+  /* background: var(--background-paper); */
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-small);
   transition: transform var(--transition-medium),
@@ -295,6 +295,7 @@
   color: var(--text-secondary);
   margin-bottom: var(--spacing-medium);
   text-align: center;
+  padding-top: 9px;
 }
 
 .pagination {
