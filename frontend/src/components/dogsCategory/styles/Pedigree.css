@@ -13,8 +13,8 @@
   --icon-bg: rgba(15, 23, 42, 0.9);
   --icon-hover-bg: rgba(30, 41, 59, 1);
   --tree-container-bg: #0f172a;
-  --tree-container-shadow: 0 6px 12px rgba(0,0,0,0.7);
-  --node-shadow: 0 4px 8px rgba(0,0,0,0.6);
+  --tree-container-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+  --node-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
   --border-color: #1e293b;
   --error-bg: #7f1d1d;
   --error-color: #fecaca;
@@ -41,8 +41,8 @@
   --icon-bg: rgba(241, 245, 249, 0.9);
   --icon-hover-bg: rgba(226, 232, 240, 1);
   --tree-container-bg: #ffffff;
-  --tree-container-shadow: 0 6px 16px rgba(0,0,0,0.1);
-  --node-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --tree-container-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  --node-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --border-color: #cbd5e1;
   --error-bg: #fee2e2;
   --error-color: #b91c1c;
@@ -71,7 +71,8 @@
   transform: scale(1.05);
 }
 
-.node-text, .node-subtext {
+.node-text,
+.node-subtext {
   opacity: 0.9;
   transition: opacity 0.3s ease;
 }
@@ -96,7 +97,7 @@
 
 .custom-node.placeholder .node-rect {
   fill: var(--placeholder-bg);
-  stroke-dasharray: 4,4;
+  stroke-dasharray: 4, 4;
 }
 
 .custom-node:not(.placeholder) .node-rect {

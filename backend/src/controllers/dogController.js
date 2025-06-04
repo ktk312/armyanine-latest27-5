@@ -3,12 +3,11 @@ const { connect } = require("../routes/dogRoutes");
 // const { getPedigreeTreeRecursive, getDogPedigreeData } = require("../services/dogService");
 const prisma = new PrismaClient();
 
-
 const createDog = async (req, res) => {
   console.log("[POST] Create Dog API called");
 
   try {
-    const file = req.file ? req.file.filename : null;// Get file path of the uploaded image
+    const file = req.file ? req.file.filename : null; // Get file path of the uploaded image
     const {
       showTitle,
       dogName,
@@ -45,19 +44,19 @@ const createDog = async (req, res) => {
       deathDate,
       soldDate,
       loanDate,
-      transferDate
+      transferDate,
     } = req.body;
 
     // Validate required fields
     if (!dogName || !breedId || !countryId || !categoryId || !dob || !sex) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    const parsedIsDeath = isDeath === 'true';
-    const parsedIsSold = isSold === 'true';
-    const parsedIsLoan = isLoan === 'true';
-    const parsedIsTransfer = isTransfer === 'true';
-    const parsedCDN = CDN === 'true';
-    const parsedCNS = CNS === 'true';
+    const parsedIsDeath = isDeath === "true";
+    const parsedIsSold = isSold === "true";
+    const parsedIsLoan = isLoan === "true";
+    const parsedIsTransfer = isTransfer === "true";
+    const parsedCDN = CDN === "true";
+    const parsedCNS = CNS === "true";
 
     const setStatus = "Active";
 
@@ -69,7 +68,7 @@ const createDog = async (req, res) => {
     const sireIdNumber = sireId ? Number(sireId) : null;
     const damIdNumber = damId ? Number(damId) : null;
     const microchip_id = microchip ? Number(microchip) : null;
-    console.log("----microchips are", typeof microchip_id)
+    console.log("----microchips are", typeof microchip_id);
     // Ensure breed exists
     const breedExists = await prisma.breed.findUnique({
       where: { id: breedIdNumber },
@@ -118,9 +117,13 @@ const createDog = async (req, res) => {
           breed: { connect: { id: breedIdNumber } },
           // country: { connect: { idCountry: countryIdNumber | "" } },
           // city: { connect: { id: cityIdNumber | "" } },
-          ...(countryIdNumber ? { country: { connect: { idCountry: countryIdNumber } } } : {}),
+          ...(countryIdNumber
+            ? { country: { connect: { idCountry: countryIdNumber } } }
+            : {}),
           ...(cityIdNumber ? { city: { connect: { id: cityIdNumber } } } : {}),
-          ...(microchip_id ? { microchip: { connect: { id: microchip_id } } } : {}),
+          ...(microchip_id
+            ? { microchip: { connect: { id: microchip_id } } }
+            : {}),
           // microchip: { connect: { id: microchip_id } },
           // Handle nullable foreign keys
           sire: sireIdNumber ? { connect: { id: sireIdNumber } } : undefined,
@@ -152,7 +155,7 @@ const getAllDogs = async (req, res) => {
         country: true,
         city: true,
         category: true,
-        microchip: true
+        microchip: true,
       },
       orderBy: {
         id: "desc",
@@ -182,7 +185,7 @@ const getDogById = async (req, res) => {
         city: true,
         country: true,
         breed: true,
-        category: true
+        category: true,
       },
     });
 
@@ -233,10 +236,10 @@ const updateDog = async (req, res) => {
       progenyTrainability,
       soldDate,
       loanDate,
-      transferDate
+      transferDate,
     } = req.body;
 
-    const file = req.file ? req.file.filename : null;// Get file path of the uploaded image
+    const file = req.file ? req.file.filename : null; // Get file path of the uploaded image
 
     // Check KP
     const KPValue = KP ? String(KP) : null;
@@ -250,13 +253,12 @@ const updateDog = async (req, res) => {
     const damIdNumber = damId ? Number(damId) : null;
     const microchip_id = microchip ? Number(microchip) : null;
 
-
-    const parsedIsDeath = isDeath === 'true';
-    const parsedIsSold = isSold === 'true';
-    const parsedIsLoan = isLoan === 'true';
-    const parsedIsTransfer = isTransfer === 'true';
-    const parsedCDN = CDN === 'true';
-    const parsedCNS = CNS === 'true';
+    const parsedIsDeath = isDeath === "true";
+    const parsedIsSold = isSold === "true";
+    const parsedIsLoan = isLoan === "true";
+    const parsedIsTransfer = isTransfer === "true";
+    const parsedCDN = CDN === "true";
+    const parsedCNS = CNS === "true";
     const updatedDog = await prisma.dog.update({
       where: { id: parseInt(id) },
       data: {
@@ -297,17 +299,20 @@ const updateDog = async (req, res) => {
         // city: { connect: { id: cityIdNumber } },
         // country: { connect: { idCountry: countryIdNumber } },
         // microchip: { connect: { id: microchip_id } },
-         ...(countryIdNumber ? { country: { connect: { idCountry: countryIdNumber } } } : {}),
-          ...(cityIdNumber ? { city: { connect: { id: cityIdNumber } } } : {}),
-          ...(microchip_id ? { microchip: { connect: { id: microchip_id } } } : {}),
+        ...(countryIdNumber
+          ? { country: { connect: { idCountry: countryIdNumber } } }
+          : {}),
+        ...(cityIdNumber ? { city: { connect: { id: cityIdNumber } } } : {}),
+        ...(microchip_id
+          ? { microchip: { connect: { id: microchip_id } } }
+          : {}),
         // Handle nullable foreign keys
         sire: sireIdNumber ? { connect: { id: sireIdNumber } } : undefined,
         dam: damIdNumber ? { connect: { id: damIdNumber } } : undefined,
       },
     });
 
-    res.status(200).json({ message: "Dog Updated successfully", updatedDog }
-    );
+    res.status(200).json({ message: "Dog Updated successfully", updatedDog });
   } catch (error) {
     console.error("Error updating dog:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -345,7 +350,6 @@ const getDogsByBreed = async (req, res) => {
         sire: true,
         dam: true,
       },
-
     });
 
     if (dogs.length === 0) {
@@ -493,7 +497,15 @@ const germanShepherdList = async (req, res) => {
   console.log("GET ALL GERMAN SHEPHERD (GET");
   try {
     const germanShepherdList = await prisma.dog.findMany({
-      where: { breedId: 3, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false },
+      where: {
+        breedId: 3,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
       orderBy: {
         id: "desc",
       },
@@ -505,7 +517,15 @@ const germanShepherdList = async (req, res) => {
       (dog) => normalizeSex(dog.sex) === "female"
     );
     const totalGermanShepherd = await prisma.dog.count({
-      where: { breedId: 3,isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false},
+      where: {
+        breedId: 3,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
     });
     res.status(200).json({
       sires,
@@ -524,7 +544,15 @@ const bullDogsList = async (req, res) => {
 
   try {
     const bulldogsList = await prisma.dog.findMany({
-      where: { breedId: 2, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false },
+      where: {
+        breedId: 2,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
       orderBy: {
         id: "desc",
       },
@@ -536,7 +564,15 @@ const bullDogsList = async (req, res) => {
       (dog) => normalizeSex(dog.sex) === "female"
     );
     const totalBulldog = await prisma.dog.count({
-      where: { breedId: 2, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false },
+      where: {
+        breedId: 2,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
     });
     res.status(200).json({
       sires,
@@ -555,7 +591,15 @@ const labradorRetreiverList = async (req, res) => {
 
   try {
     const LabradorRetreiverList = await prisma.dog.findMany({
-      where: { breedId: 1, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false },
+      where: {
+        breedId: 1,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
       orderBy: {
         id: "desc",
       },
@@ -567,7 +611,15 @@ const labradorRetreiverList = async (req, res) => {
       (dog) => normalizeSex(dog.sex) === "female"
     );
     const totalLabradorRetreiver = await prisma.dog.count({
-      where: { breedId: 1, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false },
+      where: {
+        breedId: 1,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
     });
     res.status(200).json({
       sires,
@@ -591,15 +643,19 @@ const loanDogList = async (req, res) => {
         id: "desc",
       },
     });
-    const sires = LoanDogsList.filter((dog) => normalizeSex(dog.sex) === "male");
-    const dams = LoanDogsList.filter((dog) => normalizeSex(dog.sex) === "female");
+    const sires = LoanDogsList.filter(
+      (dog) => normalizeSex(dog.sex) === "male"
+    );
+    const dams = LoanDogsList.filter(
+      (dog) => normalizeSex(dog.sex) === "female"
+    );
     const totalLoanDogs = await prisma.dog.count({
-      where: { isLoan: true }
+      where: { isLoan: true },
     });
     res.status(200).json({
       sires,
       dams,
-      totalLoanDogs
+      totalLoanDogs,
     });
   } catch (error) {
     console.error("Error fetching dogs:", error);
@@ -621,12 +677,12 @@ const soldDogList = async (req, res) => {
     const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
     const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
     const total = await prisma.dog.count({
-      where: { isSold: true }
+      where: { isSold: true },
     });
     res.status(200).json({
       sires,
       dams,
-      total
+      total,
     });
   } catch (error) {
     console.error("Error fetching dogs:", error);
@@ -640,7 +696,14 @@ const standingDogList = async (req, res) => {
 
   try {
     const List = await prisma.dog.findMany({
-      where: { isDeath: false, isLoan: false, isTransfer: false, isSold: false, CNS:false, CDN: false },
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isTransfer: false,
+        isSold: false,
+        CNS: false,
+        CDN: false,
+      },
       orderBy: {
         id: "desc",
       },
@@ -648,13 +711,19 @@ const standingDogList = async (req, res) => {
     const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
     const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
     const total = await prisma.dog.count({
-        where: { isDeath: false, isLoan: false, isTransfer: false, isSold: false, CNS:false, CDN: false },
-
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isTransfer: false,
+        isSold: false,
+        CNS: false,
+        CDN: false,
+      },
     });
     res.status(200).json({
       sires,
       dams,
-      total
+      total,
     });
   } catch (error) {
     console.error("Error fetching dogs:", error);
@@ -668,7 +737,15 @@ const belgianDogList = async (req, res) => {
 
   try {
     const List = await prisma.dog.findMany({
-      where: { breed: 4, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false },
+      where: {
+        breed: 4,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
       orderBy: {
         id: "desc",
       },
@@ -676,19 +753,26 @@ const belgianDogList = async (req, res) => {
     const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
     const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
     const total = await prisma.dog.count({
-      where: { breed: 4, isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false }
+      where: {
+        breed: 4,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
+      },
     });
     res.status(200).json({
       sires,
       dams,
-      total
+      total,
     });
   } catch (error) {
     console.error("Error fetching dogs:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 //Get All Standing Dog
 const transferredDogList = async (req, res) => {
@@ -704,12 +788,12 @@ const transferredDogList = async (req, res) => {
     const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
     const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
     const total = await prisma.dog.count({
-      where: { isTransfer: true }
+      where: { isTransfer: true },
     });
     res.status(200).json({
       sires,
       dams,
-      total
+      total,
     });
   } catch (error) {
     console.error("Error fetching dogs:", error);
@@ -1295,42 +1379,42 @@ const getDogProgeny = async (req, res) => {
       imageUrl: dog.DogImage[0]?.url || null,
       dob: dog.dob
         ? new Date(dog.dob).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
         : "Unknown",
       dam: dog.dam
         ? {
-          name: dog.dam.dogName,
-          gender: dog.dam.sex,
-          breed: dog.dam.breed?.breed || "Unknown",
-          dob: dog.dam.dob
-            ? new Date(dog.dam.dob).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-            : "Unknown",
-          accNumber: dog.dam.KP || "Unknown",
-          imageUrl: dog.dam.DogImage[0]?.url || null,
-        }
+            name: dog.dam.dogName,
+            gender: dog.dam.sex,
+            breed: dog.dam.breed?.breed || "Unknown",
+            dob: dog.dam.dob
+              ? new Date(dog.dam.dob).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })
+              : "Unknown",
+            accNumber: dog.dam.KP || "Unknown",
+            imageUrl: dog.dam.DogImage[0]?.url || null,
+          }
         : null,
       sire: dog.sire
         ? {
-          name: dog.sire.dogName,
-          gender: dog.sire.sex,
-          breed: dog.sire.breed?.breed || "Unknown",
-          dob: dog.sire.dob
-            ? new Date(dog.sire.dob).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-            : "Unknown",
-          accNumber: dog.sire.KP || "Unknown",
-          imageUrl: dog.sire.DogImage[0]?.url || null,
-        }
+            name: dog.sire.dogName,
+            gender: dog.sire.sex,
+            breed: dog.sire.breed?.breed || "Unknown",
+            dob: dog.sire.dob
+              ? new Date(dog.sire.dob).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })
+              : "Unknown",
+            accNumber: dog.sire.KP || "Unknown",
+            imageUrl: dog.sire.DogImage[0]?.url || null,
+          }
         : null,
     }));
 
@@ -1341,15 +1425,12 @@ const getDogProgeny = async (req, res) => {
   }
 };
 
-
-
 const getFilteredDogs = async (req, res) => {
-  console.log("Filter All Dog API Called")
+  console.log("Filter All Dog API Called");
   try {
     // Safely parse breedId and cityId from query
     const breedId = req.query.breedId ? parseInt(req.query.breedId) : null;
     const cityId = req.query.cityId ? parseInt(req.query.cityId) : null;
-
 
     // Only include filters if they are valid numbers
     const filters = [];
@@ -1368,7 +1449,7 @@ const getFilteredDogs = async (req, res) => {
         country: true,
         city: true,
         category: true,
-        microchip: true
+        microchip: true,
       },
       orderBy: {
         id: "desc",
@@ -1380,9 +1461,6 @@ const getFilteredDogs = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
-
 
 module.exports = {
   getFilteredDogs,
