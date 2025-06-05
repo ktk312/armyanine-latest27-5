@@ -75,44 +75,44 @@ model Country {
 }
 
 model Dog {
-  id          Int       @id @default(autoincrement())
-  showTitle   String?
-  dogName     String
-  friendlyUrl String?
-  kennel      String?
-  breeder     String?
-  breedId     Int?
-  sireId      Int? // Foreign key for father
-  damId       Int? // Foreign key for mother
-  dob         DateTime?
-  isDeath     Boolean   @default(false)
-  deathDate   String?
-  isSold      Boolean   @default(false)
-  soldDate    String?
-  isLoan   Boolean @default(false)
-  loanDate String?
-  isTransfer   Boolean @default(false)
-  transferDate String?
-  CDN          Boolean? @default(false)
-  CNS          Boolean? @default(false)
-  sex          String
-  achievements String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  status       String?
-  countryId    Int? // Foreign key reference (instead of string)
-  cityId       Int?
-  categoryId   Int?
-  KP           String?  @unique
-  location     String?
-  microchipId  Int?     @unique
-  HD           String?
-  ED           String?
-  hair         String?
-  color        String?
-  chestDepth   String?
-  chestCircumference  String?
-  weight       String?
+  id                 Int       @id @default(autoincrement())
+  showTitle          String?
+  dogName            String
+  friendlyUrl        String?
+  kennel             String?
+  breeder            String?
+  breedId            Int?
+  sireId             Int? // Foreign key for father
+  damId              Int? // Foreign key for mother
+  dob                DateTime?
+  isDeath            Boolean   @default(false)
+  deathDate          String?
+  isSold             Boolean   @default(false)
+  soldDate           String?
+  isLoan             Boolean   @default(false)
+  loanDate           String?
+  isTransfer         Boolean   @default(false)
+  transferDate       String?
+  CDN                Boolean?  @default(false)
+  CNS                Boolean?  @default(false)
+  sex                String
+  achievements       String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  status             String?
+  countryId          Int? // Foreign key reference (instead of string)
+  cityId             Int?
+  categoryId         Int?
+  KP                 String?   @unique
+  location           String?
+  microchipId        Int?      @unique
+  HD                 String?
+  ED                 String?
+  hair               String?
+  color              String?
+  chestDepth         String?
+  chestCircumference String?
+  weight             String?
 
   // 🆕 Textarea Fields
   virtuesAndFaults      String? // Particular Virtues and Faults
@@ -140,6 +140,11 @@ model Dog {
   StudCertificateSire StudCertificate[] @relation("StudSire")
 
   StudCertificateDam StudCertificate[] @relation("StudDam")
+
+  vaccinationRecords VaccinationRecord[]
+  trainingRecords    TrainingRecord[]
+  prophylaxisRecords ProphylaxisRecord[]
+  dewormingRecords   DewormingRecord[]
 }
 
 model DogImage {
@@ -218,7 +223,7 @@ model LitterDetail {
   KP          String?    @unique
   status      String?
   matingDate  String?
-  dob        String?
+  dob         String?
   // Define relation
   litter      Litter     @relation(fields: [litterId], references: [id], onDelete: Cascade)
   microchip   Microchip? @relation(fields: [microchipId], references: [id])
@@ -265,4 +270,58 @@ model Microchip {
 
   Dog          Dog?
   LitterDetail LitterDetail[]
+}
+
+// Medical history of Dogs
+model VaccinationRecord {
+  id        Int      @id @default(autoincrement())
+  age       Int
+  vaccine   String
+  dueDate   DateTime
+  batchNo   String
+  vetSign   String
+  dogId     Int
+  dog       Dog      @relation(fields: [dogId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TrainingRecord {
+  id                Int      @id @default(autoincrement())
+  trainerName       String
+  trainingStartedOn DateTime
+  trainingCompleted DateTime
+  trainingCategory  String?
+  performance       String? 
+  intelligence      String?
+  willingness       String?
+  energy            String?
+  sensitivity       String?
+  aggression        String?
+  dogId             Int
+  dog               Dog      @relation(fields: [dogId], references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model ProphylaxisRecord {
+  id               Int      @id @default(autoincrement())
+  date             DateTime
+  prophylacticDrug String?
+  remarks          String?
+  dogId            Int
+  dog              Dog      @relation(fields: [dogId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model DewormingRecord {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  drug      String?
+  sign      String?
+  dogId     Int
+  dog       Dog      @relation(fields: [dogId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
