@@ -45,8 +45,13 @@ const createDog = async (req, res) => {
       soldDate,
       loanDate,
       transferDate,
+      chestDepth,
+      chestCircumference,
+      weight
     } = req.body;
-
+    console.log("---achiement are", chestDepth,
+      chestCircumference,
+      weight)
     // Validate required fields
     if (!dogName || !breedId || !countryId || !categoryId || !dob || !sex) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -112,6 +117,9 @@ const createDog = async (req, res) => {
           soldDate,
           loanDate,
           transferDate,
+          chestDepth,
+          chestCircumference,
+          weight,
           // Relations
           category: { connect: { id: categoryIdNumber } },
           breed: { connect: { id: breedIdNumber } },
@@ -237,6 +245,9 @@ const updateDog = async (req, res) => {
       soldDate,
       loanDate,
       transferDate,
+      chestDepth,
+      chestCircumference,
+      weight,
     } = req.body;
 
     const file = req.file ? req.file.filename : null; // Get file path of the uploaded image
@@ -293,6 +304,9 @@ const updateDog = async (req, res) => {
         soldDate,
         loanDate,
         transferDate,
+        chestDepth,
+        chestCircumference,
+        weight,
         // microchip: microchip_id,
         category: { connect: { id: categoryIdNumber } },
         breed: { connect: { id: breedIdNumber } },
@@ -738,7 +752,7 @@ const belgianDogList = async (req, res) => {
   try {
     const List = await prisma.dog.findMany({
       where: {
-        breed: 4,
+        breedId: 2,
         isDeath: false,
         isLoan: false,
         isSold: false,
@@ -754,7 +768,7 @@ const belgianDogList = async (req, res) => {
     const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
     const total = await prisma.dog.count({
       where: {
-        breed: 4,
+        breedId: 2,
         isDeath: false,
         isLoan: false,
         isSold: false,
@@ -1379,42 +1393,42 @@ const getDogProgeny = async (req, res) => {
       imageUrl: dog.DogImage[0]?.url || null,
       dob: dog.dob
         ? new Date(dog.dob).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
         : "Unknown",
       dam: dog.dam
         ? {
-            name: dog.dam.dogName,
-            gender: dog.dam.sex,
-            breed: dog.dam.breed?.breed || "Unknown",
-            dob: dog.dam.dob
-              ? new Date(dog.dam.dob).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })
-              : "Unknown",
-            accNumber: dog.dam.KP || "Unknown",
-            imageUrl: dog.dam.DogImage[0]?.url || null,
-          }
+          name: dog.dam.dogName,
+          gender: dog.dam.sex,
+          breed: dog.dam.breed?.breed || "Unknown",
+          dob: dog.dam.dob
+            ? new Date(dog.dam.dob).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+            : "Unknown",
+          accNumber: dog.dam.KP || "Unknown",
+          imageUrl: dog.dam.DogImage[0]?.url || null,
+        }
         : null,
       sire: dog.sire
         ? {
-            name: dog.sire.dogName,
-            gender: dog.sire.sex,
-            breed: dog.sire.breed?.breed || "Unknown",
-            dob: dog.sire.dob
-              ? new Date(dog.sire.dob).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })
-              : "Unknown",
-            accNumber: dog.sire.KP || "Unknown",
-            imageUrl: dog.sire.DogImage[0]?.url || null,
-          }
+          name: dog.sire.dogName,
+          gender: dog.sire.sex,
+          breed: dog.sire.breed?.breed || "Unknown",
+          dob: dog.sire.dob
+            ? new Date(dog.sire.dob).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+            : "Unknown",
+          accNumber: dog.sire.KP || "Unknown",
+          imageUrl: dog.sire.DogImage[0]?.url || null,
+        }
         : null,
     }));
 

@@ -30,7 +30,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string
 //   city: string;
 //   virtuesAndFaults: string;
@@ -72,7 +71,6 @@
 //     category: dog?.category?.name ?? "",
 //     chestDepth: dog?.chestDepth ?? "",
 //     chestCircumference: dog?.chestCircumference ?? "",
-//     fieldAchievements: dog?.fieldAchievements ?? "",
 //     weight: dog?.weight ?? "",
 //     city: dog?.city?.city ?? "",
 //     virtuesAndFaults: dog?.virtuesAndFaults ?? "",
@@ -308,7 +306,6 @@
 //                     <p><strong>Category:</strong> {selectedDog?.category}</p>
 //                     <p><strong>chestDepth:</strong> {selectedDog?.chestDepth}</p>
 //                     <p><strong>Chest Circumference:</strong> {selectedDog?.chestCircumference}</p>
-//                     <p><strong>Field Achievements:</strong> {selectedDog?.fieldAchievements}</p>
 //                     <p><strong>Weight:</strong> {selectedDog?.weight}</p>
 //                     <p><strong>City:</strong> {selectedDog?.city}</p>
 //                     <p><strong>Virtues And Faults:</strong> {selectedDog?.virtuesAndFaults}</p>
@@ -376,7 +373,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string;
 //   city: string;
 //   virtuesAndFaults: string;
@@ -425,7 +421,6 @@
 //     category: dog?.category?.name ?? "",
 //     chestDepth: dog?.chestDepth ?? "",
 //     chestCircumference: dog?.chestCircumference ?? "",
-//     fieldAchievements: dog?.fieldAchievements ?? "",
 //     weight: dog?.weight ?? "",
 //     city: dog?.city?.city ?? "",
 //     virtuesAndFaults: dog?.virtuesAndFaults ?? "",
@@ -742,7 +737,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string;
 //   city: string;
 //   virtuesAndFaults: string;
@@ -821,7 +815,6 @@
 //     category: dog?.category?.name ?? "",
 //     chestDepth: dog?.chestDepth ?? "",
 //     chestCircumference: dog?.chestCircumference ?? "",
-//     fieldAchievements: dog?.fieldAchievements ?? "",
 //     weight: dog?.weight ?? "",
 //     city: dog?.city?.city ?? "",
 //     virtuesAndFaults: dog?.virtuesAndFaults ?? "",
@@ -1092,7 +1085,6 @@
 //                 <DetailItem label="Category" value={selectedDog.category} />
 //                 <DetailItem label="Chest Depth" value={selectedDog.chestDepth} />
 //                 <DetailItem label="Chest Circumference" value={selectedDog.chestCircumference} />
-//                 <DetailItem label="Field Achievements" value={selectedDog.fieldAchievements} />
 //                 <DetailItem label="Weight" value={selectedDog.weight} />
 //                 <DetailItem label="Virtues and Faults" value={selectedDog.virtuesAndFaults} />
 //                 <DetailItem label="Breeding Advice" value={selectedDog.breedingAdvice} />
@@ -1174,7 +1166,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string;
 //   city: string;
 //   virtuesAndFaults: string;
@@ -1255,7 +1246,6 @@
 //     category: dog.category?.name ?? "",
 //     chestDepth: dog.chestDepth ?? "",
 //     chestCircumference: dog.chestCircumference ?? "",
-//     fieldAchievements: dog.fieldAchievements ?? "",
 //     weight: dog.weight ?? "",
 //     city: dog.city?.city ?? "",
 //     virtuesAndFaults: dog.virtuesAndFaults ?? "",
@@ -1783,10 +1773,6 @@
 //                     label="Chest Circumference"
 //                     value={selectedDog.chestCircumference}
 //                   />
-//                   <DetailItem
-//                     label="Field Achievements"
-//                     value={selectedDog.fieldAchievements}
-//                   />
 //                   <DetailItem label="Weight" value={selectedDog.weight} />
 //                   <DetailItem
 //                     label="Virtues and Faults"
@@ -1884,7 +1870,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string;
 //   city: string;
 //   virtuesAndFaults: string;
@@ -1957,7 +1942,6 @@
 //     category: dog.category?.name ?? "",
 //     chestDepth: dog.chestDepth ?? "",
 //     chestCircumference: dog.chestCircumference ?? "",
-//     fieldAchievements: dog.fieldAchievements ?? "",
 //     weight: dog.weight ?? "",
 //     city: dog.city?.city ?? "",
 //     virtuesAndFaults: dog.virtuesAndFaults ?? "",
@@ -2520,7 +2504,6 @@
 //                   <DetailItem label="Category" value={selectedDog.category} />
 //                   <DetailItem label="Chest Depth" value={selectedDog.chestDepth} />
 //                   <DetailItem label="Chest Circumference" value={selectedDog.chestCircumference} />
-//                   <DetailItem label="Field Achievements" value={selectedDog.fieldAchievements} />
 //                   <DetailItem label="Weight" value={selectedDog.weight} />
 //                   <DetailItem label="Virtues and Faults" value={selectedDog.virtuesAndFaults} />
 //                   <DetailItem label="Breeding Advice" value={selectedDog.breedingAdvice} />
@@ -2601,7 +2584,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string;
 //   city: string;
 //   virtuesAndFaults: string;
@@ -2687,7 +2669,6 @@
 //     category: dog.category?.name ?? "",
 //     chestDepth: dog.chestDepth ?? "",
 //     chestCircumference: dog.chestCircumference ?? "",
-//     fieldAchievements: dog.fieldAchievements ?? "",
 //     weight: dog.weight ?? "",
 //     city: dog.city?.city ?? "",
 //     virtuesAndFaults: dog.virtuesAndFaults ?? "",
@@ -3492,10 +3473,7 @@
 //                     label="Chest Circumference"
 //                     value={selectedDog.chestCircumference}
 //                   />
-//                   <DetailItem
-//                     label="Field Achievements"
-//                     value={selectedDog.fieldAchievements}
-//                   />
+//              
 //                   <DetailItem label="Weight" value={selectedDog.weight} />
 //                   <DetailItem
 //                     label="Virtues and Faults"
@@ -3637,7 +3615,6 @@
 //   category: string;
 //   chestDepth: string;
 //   chestCircumference: string;
-//   fieldAchievements: string;
 //   weight: string;
 //   city: string;
 //   virtuesAndFaults: string;
@@ -3721,7 +3698,6 @@
 //     category: dog.category?.name || "",
 //     chestDepth: dog.chestDepth || "",
 //     chestCircumference: dog.chestCircumference || "",
-//     fieldAchievements: dog.fieldAchievements || "",
 //     weight: dog.weight || "",
 //     city: dog.city?.city || "",
 //     virtuesAndFaults: dog.virtuesAndFaults || "",
@@ -4468,10 +4444,6 @@
 //                     label="Chest Circumference"
 //                     value={selectedDog.chestCircumference}
 //                   />
-//                   <DetailItem
-//                     label="Field Achievements"
-//                     value={selectedDog.fieldAchievements}
-//                   />
 //                   <DetailItem label="Weight" value={selectedDog.weight} />
 //                   <DetailItem
 //                     label="Virtues and Faults"
@@ -4538,7 +4510,7 @@ import DogList from "../dogsCategory/DogSiblingsList";
 import PedigreeTree from "../dogsCategory/react-tree";
 import VirtualBreeding from "../dogsCategory/virtualBreeding";
 import Progeny from "../progeny/Progeny";
-import { useFetchDogs } from "../dogsCategory/hooks/useFetchDogs";
+import { useFetchDogs, useFilteredDogs } from "../dogsCategory/hooks/useFetchDogs";
 import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 import {
@@ -4613,7 +4585,7 @@ interface MappedDog {
   category: string;
   chestDepth: string;
   chestCircumference: string;
-  fieldAchievements: string;
+  achievements: string;
   weight: string;
   city: string;
   virtuesAndFaults: string;
@@ -4662,8 +4634,7 @@ const DatabaseView = () => {
     value: string;
     label: string;
   } | null>(null);
-  const { dogs, loading, error } = useFetchDogs(
-  );
+  const {dogs, loading, error} = useFilteredDogs(selectedBreed?.value || "", selectedCity?.value || "")
   const [selectedDog, setSelectedDog] = useState<null | MappedDog>(null);
   const [selectedSection, setSelectedSection] = useState("Basic Data");
   const [searchQuery, setSearchQuery] = useState("");
@@ -4696,7 +4667,7 @@ const DatabaseView = () => {
     category: dog.category?.name || "",
     chestDepth: dog.chestDepth || "",
     chestCircumference: dog.chestCircumference || "",
-    fieldAchievements: dog.fieldAchievements || "",
+    achievements: dog.achievements || "",
     weight: dog.weight || "",
     city: dog.city?.city || "",
     virtuesAndFaults: dog.virtuesAndFaults || "",
@@ -4974,7 +4945,7 @@ const DatabaseView = () => {
                             textAlign: "center",
                             fontSize: { xs: "0.75rem", sm: "0.875rem" },
                           }}
-                          className="dark: !text-white"
+                          className="dark:!text-white"
                         >
                           {dog.location}
                         </Typography>
@@ -5261,7 +5232,7 @@ const DatabaseView = () => {
                   />
                   <DetailItem
                     label="Field Achievements"
-                    value={selectedDog.fieldAchievements}
+                    value={selectedDog.achievements}
                   />
                   <DetailItem label="Weight" value={selectedDog.weight} />
                   <DetailItem

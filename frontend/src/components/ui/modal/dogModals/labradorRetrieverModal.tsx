@@ -30,6 +30,13 @@ export const LabradorRetrieverListModal: React.FC<ModalProps> = ({
         KP: "",
         status: "",
     });
+    const headerToFilterKey: Record<string, keyof typeof filters> = {
+        "S.No": "id",
+        "DOG NAME": "dogName",
+        "ACC No": "KP",
+        "Status": "status",
+    };
+
     const { sires, dams } = useLabradorRetriever();
     const ITEMS_PER_PAGE = 5;
 
@@ -42,7 +49,7 @@ export const LabradorRetrieverListModal: React.FC<ModalProps> = ({
         .filter(dog =>
             Object.entries(filters).every(([key, value]) => {
                 if (!value) return true;
-                const dogValue = String(dog[key as keyof LabradorRetriever]).toLowerCase();
+                const dogValue = String(dog[key as keyof LabradorRetriever] ?? "").toLowerCase();
                 return dogValue.includes(value.toLowerCase());
             })
         );
@@ -151,7 +158,12 @@ export const LabradorRetrieverListModal: React.FC<ModalProps> = ({
                                                     <input
                                                         type="text"
                                                         placeholder={`Search ${header}`}
-                                                        onChange={(e) => handleFilterChange(header.replace(" ", "").toLowerCase(), e.target.value)}
+                                                        onChange={(e) => {
+                                                            const filterKey = headerToFilterKey[header];
+                                                            if (filterKey) {
+                                                                handleFilterChange(filterKey, e.target.value);
+                                                            }
+                                                        }}
                                                         className="mt-1 w-full border rounded-md p-1 text-sm"
                                                     />
                                                 )}

@@ -65,7 +65,6 @@ export interface Dog {
   CNS: Boolean;
   chestDepth: string;
   chestCircumference: string;
-  fieldAchievements: string;
   weight: string
   breed: Breed; // Added breed relation
   country: Country; // Added country relation

@@ -32,6 +32,14 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
         KP: "",
         status: "",
     });
+
+    const headerToFilterKey: Record<string, keyof typeof filters> = {
+        "S.No": "id",
+        "DOG NAME": "dogName",
+        "ACC No": "KP",
+        "Status": "status",
+    };
+
     const { sires, dams } = useStandingDog();
 
     const ITEMS_PER_PAGE = 5;
@@ -147,14 +155,19 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 text-gray-800 dark:text-white/90">
                                     <TableRow>
-                                        {["S.No", "DOG NAME","ACC No","Status"].map((header, idx) => (
-                                            <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-gray-50 text-start">
+                                        {["S.No", "DOG NAME", "ACC No", "Status"].map((header, idx) => (
+                                            <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-black-50 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
                                                     <input
                                                         type="text"
                                                         placeholder={`Search ${header}`}
-                                                        onChange={(e) => handleFilterChange(header.replace(" ", "").toLowerCase(), e.target.value)}
+                                                        onChange={(e) => {
+                                                            const filterKey = headerToFilterKey[header];
+                                                            if (filterKey) {
+                                                                handleFilterChange(filterKey, e.target.value);
+                                                            }
+                                                        }}
                                                         className="mt-1 w-full border rounded-md p-1 text-sm"
                                                     />
                                                 )}

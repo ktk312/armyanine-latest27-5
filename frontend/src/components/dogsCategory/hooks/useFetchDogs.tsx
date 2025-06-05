@@ -15,7 +15,7 @@ export const useFetchDogs = () => {
 
 // Filter Dog Hook
 export const useFilteredDogs = (breedId: string, cityId: string) => {
-  const { filteredDog, loading, error, dogs, setSelectedDog, selectedDog } = useDogStore();
+  const { filteredDog, fetchDogs,loading, error, dogs, setSelectedDog, selectedDog } = useDogStore();
 
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -23,6 +23,8 @@ export const useFilteredDogs = (breedId: string, cityId: string) => {
     if (breedId && cityId) {
       filteredDog(breedId, cityId);
       setHasSearched(true);
+    }else{
+      fetchDogs();
     }
   }, [breedId, cityId, filteredDog]);
 
