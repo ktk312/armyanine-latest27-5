@@ -1,6 +1,6 @@
 export interface VaccinationRecord {
     id: number;
-    age: string | Number | undefined;
+    age: string | Number;
     vaccine: string;
     dueDate: string; // ISO string
     batchNo: string | Number;
