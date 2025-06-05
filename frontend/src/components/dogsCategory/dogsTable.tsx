@@ -18,7 +18,6 @@ import { useFetchDogs } from "./hooks/useFetchDogs";
 import { useGermanShepherds } from "./hooks/useGermanShepherd";
 import { useLabradorRetriever } from "./hooks/useLabradorRetriever";
 import { LabradorRetrieverListModal } from "../ui/modal/dogModals/labradorRetrieverModal";
-import { useBulldog } from "./hooks/useBulldogs";
 import { useSoldDog } from "./hooks/useSoldDog";
 import { useLoanDogs } from "./hooks/useLoanDogs";
 import { useTransferredDog } from "./hooks/useTransferredDog";
