@@ -40,7 +40,7 @@ interface DefaultInputsProps {
     weight: string;
     chestDepth: string;
     chestCircumference: string;
-    fieldAchievements: string;
+    achievements: string;
     virtuesAndFaults: String;
     breedingAdvice: String;
     miscellaneousComments: String;
@@ -405,7 +405,7 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
         </div>
         <div>
           <Label>Achievements in Field</Label>
-          <Input type="text" id="input" onChange={handleChange} />
+          <Input type="text" id="input" name="achievements" value={formData?.achievements} onChange={handleChange} />
         </div>
         <div>
           <Label>Depth Chest</Label>

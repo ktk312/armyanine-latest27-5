@@ -110,6 +110,9 @@ model Dog {
   ED           String?
   hair         String?
   color        String?
+  chestDepth   String?
+  chestCircumference  String?
+  weight       String?
 
   // 🆕 Textarea Fields
   virtuesAndFaults      String? // Particular Virtues and Faults

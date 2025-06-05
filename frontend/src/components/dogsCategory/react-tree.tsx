@@ -1,976 +1,554 @@
-// import { useEffect, useState } from 'react';
-// import Tree, { CustomNodeElementProps, TreeNodeDatum } from 'react-d3-tree';
-// import axios from 'axios';
-// import ComponentCard from '../common/ComponentCard';
 
-// // Extend the TreeNodeDatum with our custom properties
-// interface CustomTreeNodeDatum extends TreeNodeDatum {
-//   __rd3t: {
-//     id: string;
-//     depth: number;
-//     collapsed: boolean;
-//   };
-//   accNumber?: string;
-//   sex?: string;
-// }
+//final version with css into a separate file
 
-// interface DogDetails {
-//   id: number;
-//   name: string;
-//   accNumber?: string;
-//   sex?: string;
-//   sireLine?: TreeNodeDatum | null;
-//   damLine?: TreeNodeDatum | null;
-// }
-
-// const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
-//   const customNode = nodeDatum as CustomTreeNodeDatum;
-//   const fillColor = customNode.sex === 'Male' ? '#e0f2fe' : '#fce7f3'; // Different colors for male/female
-//   const fontFamily = 'Segoe UI, Arial, sans-serif';
-
-//   return (
-//     <g onClick={toggleNode}>
-//       <rect
-//         width="200"
-//         height="100"
-//         x="-90"
-//         y="-40"
-//         fill={fillColor}
-//         stroke="#0ea5e9"
-//         strokeWidth={1.5}
-//         rx="12"
-//         ry="12"
-//         filter="drop-shadow(0 1px 3px rgba(255, 0, 0, 0.1))"
-//       />
-//       <text
-//         x="9"
-//         y="-10"
-//         textAnchor="middle"
-//         // fontWeight="bold"
-//         fontSize={20}
-//         fill="#1e3a8a"
-//         style={{ fontFamily }}
-//       >
-//         {customNode.name}
-//       </text>
-//       {customNode.accNumber && (
-//         <text
-//           x="0"
-//           y="10"
-//           textAnchor="middle"
-//           fill="#0369a1"
-//           style={{ fontFamily }}
-//         >
-//           ACC#: {customNode.accNumber}
-//         </text>
-//       )}
-//       {customNode.attributes?.role && (
-//         <text
-//           x="0"
-//           y="27"
-//           textAnchor="middle"
-//           fontSize={13}
-//           fill="#475569"
-//           fontStyle="italic"
-//           style={{ fontFamily }}
-//         >
-//           {customNode.attributes.role}
-//         </text>
-//       )}
-//     </g>
-//   );
-// };
-
-// type DogPedigreeProps = {
-//   dogId: number;
-// };
-
-// const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
-//   const [translate] = useState({ x: 500, y: 100 });
-//   const [dogDetails, setDogDetails] = useState<DogDetails | null>(null);
-//   const [sireData, setSireData] = useState<TreeNodeDatum | null>(null);
-//   const [damData, setDamData] = useState<TreeNodeDatum | null>(null);
-//   // Counter for generating unique IDs
-//   const [nodeIdCounter, setNodeIdCounter] = useState(0);
-
-//   const generateNodeId = () => {
-//     setNodeIdCounter(prev => prev + 1);
-//     return `node-${nodeIdCounter}`;
-//   };
-
-//   const transformTree = (node: any, depth = 0): CustomTreeNodeDatum => {
-//     const id = generateNodeId();
-//     return {
-//       name: node.name,
-//       accNumber: node.accNumber,
-//       sex: node.sex,
-//       attributes: {
-//         role: node.role,
-//         ...(node.accNumber && { accNumber: node.accNumber }),
-//         ...(node.sex && { sex: node.sex })
-//       },
-//       children: node.children?.map((child: any) => transformTree(child, depth + 1)) || [],
-//       __rd3t: {
-//         id,
-//         depth,
-//         collapsed: depth > 1 // Collapse nodes deeper than 1 level by default
-//       }
-//     };
-//   };
-
-//   useEffect(() => {
-//     const fetchPedigree = async () => {
-//       try {
-//         const response = await axios.get(`http://localhost:3000/api/dog/pedigree/${dogId}`);
-
-//         // Transform the main dog details
-//         const mainDog = {
-//           id: response.data.id,
-//           name: response.data.name,
-//           accNumber: response.data.accNumber,
-//           sex: response.data.sex,
-//         };
-
-//         // Extract sire and dam lines from children
-//         const sireLine = response.data.children.find((child: any) => child.role.includes('Sire'));
-//         const damLine = response.data.children.find((child: any) => child.role.includes('Dam'));
-
-//         setDogDetails(mainDog);
-//         setSireData(sireLine ? transformTree(sireLine) : null);
-//         setDamData(damLine ? transformTree(damLine) : null);
-//       } catch (error) {
-//         console.error('Failed to fetch pedigree:', error);
-//       }
-//     };
-
-//     fetchPedigree();
-//   }, [dogId]);
-
-
-//   return (
-//     <div className="bg-gray-50 dark:bg-gray-900 py-10 px-4 transition-colors duration-300">
-//       <ComponentCard title="">
-//         <div className="grid grid-cols-1 gap-1 xl:grid-cols-1">
-
-//           {/* <div style={{ width: '100%', height: '100vh', padding: '20px' }}> */}
-//           {/* Main dog details */}
-//           {dogDetails && (
-//             <div style={{
-//               textAlign: 'center',
-//               marginBottom: '40px',
-//               padding: '20px',
-//               backgroundColor: '#f8fafc',
-//               borderRadius: '12px',
-//               boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-//             }}>
-//               <h2 style={{ color: '#1e3a8a', marginBottom: '8px' }}>{dogDetails.name}</h2>
-//               {dogDetails.accNumber && (
-//                 <p style={{ color: '#0369a1', marginBottom: '8px' }}>ACC#: {dogDetails.accNumber}</p>
-//               )}
-//               <p style={{ color: '#475569', fontStyle: 'italic' }}>Main Dog</p>
-//             </div>
-//           )}
-
-//           {/* </div> */}
-//         </div>
-//         {/* Sire and Dam trees */}
-//         {/* <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px' }}> */}
-//         <div className="grid grid-cols-1 gap-6 xl:grid-cols-1">
-//           {/* Sire lineage */}
-//           <div style={{ flex: 1 }}>
-//             <h3 style={{ textAlign: 'center', color: '#1e40af', marginBottom: '20px' }}>Sire Lineage</h3>
-//             {sireData ? (
-//               <div style={{ height: '70vh', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px' }}>
-//                 <Tree
-//                   data={sireData}
-//                   translate={translate}
-//                   orientation="horizontal"
-//                   pathFunc="elbow"
-//                   zoomable
-//                   scaleExtent={{ min: 0.5, max: 2 }}
-//                   enableLegacyTransitions
-//                   renderCustomNodeElement={renderRectNode}
-//                   collapsible
-//                   nodeSize={{ x: 250, y: 180 }}
-//                   separation={{ siblings: 1.5, nonSiblings: 1.5 }}
-//                 />
-//               </div>
-//             ) : (
-//               <p style={{ textAlign: 'center', color: '#64748b' }}>No sire information available</p>
-//             )}
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 gap-6 xl:grid-cols-1">
-//           {/* Dam lineage */}
-//           <div style={{ flex: 1 }}>
-//             <h3 style={{ textAlign: 'center', color: '#831843', marginBottom: '20px' }}>Dam Lineage</h3>
-//             {damData ? (
-//               <div style={{ height: '70vh', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px' }}>
-//                 <Tree
-//                   data={damData}
-//                   translate={translate}
-//                   orientation="horizontal"
-//                   pathFunc="elbow"
-//                   zoomable
-//                   scaleExtent={{ min: 0.5, max: 2 }}
-//                   enableLegacyTransitions
-//                   renderCustomNodeElement={renderRectNode}
-//                   collapsible
-//                   nodeSize={{ x: 250, y: 180 }}
-//                   separation={{ siblings: 1.5, nonSiblings: 1.5 }}
-//                 />
-//               </div>
-//             ) : (
-//               <p style={{ textAlign: 'center', color: '#64748b' }}>No dam information available</p>
-//             )}
-//           </div>
-
-//         </div>
-//         {/* </div> */}
-
-//       </ComponentCard>
-
-//     </div>
-//   );
-// };
-
-// export default PedigreeTree;
-
-
-
-
-
-
-
-
-
-
-// import { useEffect, useState, useRef } from 'react';
-// import Tree, { CustomNodeElementProps, TreeNodeDatum } from 'react-d3-tree';
-// import axios from 'axios';
-// import html2canvas from 'html2canvas';
-// import jsPDF from 'jspdf';
-// import ComponentCard from '../common/ComponentCard';
-// import { FaMars, FaVenus, FaSpinner, FaFilePdf } from 'react-icons/fa';
-// import './styles/Pedigree.css'; // Import custom CSS
-
-// interface CustomTreeNodeDatum extends TreeNodeDatum {
-//   __rd3t: {
-//     id: string;
-//     depth: number;
-//     collapsed: boolean;
-//   };
-//   accNumber?: string;
-//   sex?: string;
-// }
-
-// interface DogDetails {
-//   id: number;
-//   name: string;
-//   accNumber?: string;
-//   sex?: string;
-// }
-
-// interface ApiNode {
-//   name: string;
-//   accNumber?: string;
-//   sex?: string;
-//   role?: string;
-//   children?: ApiNode[];
-// }
-
-// const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
-//   const customNode = nodeDatum as CustomTreeNodeDatum;
-//   const isMale = customNode.sex === 'Male';
-//   const fillColor = isMale
-//     ? 'url(#maleGradient)'
-//     : 'url(#femaleGradient)';
-//   const fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
-//   const width = 220;
-//   const height = 120;
-
-//   return (
-//     <g
-//       onClick={toggleNode}
-//       role="button"
-//       aria-label={`Node: ${customNode.name}`}
-//       className="group transition-transform duration-300 hover:scale-105"
-//     >
-//       <defs>
-//         <linearGradient id="maleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-//           <stop offset="0%" style={{ stopColor: '#bfdbfe', stopOpacity: 1 }} />
-//           <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
-//         </linearGradient>
-//         <linearGradient id="femaleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-//           <stop offset="0%" style={{ stopColor: '#fbcfe8', stopOpacity: 1 }} />
-//           <stop offset="100%" style={{ stopColor: '#ec4899', stopOpacity: 1 }} />
-//         </linearGradient>
-//       </defs>
-//       <rect
-//         width={width}
-//         height={height}
-//         x={-width / 2}
-//         y={-height / 2}
-//         fill={fillColor}
-//         stroke={isMale ? '#2563eb' : '#db2777'}
-//         strokeWidth={2}
-//         rx="16"
-//         ry="16"
-//         className="transition-shadow duration-300 group-hover:shadow-lg"
-//       />
-//       <text
-//         x="0"
-//         y={-height / 4}
-//         textAnchor="middle"
-//         fontSize={22}
-//         fontWeight="600"
-//         fill="#ffffff"
-//         style={{ fontFamily, textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
-//         aria-hidden="true"
-//       >
-//         {customNode.name}
-//       </text>
-//       {customNode.accNumber && (
-//         <text
-//           x="0"
-//           y="0"
-//           textAnchor="middle"
-//           fontSize={14}
-//           fill="#ffffff"
-//           style={{ fontFamily }}
-//           aria-hidden="true"
-//         >
-//           ACC#: {customNode.accNumber}
-//         </text>
-//       )}
-//       {customNode.attributes?.role && (
-//         <text
-//           x="0"
-//           y={height / 4}
-//           textAnchor="middle"
-//           fontSize={12}
-//           fill="#ffffff"
-//           fontStyle="italic"
-//           style={{ fontFamily }}
-//           aria-hidden="true"
-//         >
-//           {customNode.attributes.role}
-//         </text>
-//       )}
-//       <g transform={`translate(${width / 2 - 30}, ${-height / 2 + 10})`}>
-//         {isMale ? (
-//           <FaMars size={20} color="#ffffff" aria-label="Male" />
-//         ) : (
-//           <FaVenus size={20} color="#ffffff" aria-label="Female" />
-//         )}
-//       </g>
-//     </g>
-//   );
-// };
-
-// type DogPedigreeProps = {
-//   dogId: number;
-// };
-
-// const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
-//   const treeContainerRef = useRef<HTMLDivElement>(null);
-//   const componentRef = useRef<HTMLDivElement>(null);
-//   const [translate, setTranslate] = useState({ x: 0, y: 0 });
-//   const [dogDetails, setDogDetails] = useState<DogDetails | null>(null);
-//   const [sireData, setSireData] = useState<TreeNodeDatum | null>(null);
-//   const [damData, setDamData] = useState<TreeNodeDatum | null>(null);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     if (treeContainerRef.current) {
-//       const { width, height } = treeContainerRef.current.getBoundingClientRect();
-//       setTranslate({ x: width / 2, y: height / 4 });
-//     }
-//   }, [sireData, damData]);
-
-//   const transformTree = (node: ApiNode, depth = 0, counterRef: { current: number }): CustomTreeNodeDatum => {
-//     const id = `node-${counterRef.current++}`;
-//     return {
-//       name: node.name,
-//       accNumber: node.accNumber,
-//       sex: node.sex,
-//       attributes: {
-//         role: node.role || "",
-//         ...(node.accNumber && { accNumber: node.accNumber }),
-//         ...(node.sex && { sex: node.sex }),
-//       },
-//       children: node.children?.map((child) => transformTree(child, depth + 1, counterRef)) || [],
-//       __rd3t: {
-//         id,
-//         depth,
-//         collapsed: depth > 1,
-//       },
-//     };
-//   };
-
-//   useEffect(() => {
-//     const fetchPedigree = async () => {
-//       setIsLoading(true);
-//       try {
-//         const API_URL = 'http://localhost:3000';
-//         const response = await axios.get(`${API_URL}/api/dog/pedigree/${dogId}`);
-//         const mainDog = {
-//           id: response.data.id,
-//           name: response.data.name,
-//           accNumber: response.data.accNumber,
-//           sex: response.data.sex,
-//         };
-//         const sireLine = response.data.children?.find((child: ApiNode) => child.role?.includes('Sire'));
-//         const damLine = response.data.children?.find((child: ApiNode) => child.role?.includes('Dam'));
-//         const counterRef = { current: 0 };
-//         setDogDetails(mainDog);
-//         setSireData(sireLine ? transformTree(sireLine, 0, counterRef) : null);
-//         setDamData(damLine ? transformTree(damLine, 0, counterRef) : null);
-//         setError(null);
-//       } catch (error) {
-//         console.error('Failed to fetch pedigree:', error);
-//         setError('Failed to load pedigree data. Please try again later.');
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-//     fetchPedigree();
-//   }, [dogId]);
-
-//   const handleExportPdf = async () => {
-//     if (!componentRef.current) return;
-//     try {
-//       setIsLoading(true);
-//       const canvas = await html2canvas(componentRef.current, {
-//         scale: 2,
-//         useCORS: true,
-//         backgroundColor: '#ffffff',
-//       });
-//       const imgData = canvas.toDataURL('image/png');
-//       const pdf = new jsPDF('p', 'mm', 'a4');
-//       const imgWidth = 190;
-//       const pageHeight = 297;
-//       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-//       let heightLeft = imgHeight;
-//       let position = 10;
-
-//       pdf.setFontSize(16);
-//       pdf.text(`Pedigree of ${dogDetails?.name || 'Dog'}`, 10, 10);
-//       position += 10;
-
-//       pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-//       heightLeft -= pageHeight - 20;
-
-//       while (heightLeft > 0) {
-//         pdf.addPage();
-//         position = heightLeft - imgHeight + 10;
-//         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-//         heightLeft -= pageHeight - 20;
-//       }
-
-//       pdf.save(`pedigree_${dogId}.pdf`);
-//       setError(null);
-//     } catch (error) {
-//       console.error('Failed to export PDF:', error);
-//       setError('Failed to export PDF. Please try again later.');
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="pedigree-container">
-//       <ComponentCard title="Pedigree Tree" className="pedigree-card">
-//         <div className="export-button-container">
-//           <button
-//             onClick={handleExportPdf}
-//             className="export-button"
-//             disabled={isLoading || !dogDetails}
-//           >
-//             <FaFilePdf className="export-icon" />
-//             Export to PDF
-//           </button>
-//         </div>
-//         <div ref={componentRef}>
-//           {isLoading && (
-//             <div className="loading-container">
-//               <FaSpinner className="loading-spinner" />
-//               <span className="loading-text">Loading pedigree...</span>
-//             </div>
-//           )}
-//           {error && (
-//             <div className="error-container">
-//               <p className="error-text">{error}</p>
-//               <button
-//                 onClick={() => {
-//                   setError(null);
-//                   setIsLoading(true);
-//                   setSireData(null);
-//                   setDamData(null);
-//                   setDogDetails(null);
-//                 }}
-//                 className="retry-button"
-//               >
-//                 Retry
-//               </button>
-//             </div>
-//           )}
-//           {dogDetails && (
-//             <div className="main-dog-card">
-//               <h2 className="main-dog-title">{dogDetails.name}</h2>
-//               {dogDetails.accNumber && (
-//                 <p className="main-dog-acc">ACC#: {dogDetails.accNumber}</p>
-//               )}
-//               <p className="main-dog-label">Main Dog</p>
-//               {dogDetails.sex && (
-//                 <div className="main-dog-sex">
-//                   {dogDetails.sex === 'Male' ? (
-//                     <FaMars className="sex-icon male" aria-label="Male" />
-//                   ) : (
-//                     <FaVenus className="sex-icon female" aria-label="Female" />
-//                   )}
-//                 </div>
-//               )}
-//             </div>
-//           )}
-//           <div className="lineage-container">
-//             {/* Sire lineage */}
-//             <div className="lineage-section">
-//               <h3 className="lineage-title sire">Sire Lineage</h3>
-//               {sireData ? (
-//                 <div
-//                   ref={treeContainerRef}
-//                   className="tree-container"
-//                 >
-//                   <Tree
-//                     data={sireData}
-//                     translate={translate}
-//                     orientation="horizontal"
-//                     pathFunc="elbow"
-//                     zoomable
-//                     scaleExtent={{ min: 0.5, max: 2 }}
-//                     enableLegacyTransitions
-//                     renderCustomNodeElement={renderRectNode}
-//                     collapsible
-//                     nodeSize={{ x: 260, y: 200 }}
-//                     separation={{ siblings: 1.5, nonSiblings: 1.5 }}
-//                     pathClassFunc={() => 'stroke-indigo-400 dark:stroke-indigo-200 stroke-2'}
-//                   />
-//                 </div>
-//               ) : (
-//                 <p className="no-data-text">No sire information available</p>
-//               )}
-//             </div>
-//             {/* Dam lineage */}
-//             <div className="lineage-section">
-//               <h3 className="lineage-title dam">Dam Lineage</h3>
-//               {damData ? (
-//                 <div
-//                   className="tree-container"
-//                 >
-//                   <Tree
-//                     data={damData}
-//                     translate={translate}
-//                     orientation="horizontal"
-//                     pathFunc="elbow"
-//                     zoomable
-//                     scaleExtent={{ min: 0.5, max: 2 }}
-//                     enableLegacyTransitions
-//                     renderCustomNodeElement={renderRectNode}
-//                     collapsible
-//                     nodeSize={{ x: 260, y: 200 }}
-//                     separation={{ siblings: 1.5, nonSiblings: 1.5 }}
-//                     pathClassFunc={() => 'stroke-pink-400 dark:stroke-pink-200 stroke-2'}
-//                   />
-//                 </div>
-//               ) : (
-//                 <p className="no-data-text">No dam information available</p>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       </ComponentCard>
-//     </div>
-//   );
-// };
-
-// export default PedigreeTree;
-
-
-
-
-
-
-
-
-import { useEffect, useState, useRef } from 'react';
-import Tree, { CustomNodeElementProps, TreeNodeDatum } from 'react-d3-tree';
-import axios from 'axios';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import ComponentCard from '../common/ComponentCard';
-import { FaMars, FaVenus, FaSpinner, FaFilePdf } from 'react-icons/fa';
-import './styles/Pedigree.css'; // Import custom CSS
-import { BASE_URL } from '../../config/constant';
+import { useEffect, useRef, useState } from "react";
+import Tree, { TreeNodeDatum, CustomNodeElementProps } from "react-d3-tree";
+import axios from "axios";
+import {
+  FaMars,
+  FaVenus,
+  FaPlus,
+  FaMinus,
+  FaRedo,
+  FaSun,
+  FaMoon,
+  FaArrowUp,
+} from "react-icons/fa";
+import { BASE_URL } from "../../config/constant";
+import {
+  Box,
+  Tooltip,
+  IconButton,
+  useTheme,
+  Skeleton,
+  Snackbar,
+  Alert,
+  useMediaQuery,
+} from "@mui/material";
+import '../dogsCategory/styles/Pedigree.css';
+import { Dog } from "./types/dog";
+import { DogDetailsModal } from "../ui/modal/dogModals/dogProfileModal";
 
 interface CustomTreeNodeDatum extends TreeNodeDatum {
-  __rd3t: {
-    id: string;
-    depth: number;
-    collapsed: boolean;
-  };
+  id?: string;
   accNumber?: string;
   sex?: string;
-}
-
-interface DogDetails {
-  id: number;
-  name: string;
-  accNumber?: string;
-  sex?: string;
+  role?: "Sire" | "Dam" | "Unknown";
+  depth?: number;
+  hasPlaceholder?: boolean;
 }
 
 interface ApiNode {
+  id: string;
   name: string;
   accNumber?: string;
   sex?: string;
-  role?: string;
   children?: ApiNode[];
 }
 
-const renderRectNode = ({ nodeDatum, toggleNode }: CustomNodeElementProps) => {
-  const customNode = nodeDatum as CustomTreeNodeDatum;
-  const isMale = customNode.sex === 'Male';
-  const fillColor = isMale ? 'url(#maleGradient)' : 'url(#femaleGradient)';
-  const fontFamily = 'Inter, Segoe UI, Arial, sans-serif';
-  const width = 300; // Increased node width (from 220 to 300)
-  const height = 120;
+const MAX_GENERATIONS = 3;
 
-  return (
-    <g
-      onClick={toggleNode}
-      role="button"
-      aria-label={`Node: ${customNode.name}`}
-      className="group transition-transform duration-300 hover:scale-105"
-    >
-      <defs>
-        <linearGradient id="maleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#bfdbfe', stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
-        </linearGradient>
-        <linearGradient id="femaleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#fbcfe8', stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: '#ec4899', stopOpacity: 1 }} />
-        </linearGradient>
-      </defs>
-      <rect
-        width={width}
-        height={height}
-        x={-width / 2}
-        y={-height / 2}
-        fill={fillColor}
-        stroke={isMale ? '#2563eb' : '#db2777'}
-        strokeWidth={2}
-        rx="16"
-        ry="16"
-        className="transition-shadow duration-300 group-hover:shadow-lg"
-      />
-      <text
-        x="0"
-        y={-height / 4}
-        textAnchor="middle"
-        fontSize={22}
-        fontWeight="600"
-        fill="#ffffff"
-        style={{ fontFamily, textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
-        aria-hidden="true"
-      >
-        {customNode.name}
-      </text>
-      {customNode.accNumber && (
-        <text
-          x="0"
-          y="0"
-          textAnchor="middle"
-          fontSize={14}
-          fill="#ffffff"
-          style={{ fontFamily }}
-          aria-hidden="true"
-        >
-          ACC#: {customNode.accNumber}
-        </text>
-      )}
-      {customNode.attributes?.role && (
-        <text
-          x="0"
-          y={height / 4}
-          textAnchor="middle"
-          fontSize={12}
-          fill="#ffffff"
-          fontStyle="italic"
-          style={{ fontFamily }}
-          aria-hidden="true"
-        >
-          {customNode.attributes.role}
-        </text>
-      )}
-      <g transform={`translate(${width / 2 - 30}, ${-height / 2 + 10})`}>
-        {isMale ? (
-          <FaMars size={20} color="#ffffff" aria-label="Male" />
-        ) : (
-          <FaVenus size={20} color="#ffffff" aria-label="Female" />
-        )}
-      </g>
-    </g>
-  );
+const createPlaceholderNode = (
+  depth: number,
+  role: "Sire" | "Dam" | "Unknown" = "Unknown"
+): CustomTreeNodeDatum => {
+  const sex = role === "Sire" ? "Male" : role === "Dam" ? "Female" : "Unknown";
+  const children =
+    depth < MAX_GENERATIONS - 1
+      ? [
+        createPlaceholderNode(depth + 1, "Sire"),
+        createPlaceholderNode(depth + 1, "Dam"),
+      ]
+      : [];
+
+  return {
+    id: "",
+    name: "No record",
+    accNumber: "",
+    sex,
+    role,
+    hasPlaceholder: true,
+    children,
+    __rd3t: {
+      id: `placeholder-${role}-${depth}-${Math.random().toString(36).slice(2)}`,
+      depth,
+      collapsed: false,
+    },
+  };
 };
 
-type DogPedigreeProps = {
-  dogId: number;
+const countNodes = (node: TreeNodeDatum | null): number => {
+  if (!node) return 0;
+  let count = 1;
+  if (node.children) {
+    count += node.children.reduce((sum, child) => sum + countNodes(child), 0);
+  }
+  return count;
 };
 
-const PedigreeTree: React.FC<DogPedigreeProps> = ({ dogId }) => {
-  const treeContainerRef = useRef<HTMLDivElement>(null);
-  const componentRef = useRef<HTMLDivElement>(null);
-  const [translate, setTranslate] = useState({ x: 0, y: 0 });
-  const [dogDetails, setDogDetails] = useState<DogDetails | null>(null);
-  const [sireData, setSireData] = useState<TreeNodeDatum | null>(null);
-  const [damData, setDamData] = useState<TreeNodeDatum | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [manualDarkMode, setManualDarkMode] = useState<boolean | null>(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [sireTree, setSireTree] = useState<TreeNodeDatum | null>(null);
+  const [damTree, setDamTree] = useState<TreeNodeDatum | null>(null);
+  const [dogName, setDogName] = useState<string>("");
+  const [zoom, setZoom] = useState(1);
+  const [IdDog, setDogId] = useState<string | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewDog, setViewDog] = useState<Dog | null>(null);
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
+  const [selectedDog, setSelectedDog] = useState<null>(null);
 
-  // Calculate maximum depth of the tree for dynamic height
-  const getTreeDepth = (node: TreeNodeDatum | null): number => {
-    if (!node || !node.children) return 0;
-    return 1 + Math.max(...node.children.map(getTreeDepth));
+  const MIN_ZOOM = 0.4;
+  const MAX_ZOOM = 2;
+
+  const isDark = manualDarkMode !== null ? manualDarkMode : theme.palette.mode === "dark";
+
+
+
+  const nodeColors = {
+    male: isDark ? "#60a5fa" : "#2563eb",
+    female: isDark ? "#f472b6" : "#db2777",
+    placeholderBg: isDark ? "#374151" : "#f3f4f6",
+    textPrimary: isDark ? "#e0e7ff" : "#1f2937",
+    textSecondary: isDark ? "#9ca3af" : "#4b5563",
+    nodeBoxBg: isDark ? "#1f2937" : "#ffffff",
+    nodeBoxShadow: isDark
+      ? "0 4px 8px rgba(0,0,0,0.6)"
+      : "0 4px 12px rgba(0,0,0,0.1)",
+    linkColor: isDark ? "#4b5563" : "#d1d5db",
+    activeLink: isDark ? "#60a5fa" : "#3b82f6",
   };
-
-  useEffect(() => {
-    if (treeContainerRef.current) {
-      const { width, height } = treeContainerRef.current.getBoundingClientRect();
-      const sireDepth = sireData ? getTreeDepth(sireData) : 0;
-      const damDepth = damData ? getTreeDepth(damData) : 0;
-      const maxDepth = Math.max(sireDepth, damDepth);
-      const dynamicHeight = Math.max(400, maxDepth * 250); // Minimum 400px, 250px per level
-      setTranslate({ x: width / 2, y: dynamicHeight / 4 });
-    }
-  }, [sireData, damData]);
-
-  const transformTree = (node: ApiNode, depth = 0, counterRef: { current: number }): CustomTreeNodeDatum => {
-    const id = `node-${counterRef.current++}`;
-    return {
-      name: node.name,
-      accNumber: node.accNumber,
-      sex: node.sex,
-      attributes: {
-        role: node.role || "",
-        ...(node.accNumber && { accNumber: node.accNumber }),
-        ...(node.sex && { sex: node.sex }),
-      },
-      children: node.children?.map((child) => transformTree(child, depth + 1, counterRef)) || [],
-      __rd3t: {
-        id,
-        depth,
-        collapsed: false, // Ensure all nodes are expanded by default
-      },
-    };
-  };
-
   useEffect(() => {
     const fetchPedigree = async () => {
-      setIsLoading(true);
       try {
-        // const API_URL = 'http://localhost:3000';
-        const response = await axios.get(`${BASE_URL}/dog/pedigree/${dogId}`);
-        const mainDog = {
-          id: response.data.id,
-          name: response.data.name,
-          accNumber: response.data.accNumber,
-          sex: response.data.sex,
-        };
-        const sireLine = response.data.children?.find((child: ApiNode) => child.role?.includes('Sire'));
-        const damLine = response.data.children?.find((child: ApiNode) => child.role?.includes('Dam'));
-        const counterRef = { current: 0 };
-        setDogDetails(mainDog);
-        setSireData(sireLine ? transformTree(sireLine, 0, counterRef) : null);
-        setDamData(damLine ? transformTree(damLine, 0, counterRef) : null);
+        setLoading(true);
         setError(null);
-      } catch (error) {
-        console.error('Failed to fetch pedigree:', error);
-        setError('Failed to load pedigree data. Please try again later.');
+        const { data } = await axios.get(`${BASE_URL}/dog/pedigree/${dogId}`);
+        setDogName(data.name || "Unknown");
+        const sireNode = data.children?.[0] || null;
+        const damNode = data.children?.[1] || null;
+
+        setSireTree(sireNode ? transformTree(sireNode, 0, "Sire") : null);
+        setDamTree(damNode ? transformTree(damNode, 0, "Dam") : null);
+      } catch (err) {
+        console.error("Error loading pedigree data:", err);
+        setError("Failed to load pedigree data. Please try again later.");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
     fetchPedigree();
   }, [dogId]);
 
-  const handleExportPdf = async () => {
-    if (!componentRef.current) return;
-    try {
-      setIsLoading(true);
-      const canvas = await html2canvas(componentRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        windowWidth: document.documentElement.scrollWidth, // Capture full width
-        windowHeight: document.documentElement.scrollHeight, // Capture full height
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 190;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 10;
 
-      pdf.setFontSize(16);
-      pdf.text(`Pedigree of ${dogDetails?.name || 'Dog'}`, 10, 10);
-      position += 10;
-
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight - 20;
-
-      while (heightLeft > 0) {
-        pdf.addPage();
-        position = heightLeft - imgHeight + 10;
-        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight - 20;
-      }
-
-      pdf.save(`pedigree_${dogId}.pdf`);
-      setError(null);
-    } catch (error) {
-      console.error('Failed to export PDF:', error);
-      setError('Failed to export PDF. Please try again later.');
-    } finally {
-      setIsLoading(false);
+  const transformTree = (
+    node: ApiNode | null,
+    depth = 0,
+    role: "Sire" | "Dam" | "Unknown" = "Unknown"
+  ): CustomTreeNodeDatum => {
+    if (!node || !node.name || node.name.toLowerCase() === "unknown") {
+      return createPlaceholderNode(depth, role);
     }
+
+    let children: CustomTreeNodeDatum[] = [];
+    if (depth < MAX_GENERATIONS - 1) {
+      if (node.children && node.children.length > 0) {
+        children = node.children.map((child, idx) =>
+          transformTree(child, depth + 1, idx === 0 ? "Sire" : "Dam")
+        );
+        if (children.length < 2) {
+          children[0] = children[0] || createPlaceholderNode(depth + 1, "Sire");
+          children[1] = children[1] || createPlaceholderNode(depth + 1, "Dam");
+        }
+      } else {
+        children = [
+          createPlaceholderNode(depth + 1, "Sire"),
+          createPlaceholderNode(depth + 1, "Dam"),
+        ];
+      }
+    }
+
+    return {
+      id: node.id,
+      name: node.name,
+      accNumber: node.accNumber,
+      sex: node.sex,
+      role,
+      depth,
+      children,
+      __rd3t: {
+        id: `${node.accNumber || node.name}-${depth}-${Math.random().toString(36).slice(2)}`,
+        depth,
+        collapsed: false,
+      },
+    };
+  };
+
+
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setTranslate({
+        x: width / (isMobile ? 3 : 5),
+        y: height / (isMobile ? 5 : 10)
+      });
+    }
+  }, [sireTree, damTree, isMobile]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        setShowBackToTop(containerRef.current.scrollTop > 100);
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, []);
+
+  const zoomIn = () => setZoom((z) => Math.min(z + 0.1, MAX_ZOOM));
+  const zoomOut = () => setZoom((z) => Math.max(z - 0.1, MIN_ZOOM));
+  const resetZoom = () => setZoom(1);
+  const scrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+  useEffect(() => {
+    const fetchDogDetails = async () => {
+      if (!IdDog) return;
+
+      try {
+        const { data } = await axios.get(`${BASE_URL}/dog/${IdDog}`);
+        console.log("Fetched dog data:", data);
+        setSelectedDog(data);
+        // Open modal after data is fetched
+        setViewDog(data);
+        setIsViewModalOpen(true);
+
+      } catch (error) {
+        console.error("Error fetching dog details:", error);
+      }
+    };
+
+    fetchDogDetails();
+  }, [IdDog]);
+  const getNodeDimensions = () => {
+    if (isMobile) return { width: 120, height: 36, fontSize: 11, accFontSize: 8, genFontSize: 7, iconSize: 10 };
+    return { width: 160, height: 50, fontSize: 13, accFontSize: 10, genFontSize: 9, iconSize: 14 };
+  };
+
+  const nodeDimensions = getNodeDimensions();
+
+  const renderRectNode = ({ nodeDatum }: CustomNodeElementProps) => {
+    const customNode = nodeDatum as CustomTreeNodeDatum;
+    const isMale = customNode.sex === "Male";
+    // if (customNode.id) {
+    //   setDogId(customNode.id);
+    // }
+
+    return (
+      <g
+        className={`custom-node group ${customNode.sex?.toLowerCase() || 'unknown'} ${customNode.hasPlaceholder ? 'placeholder' : ''}`}
+        style={{ cursor: "default" }}
+      onClick={() => {
+        console.log("Node clicked:", customNode); // 👈 Console log here
+        if (customNode.id) {
+          setDogId(customNode.id); // this triggers modal via useEffect
+        }
+      }}
+        tabIndex={0}
+        aria-label={`${customNode.name || "Unknown"} ${customNode.accNumber ? `ACC number ${customNode.accNumber}` : ""
+          }`}
+      >
+        <rect
+          className="node-rect"
+          width={nodeDimensions.width}
+          height={nodeDimensions.height}
+          x={-nodeDimensions.width / 2}
+          y={-nodeDimensions.height / 2}
+          rx={8}
+          ry={8}
+          strokeWidth={1.5}
+        />
+        <text
+          x={0}
+          y={-nodeDimensions.height / 6}
+          textAnchor="middle"
+          fontSize={nodeDimensions.fontSize}
+          fontWeight="600"
+          stroke="none"
+          className="node-text truncate"
+          style={{ maxWidth: nodeDimensions.width - 20 }}
+        >
+          {customNode.name || "Unknown"}
+        </text>
+        {customNode.accNumber && (
+          <text
+            x={0}
+            y={nodeDimensions.height / 6}
+            textAnchor="middle"
+            fontSize={nodeDimensions.accFontSize}
+            stroke="none"
+            className="node-subtext"
+          >
+            ACC#: {customNode.accNumber}
+          </text>
+        )}
+        <g className="icon" transform={`translate(${nodeDimensions.width / 2 - 18}, ${-nodeDimensions.height / 2 + 10})`}>
+          {isMale ? <FaMars size={nodeDimensions.iconSize} /> : <FaVenus size={nodeDimensions.iconSize} />}
+        </g>
+
+        {/* when we hover on node this show the generation */}
+        {/* {customNode.depth !== undefined && (
+          <text
+            x={-nodeDimensions.width / 2 + 8}
+            y={-nodeDimensions.height / 2 + 12}
+            fontSize={nodeDimensions.genFontSize}
+            stroke="none"
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+            Gen {customNode.depth + 1}
+          </text>
+        )} */}
+      </g>
+    );
+  };
+
+  const renderTree = (treeData: TreeNodeDatum | null, title: string) => {
+    if (loading) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full gap-4">
+          {[0, 1, 2].map((row) => (
+            <div key={row} className="flex gap-3 justify-center">
+              {[0, 1, 2].map((col) => (
+                <Skeleton
+                  key={col}
+                  variant="rounded"
+                  width={nodeDimensions.width}
+                  height={nodeDimensions.height}
+                  sx={{ borderRadius: 2 }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (!treeData) {
+      return (
+        <div className="no-data">
+          <p className="text-sm mb-1 font-medium">No data for {title}</p>
+          <p className="text-xs">This dog's {title} information is not available</p>
+        </div>
+      );
+    }
+
+    return (
+      <Tree
+        // renderCustomNodeElement={renderRectNode(handleNodeClick)}
+        data={treeData}
+        orientation={isMobile ? "vertical" : "horizontal"}
+        translate={translate}
+        renderCustomNodeElement={renderRectNode}
+        nodeSize={{
+          x: nodeDimensions.width + (isMobile ? 40 : 20),
+          y: nodeDimensions.height + (isMobile ? 60 : 30)
+        }}
+        separation={{
+          siblings: isMobile ? 1.2 : 0.9,
+          nonSiblings: isMobile ? 1.5 : 1.2
+        }}
+        pathFunc="step"
+        zoomable={false}
+        zoom={zoom}
+        scaleExtent={{ min: MIN_ZOOM, max: MAX_ZOOM }}
+        transitionDuration={300}
+        pathClassFunc={() => "tree-link"}
+        collapsible={false}
+      />
+    );
+  };
+
+  const getTreeHeight = (treeData: TreeNodeDatum | null): string => {
+    if (!treeData || loading) return isMobile ? "40vh" : "45vh";
+    const nodeCount = countNodes(treeData);
+    const baseHeight = isMobile ? 25 : 40;
+    return `${Math.max(baseHeight, nodeCount * (isMobile ? 12 : 6))}vh`;
   };
 
   return (
-    <div className="pedigree-container">
-      <ComponentCard title="Pedigree Tree" className="pedigree-card">
-        <div className="export-button-container">
-          <button
-            onClick={handleExportPdf}
-            className="export-button"
-            disabled={isLoading || !dogDetails}
+    <Box
+      className={isDark ? 'dark' : 'light'}
+      sx={{
+        width: "100%",
+        maxWidth: "100%",
+        margin: 0,
+        padding: { xs: "0.5rem", sm: "1rem" },
+        minHeight: "50vh",
+        backgroundColor: isDark ? "#0f172a" : "#f1f5f9",
+        color: nodeColors.textPrimary,
+        transition: "background-color 0.3s, color 0.3s",
+        userSelect: "none",
+        position: "relative",
+      }}
+    >
+      <div className="mode-toggle-container">
+        <Tooltip title={`Switch to ${isDark ? "light" : "dark"} mode`} arrow>
+          <IconButton
+            className="mode-toggle"
+            onClick={() => setManualDarkMode(!isDark)}
+            aria-label={`Toggle ${isDark ? "light" : "dark"} mode`}
           >
-            <FaFilePdf className="export-icon" />
-            Export to PDF
+            {isDark ?
+              <FaSun className="text-yellow-300" size={18} /> :
+              <FaMoon className="text-indigo-700" size={18} />
+            }
+          </IconButton>
+        </Tooltip>
+      </div>
+
+      <div className="text-center mb-4">
+        {loading ? (
+          <>
+            <Skeleton variant="text" width={200} height={40} sx={{ margin: "0 auto" }} />
+            <Skeleton variant="text" width={150} height={20} sx={{ margin: "0.5rem auto" }} />
+          </>
+        ) : (
+          <h1 className="text-2xl font-bold">{dogName}</h1>
+        )}
+      </div>
+
+      <div
+        ref={containerRef}
+        style={{
+          width: "100'",
+          height: "85vh",
+          backgroundColor: isDark ? "#0f172a" : "#ffffff",
+          borderRadius: 12,
+          boxShadow: isDark ? "0 6px 12px rgba(0,0,0,0.7)" : "0 6px 16px rgba(0,0,0,0.1)",
+          overflow: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: isMobile ? "0.5rem" : "1rem",
+        }}
+        className="scrollbar-hide"
+      >
+        <div
+          style={{
+            minHeight: getTreeHeight(sireTree),
+            padding: isMobile ? "0.3rem 0.4rem" : "0rem 0.5rem",
+            borderBottom: `1px solid ${isDark ? "#1e293b" : "#cbd5e1"}`,
+            overflow: "hidden"
+          }}
+        >
+          <h2
+            className="text-lg font-bold text-center mb-3"
+            style={{
+              color: nodeColors.male,
+              textShadow: isDark ? "0 1px 2px rgba(96, 165, 250, 0.5)" : "none"
+            }}
+          >
+            Sire Pedigree
+          </h2>
+          {renderTree(sireTree, "Sire Pedigree")}
+        </div>
+        <div
+          style={{
+            minHeight: getTreeHeight(damTree),
+            padding: isMobile ? "0.3rem 0.4rem" : "0rem 0.5rem",
+          }}
+        >
+          <h2
+            className="text-lg font-bold text-center mb-3"
+            style={{
+              color: nodeColors.female,
+              textShadow: isDark ? "0 1px 2px rgba(244, 114, 182, 0.5)" : "none"
+            }}
+          >
+            Dam Pedigree
+          </h2>
+          {renderTree(damTree, "Dam Pedigree")}
+        </div>
+
+        <nav className="zoom-controls" aria-label="Zoom controls">
+          <Tooltip title="Zoom In" arrow placement="left">
+            <IconButton
+              className="zoom-button"
+              size="small"
+              onClick={zoomIn}
+              aria-label="Zoom In"
+              disabled={zoom >= MAX_ZOOM}
+            >
+              <FaPlus size={16} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Zoom Out" arrow placement="left">
+            <IconButton
+              className="zoom-button"
+              size="small"
+              onClick={zoomOut}
+              aria-label="Zoom Out"
+              disabled={zoom <= MIN_ZOOM}
+            >
+              <FaMinus size={16} />
+            </IconButton>
+          </Tooltip>
+          <div className="separator" />
+          <Tooltip title="Reset Zoom" arrow placement="left">
+            <IconButton
+              className="zoom-button"
+              size="small"
+              onClick={resetZoom}
+              aria-label="Reset Zoom"
+              disabled={zoom === 1}
+            >
+              <FaRedo size={16} />
+            </IconButton>
+          </Tooltip>
+        </nav>
+
+        {showBackToTop && (
+          <button className="back-to-top" onClick={scrollToTop} aria-label="Scroll to top">
+            <FaArrowUp size={18} />
           </button>
-        </div>
-        <div ref={componentRef}>
-          {isLoading && (
-            <div className="loading-container">
-              <FaSpinner className="loading-spinner" />
-              <span className="loading-text">Loading pedigree...</span>
-            </div>
-          )}
-          {error && (
-            <div className="error-container">
-              <p className="error-text">{error}</p>
-              <button
-                onClick={() => {
-                  setError(null);
-                  setIsLoading(true);
-                  setSireData(null);
-                  setDamData(null);
-                  setDogDetails(null);
-                }}
-                className="retry-button"
-              >
-                Retry
-              </button>
-            </div>
-          )}
-          {dogDetails && (
-            <div className="main-dog-card">
-              <h2 className="main-dog-title">{dogDetails.name}</h2>
-              {dogDetails.accNumber && (
-                <p className="main-dog-acc">ACC#: {dogDetails.accNumber}</p>
-              )}
-              <p className="main-dog-label">Main Dog</p>
-              {dogDetails.sex && (
-                <div className="main-dog-sex">
-                  {dogDetails.sex === 'Male' ? (
-                    <FaMars className="sex-icon male" aria-label="Male" />
-                  ) : (
-                    <FaVenus className="sex-icon female" aria-label="Female" />
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          <div className="lineage-container">
-            {/* Sire lineage */}
-            <div className="lineage-section">
-              <h3 className="lineage-title sire">Sire Lineage</h3>
-              {sireData ? (
-                <div
-                  ref={treeContainerRef}
-                  className="tree-container"
-                  style={{ minHeight: `${Math.max(400, getTreeDepth(sireData) * 250)}px` }}
-                >
-                  <Tree
-                    data={sireData}
-                    translate={translate}
-                    orientation="horizontal"
-                    pathFunc="elbow"
-                    zoomable
-                    scaleExtent={{ min: 0.5, max: 2 }}
-                    enableLegacyTransitions
-                    renderCustomNodeElement={renderRectNode}
-                    collapsible
-                    nodeSize={{ x: 350, y: 200 }} // Increased x to accommodate wider nodes
-                    separation={{ siblings: 1.2, nonSiblings: 1.2 }} // Adjusted separation
-                    pathClassFunc={() => 'stroke-indigo-400 dark:stroke-indigo-200 stroke-2'}
-                  />
-                </div>
-              ) : (
-                <p className="no-data-text">No sire information available</p>
-              )}
-            </div>
-            {/* Dam lineage */}
-            <div className="lineage-section">
-              <h3 className="lineage-title dam">Dam Lineage</h3>
-              {damData ? (
-                <div
-                  className="tree-container"
-                  style={{ minHeight: `${Math.max(400, getTreeDepth(damData) * 250)}px` }}
-                >
-                  <Tree
-                    data={damData}
-                    translate={translate}
-                    orientation="horizontal"
-                    pathFunc="elbow"
-                    zoomable
-                    scaleExtent={{ min: 0.5, max: 2 }}
-                    enableLegacyTransitions
-                    renderCustomNodeElement={renderRectNode}
-                    collapsible
-                    nodeSize={{ x: 350, y: 200 }} // Increased x to accommodate wider nodes
-                    separation={{ siblings: 1.2, nonSiblings: 1.2 }} // Adjusted separation
-                    pathClassFunc={() => 'stroke-pink-400 dark:stroke-pink-200 stroke-2'}
-                  />
-                </div>
-              ) : (
-                <p className="no-data-text">No dam information available</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </ComponentCard>
-    </div>
+        )}
+      </div>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={() => setError(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert className="error-alert" onClose={() => setError(null)} severity="error">
+          <span className="font-medium">{error}</span>
+        </Alert>
+      </Snackbar>
+      {/* Render the dog detail modal */}
+      <div>
+        {isViewModalOpen && viewDog && (
+          <DogDetailsModal
+            isOpen={isViewModalOpen}
+            onClose={() => setIsViewModalOpen(false)}
+            dog={viewDog}
+          />
+        )}
+      </div>
+    </Box>
+
   );
 };
 
 export default PedigreeTree;
-
-
-
-
-

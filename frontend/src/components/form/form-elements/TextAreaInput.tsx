@@ -28,7 +28,7 @@ interface DefaultInputsProps {
     weight: string;
     chestDepth: string;
     chestCircumference: string;
-    fieldAchievements: string;
+    achievements: string;
     virtuesAndFaults: string;
     breedingAdvice: string;
     miscellaneousComments: string;

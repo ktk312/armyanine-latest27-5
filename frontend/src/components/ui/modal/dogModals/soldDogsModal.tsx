@@ -148,7 +148,7 @@ export const SoldDogsListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 ">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "SOLD TO", "ACC NO", "SOLD DATE", "STATUS"].map((header, idx) => (
+                                        {["S.No", "DOG NAME",  "ACC NO", "SOLD DATE", "STATUS"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -172,7 +172,7 @@ export const SoldDogsListModal: React.FC<ModalProps> = ({
                                         >
                                             <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
-                                            <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell>
+                                            {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.soldDate || ""}</TableCell>
                                             <TableCell className="px-4 py-3 text-start">

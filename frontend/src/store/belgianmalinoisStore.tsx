@@ -17,7 +17,7 @@ export const useBelgianMalinoisStore = create<BelgianMalinoisState>((set) => ({
         set({
           sires: response.sires,
           dams: response.dams,
-          totalBelgianMalinois: response.totalBelgianMalinoiss,
+          totalBelgianMalinois: response.total,
           loading: false,
         });
       } catch (err) {
