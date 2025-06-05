@@ -248,6 +248,10 @@ const updateDog = async (req, res) => {
       chestDepth,
       chestCircumference,
       weight,
+      color,
+      HD,
+      hair,
+      ED,
     } = req.body;
 
     const file = req.file ? req.file.filename : null; // Get file path of the uploaded image
@@ -284,6 +288,10 @@ const updateDog = async (req, res) => {
         // breedId: breedIdNumber,
         // sireId: sireIdNumber,
         // damId: damIdNumber,
+        hair,
+        color,
+        HD,
+        ED,
         dob: new Date(dob),
         sex,
         achievements,
