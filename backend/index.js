@@ -44,7 +44,11 @@ app.use("/api/cities", require("./src/routes/cityRoutes"));
 app.use('/api/line', require("./src/routes/linebreedingRoutes"));
 app.use('/api/dashboard', require("./src/routes/dashboardRoutes"));
 app.use('/api/microchip', require("./src/routes/microchipRoutes"));
-
+app.use('/api/vaccinations', require("./src/routes/vaccinationRoutes"));
+app.use("/api/training", require("./src/routes/trainingRoutes"));
+app.use("/api/prophylaxis", require("./src/routes/prophylaxisRoutes"));
+app.use("/api/deworming", require("./src/routes/dewormingRoutes"));
+app.use("/api/sickness", require("./src/routes/sicknessRoutes"));
 
 
 ////////////////////////////
