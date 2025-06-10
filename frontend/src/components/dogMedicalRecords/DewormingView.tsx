@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import { PlusIcon } from "../../assets/icons";
 import { useDeworming } from "../dogsCategory/hooks/useDeworming";
+import { useNavigate } from "react-router";
 
 const headers = [
   { label: "Date", key: "date" },
@@ -44,8 +45,9 @@ export default function DewormingView() {
   );
   const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
 
+  const navigate = useNavigate();
   const goToNewPage = () => {
-    // Logic to add new deworming record
+    navigate("/create-deworming-record");
   };
 
   return (
@@ -76,13 +78,18 @@ export default function DewormingView() {
           <thead className="bg-gray-100 dark:bg-gray-800">
             <tr>
               {headers.map((header) => (
-                <th key={header.key} className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">
+                <th
+                  key={header.key}
+                  className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300"
+                >
                   <div className="flex flex-col gap-1">
                     <span>{header.label}</span>
                     <input
                       type="text"
                       placeholder={`Search ${header.label}`}
-                      onChange={(e) => handleFilterChange(header.key, e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange(header.key, e.target.value)
+                      }
                       className="w-full border border-gray-300 dark:border-white/[0.2] rounded-md px-2 py-1 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:bg-gray-800 dark:placeholder-gray-500"
                     />
                   </div>
@@ -112,7 +119,10 @@ export default function DewormingView() {
             ))}
             {paginatedData.length === 0 && (
               <tr>
-                <td colSpan={headers.length} className="px-4 py-4 text-center text-gray-500 dark:text-gray-400">
+                <td
+                  colSpan={headers.length}
+                  className="px-4 py-4 text-center text-gray-500 dark:text-gray-400"
+                >
                   No records found.
                 </td>
               </tr>
@@ -138,7 +148,9 @@ export default function DewormingView() {
           <button
             className="rounded border border-gray-400 bg-white px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
             disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
           >
             Next
           </button>

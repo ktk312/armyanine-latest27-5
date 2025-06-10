@@ -52,10 +52,6 @@ const VaccinationView = () => {
   }, [getAllVaccinations]);
 
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
   const filteredVaccinations = vaccinations.filter((item) =>
     TABLE_HEADERS.every(({ key }) => {
       const filterVal = filters[key]?.toLowerCase().trim() || "";
@@ -135,9 +131,8 @@ const VaccinationView = () => {
               (filteredVaccinations.map((item, index) => (
                  <tr
                 key={index}
-                className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-default focus-within:ring-2 focus-within:ring-blue-500 rounded-md"
+                className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 tabIndex={0}
-                aria-rowindex={index + 2}
               >
                 <TableCell>{item?.age.toLocaleString()}</TableCell>
                 <TableCell>{item.vaccine}</TableCell>
