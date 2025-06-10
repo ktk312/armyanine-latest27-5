@@ -1,66 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import { PlusIcon } from "../../assets/icons";
-import { useNavigate } from "react-router-dom";
+import { useVaccination } from "../dogsCategory/hooks/useVaccination";
 
-const dummyData = [
-  {
-    age: "3 months",
-    vaccine: "Rabies",
-    dateDue: "2025-06-10",
-    dateGiven: "2025-06-01",
-    batchNo: "RB-203",
-    vetSign: "Dr. Khan",
-  },
-  {
-    age: "6 months",
-    vaccine: "Parvovirus",
-    dateDue: "2025-06-15",
-    dateGiven: "2025-06-05",
-    batchNo: "PV-554",
-    vetSign: "Dr. Ayesha",
-  },
-  {
-    age: "3 months",
-    vaccine: "Parvovirus",
-    dateDue: "2025-06-15",
-    dateGiven: "2025-06-05",
-    batchNo: "PV-554",
-    vetSign: "Dr. Ayesha",
-  },
+// const dummyData = [
+//   {
+//     age: "3 months",
+//     vaccine: "Rabies",
+//     dateDue: "2025-06-10",
+//     dateGiven: "2025-06-01",
+//     batchNo: "RB-203",
+//     vetSign: "Dr. Khan",
+//   },
+//   {
+//     age: "6 months",
+//     vaccine: "Parvovirus",
+//     dateDue: "2025-06-15",
+//     dateGiven: "2025-06-05",
+//     batchNo: "PV-554",
+//     vetSign: "Dr. Ayesha",
+//   },
+// ];
 
-  {
-    age: "8 months",
-    vaccine: "Parvovirus",
-    dateDue: "2025-06-15",
-    dateGiven: "2025-06-05",
-    batchNo: "PV-554",
-    vetSign: "Dr. Ayesha",
-  },
-  {
-    age: "2 months",
-    vaccine: "Parvovirus",
-    dateDue: "2025-06-15",
-    dateGiven: "2025-06-05",
-    batchNo: "PV-554",
-    vetSign: "Dr. Ayesha",
-  },
+const goToNewPage = () => {
+  // Placeholder for navigation to new vaccination form
+};
+
+const TABLE_HEADERS = [
+  { label: "Age", key: "age" },
+  { label: "Vaccine", key: "vaccine" },
+  { label: "Date Due", key: "dateDue" },
+  { label: "Date Given", key: "dateGiven" },
+  { label: "Batch No", key: "batchNo" },
+  { label: "Vet Sign", key: "vetSign" },
 ];
-const HEADERS = [
-  { key: "age", label: "Age" },
-  { key: "vaccine", label: "Vaccine" },
-  { key: "dateDue", label: "Date Due" },
-  { key: "dateGiven", label: "Date Given" },
-  { key: "batchNo", label: "Batch No" },
-  { key: "vetSign", label: "Vet Sign" },
-];
-
 const VaccinationView = () => {
-  const navigate = useNavigate(); 
-  const goToNewPage = () => {
-    navigate("/create-vaccination-record");
-  };
-  const [filters, setFilters] = useState({
+   const { vaccinations = [], isLoading, error, getAllVaccinations } = useVaccination();
+
+
+  const [filters, setFilters] = useState<Record<string, string>>({
     age: "",
     vaccine: "",
     dateDue: "",
@@ -69,17 +47,25 @@ const VaccinationView = () => {
     vetSign: "",
   });
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
+  useEffect(() => {
+    getAllVaccinations();
+  }, [getAllVaccinations]);
 
-  const filteredData = dummyData.filter((item) =>
-    Object.entries(filters).every(([key, value]) =>
-      item[key as keyof typeof item]
-        ?.toLowerCase()
-        .includes(value.toLowerCase())
-    )
+
+  const filteredVaccinations = vaccinations.filter((item) =>
+    TABLE_HEADERS.every(({ key }) => {
+      const filterVal = filters[key]?.toLowerCase().trim() || "";
+      if (!filterVal) return true;
+
+      // Handle missing or undefined keys gracefully
+      const itemVal = (item[key as keyof typeof item] ?? "").toString().toLowerCase();
+      return itemVal.includes(filterVal);
+    })
   );
+
+   
+
+ 
 
   return (
     <section
@@ -116,52 +102,51 @@ const VaccinationView = () => {
         >
           <thead>
             <tr>
-              {HEADERS.map(({ key, label }) => (
+              {TABLE_HEADERS.map(({ label, key }) => (
                 <th
                   key={key}
                   scope="col"
                   className="whitespace-nowrap px-4 py-2 text-left text-sm font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300 select-none"
                 >
-                  <div className="flex flex-col gap-1">
-                    <span>{label}</span>
-                    <input
+                  {label}
+                  {/* <input
                       type="text"
                       placeholder={`Search ${label}`}
-                      value={filters[key as keyof typeof filters]}
+                      value={filters[key]}
                       onChange={(e) => handleFilterChange(key, e.target.value)}
-                      className="w-full rounded-md border border-gray-300 dark:border-white/[0.2] px-2 py-1 text-sm text-gray-800 dark:text-gray-100 dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500"
-                    />
-                  </div>
+                      className="mt-1 w-full border rounded-md p-1 text-sm"
+                    /> */}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item, index) => (
-              <tr
+            {filteredVaccinations.length === 0 ? (
+               <tr>
+                  <td colSpan={TABLE_HEADERS.length} className="text-center p-4 text-gray-500">
+                    No records found.
+                  </td>
+                </tr>
+              ):
+              (filteredVaccinations.map((item, index) => (
+                 <tr
                 key={index}
                 className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 tabIndex={0}
               >
-                {HEADERS.map(({ key }) => (
-                  <TableCell key={key}>
-                    {item[key as keyof typeof item]}
-                  </TableCell>
-                ))}
+                <TableCell>{item?.age.toLocaleString()}</TableCell>
+                <TableCell>{item.vaccine}</TableCell>
+                <TableCell>{item?.dueDate}</TableCell>
+                <TableCell>{item?.batchNo.toLocaleString()}</TableCell>
+                <TableCell>{item?.vaccine}</TableCell>
+                <TableCell>{item?.vetSign}</TableCell>
               </tr>
-            ))}
-            {filteredData.length === 0 && (
-              <tr>
-                <td
-                  colSpan={HEADERS.length}
-                  className="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400"
-                >
-                  No matching records found.
-                </td>
-              </tr>
-            )}
+              ))
+             
+              )}
           </tbody>
         </table>
+        
       </div>
     </section>
   );
@@ -174,3 +159,6 @@ const TableCell = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default VaccinationView;
+
+
+
