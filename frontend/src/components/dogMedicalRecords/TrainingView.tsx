@@ -1,5 +1,39 @@
 import { useState } from "react";
 import Button from "../ui/button/Button";
+import { PlusIcon } from "../../assets/icons"; // Optional: for New button
+import { useNavigate } from "react-router-dom";
+
+// Dummy data – replace with API response or context state
+type Ratings = Record<PerformanceMetric, string>;
+
+const dummyTrainingData = [
+  {
+    trainerName: "John Doe",
+    trainingStartedOn: "2025-06-01",
+    trainingCompletedOn: "2025-06-10",
+    trainingCategory: "Obedience",
+    ratings: {
+      Intelligence: "Very Good",
+      Willingness: "Good",
+      Energy: "Fair",
+      Sensitivity: "Good",
+      Aggression: "Poor",
+    } as Ratings,
+  },
+  {
+    trainerName: "Emily Smith",
+    trainingStartedOn: "2025-05-20",
+    trainingCompletedOn: "2025-06-01",
+    trainingCategory: "Guard",
+    ratings: {
+      Intelligence: "Good",
+      Willingness: "Good",
+      Energy: "Very Good",
+      Sensitivity: "Fair",
+      Aggression: "Very Good",
+    } as Ratings,
+  },
+];
 
 const performanceMetrics = [
   "Intelligence",
@@ -7,144 +41,78 @@ const performanceMetrics = [
   "Energy",
   "Sensitivity",
   "Aggression",
-];
+] as const;
 
-const ratingOptions = ["Very Good", "Good", "Fair", "Poor"];
+type PerformanceMetric = typeof performanceMetrics[number];
 
-const TrainingView = () => {
-  const [trainerName, setTrainerName] = useState("");
-  const [trainingStartedOn, setTrainingStartedOn] = useState("");
-  const [trainingCompletedOn, setTrainingCompletedOn] = useState("");
-  const [trainingCategory, setTrainingCategory] = useState("");
+export default function TrainingListView() {
+  const [records] = useState(dummyTrainingData);
 
-  // State for selected ratings, keyed by metric name
-  const [ratings, setRatings] = useState<Record<string, string>>({});
-
-  /**
-   * Triggered when "New" button is clicked.
-   * Currently only shows alert.
-   */
-  const goToNewPage = () => {
-    alert("Add new training record functionality is not implemented yet.");
-  };
-
-  /**
-   * Updates rating for a given metric.
-   */
-  const handleRatingChange = (metric: string, rating: string) => {
-    setRatings((prev) => ({ ...prev, [metric]: rating }));
-  };
-
-  /**
-   * Triggered on "Save" button click.
-   * Logs the data; replace this with your backend API call.
-   */
-  const handleSave = () => {
-    const trainingData = {
-      trainerName,
-      trainingStartedOn,
-      trainingCompletedOn,
-      trainingCategory,
-      ratings,
-    };
-
-    console.log("Saving training data:", trainingData);
-    alert("Training data saved! (Check console for details)");
-
-    // TODO: Replace with actual backend API call
+  const navigate = useNavigate();
+  const handleNew = () => {
+    navigate("/create-training-record");
   };
 
   return (
-    <section
-      className="rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm transition-colors duration-300 overflow-hidden p-6"
-      aria-label="Training Records"
-      role="region"
-      tabIndex={-1}
-    >
-      {/* Form Inputs for Trainer Information */}
-      <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <label className="flex flex-col text-gray-900 dark:text-gray-100">
-          <span className="mb-1 font-semibold">Trainer Name</span>
-          <input
-            type="text"
-            value={trainerName}
-            onChange={(e) => setTrainerName(e.target.value)}
-            placeholder="Enter trainer name"
-            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </label>
+    <div className="rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md overflow-hidden transition-colors duration-300">
+      {/* Header */}
+      <div className="flex justify-between items-center px-6 py-5 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
+        <h2 className="text-2xl font-semibold tracking-wide">Training Records</h2>
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={handleNew}
+          endIcon={<PlusIcon className="h-5 w-5" />}
+          className="transition-transform hover:scale-105"
+        >
+          New
+        </Button>
+      </div>
 
-        <label className="flex flex-col text-gray-900 dark:text-gray-100">
-          <span className="mb-1 font-semibold">Training Started On</span>
-          <input
-            type="date"
-            value={trainingStartedOn}
-            onChange={(e) => setTrainingStartedOn(e.target.value)}
-            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </label>
-
-        <label className="flex flex-col text-gray-900 dark:text-gray-100">
-          <span className="mb-1 font-semibold">Training Completed</span>
-          <input
-            type="date"
-            value={trainingCompletedOn}
-            onChange={(e) => setTrainingCompletedOn(e.target.value)}
-            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </label>
-
-        <label className="flex flex-col text-gray-900 dark:text-gray-100">
-          <span className="mb-1 font-semibold">Training Category</span>
-          <input
-            type="text"
-            value={trainingCategory}
-            onChange={(e) => setTrainingCategory(e.target.value)}
-            placeholder="Enter category"
-            className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </label>
-      </form>
-
-      {/* Performance Ratings Table */}
-      <div className="overflow-x-auto mb-8">
-        <table className="min-w-full border-separate border-spacing-y-3 text-sm">
-          <thead>
-            <tr className="text-left text-gray-700 dark:text-gray-300 border-b border-gray-300 dark:border-gray-700">
-              <th className="px-4 py-3 font-semibold uppercase tracking-wide select-none">
-                Performance
-              </th>
-              {ratingOptions.map((opt) => (
-                <th
-                  key={opt}
-                  className="px-4 py-3 font-semibold uppercase tracking-wide select-none text-center"
-                >
-                  {opt}
+      {/* Table */}
+      <div className="overflow-x-auto px-6 py-6">
+        <table className="w-full table-auto border-collapse text-sm">
+          <thead className="bg-gray-100 dark:bg-gray-800 text-left text-gray-700 dark:text-gray-300">
+            <tr>
+              <th className="px-4 py-3">Trainer</th>
+              <th className="px-4 py-3">Category</th>
+              <th className="px-4 py-3">Start</th>
+              <th className="px-4 py-3">End</th>
+              {performanceMetrics.map((metric) => (
+                <th key={metric} className="px-4 py-3">
+                  {metric}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {performanceMetrics.map((metric) => (
+            {records.map((record, index) => (
               <tr
-                key={metric}
-                className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                key={index}
+                className={`transition-colors duration-200 ${
+                  index % 2 === 0
+                    ? "bg-white dark:bg-gray-900"
+                    : "bg-gray-50 dark:bg-gray-800"
+                } hover:bg-blue-50 dark:hover:bg-blue-900`}
               >
-                <td className="px-4 py-3 text-gray-900 dark:text-gray-100 font-medium">
-                  {metric}
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
+                  {record.trainerName}
                 </td>
-                {ratingOptions.map((rating) => (
-                  <td key={rating} className="px-4 py-3 text-center">
-                    {/* 
-                      Checkbox acts like a radio button here - only one rating per metric can be selected.
-                    */}
-                    <input
-                      type="checkbox"
-                      checked={ratings[metric] === rating}
-                      onChange={() => handleRatingChange(metric, rating)}
-                      className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 dark:focus:ring-blue-400"
-                      aria-label={`${metric} rating: ${rating}`}
-                    />
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
+                  {record.trainingCategory}
+                </td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
+                  {record.trainingStartedOn}
+                </td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
+                  {record.trainingCompletedOn}
+                </td>
+                {performanceMetrics.map((metric) => (
+                  <td
+                    key={metric}
+                    className="px-4 py-3 text-gray-900 dark:text-gray-100"
+                  >
+                    {record.ratings[metric]}
                   </td>
                 ))}
               </tr>
@@ -152,21 +120,6 @@ const TrainingView = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button
-          size="md"
-          variant="primary"
-          onClick={handleSave}
-          aria-label="Save training data"
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-        >
-          Save
-        </Button>
-      </div>
-    </section>
+    </div>
   );
-};
-
-export default TrainingView;
+}

@@ -48,6 +48,10 @@ import VacinationRecord from "./pages/MedicalHistory/VacinationRecord";
 import DewormingRecord from "./components/dogMedicalRecords/DewormingView";
 import TrainingRecord from "./pages/MedicalHistory/TrainingRecord";
 import Prophylaxis from "./components/dogMedicalRecords/ProphylaxisView";
+import VaccinationRecordForm from "./pages/MedicalHistory/Form/VaccinationRecordForm";
+import DewormingRecordForm from "./pages/MedicalHistory/Form/DewormingRecordForm";
+import ProphylaxisList from "./pages/MedicalHistory/ProphylaxisList";
+import TrainingRecordForm from "./pages/MedicalHistory/Form/TrainingRecordForm";
 
 export default function App() {
   return (
@@ -154,6 +158,25 @@ export default function App() {
               <Route path="/deworming-view" element={<DewormingRecord />} />
               <Route path="/training-view" element={<TrainingRecord />} />
               <Route path="/prophylaxis-view" element={<Prophylaxis />} />
+
+              {/* Medical Form */}
+              <Route
+                path="/create-vaccination-record"
+                element={<VaccinationRecordForm />}
+              />
+              <Route
+                path="/create-deworming-record"
+                element={<DewormingRecordForm />}
+              />
+              <Route path="/create-prophylaxis" element={<ProphylaxisList />} />
+              <Route
+                path="/create-training-record"
+                element={<TrainingRecordForm />}
+              />
+
+              {/* Dog Management */}
+
+              {/* Dog Breed */}
 
               {/* Ui Elements */}
               <Route path="/alerts" element={<Alerts />} />

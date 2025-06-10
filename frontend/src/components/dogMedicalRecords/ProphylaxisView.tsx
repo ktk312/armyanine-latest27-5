@@ -1,5 +1,6 @@
 import Button from "../ui/button/Button";
 import { PlusIcon } from "../../assets/icons";
+import { useNavigate } from "react-router-dom";
 
 const dummyData = [
   {
@@ -16,11 +17,12 @@ const dummyData = [
 
 const headers = ["Date", "Prophylactic Drug", "Remarks"];
 
-const goToNewPage = () => {
-  // Placeholder for adding prophylaxis record
-};
-
 export default function ProphylaxisView() {
+  const navigate = useNavigate();
+  const goToNewPage = () => {
+    navigate("/create-prophylaxis");
+  };
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900 shadow-md transition-colors duration-300">
       {/* Header with Title and New Button */}
