@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import { PlusIcon } from "../../assets/icons";
 import { useVaccination } from "../dogsCategory/hooks/useVaccination";
+import { useNavigate } from "react-router-dom";
 
 // const dummyData = [
 //   {
@@ -22,9 +23,7 @@ import { useVaccination } from "../dogsCategory/hooks/useVaccination";
 //   },
 // ];
 
-const goToNewPage = () => {
-  // Placeholder for navigation to new vaccination form
-};
+
 
 const TABLE_HEADERS = [
   { label: "Age", key: "age" },
@@ -35,6 +34,10 @@ const TABLE_HEADERS = [
   { label: "Vet Sign", key: "vetSign" },
 ];
 const VaccinationView = () => {
+  const navigate = useNavigate();
+  const goToNewPage = () => {
+    navigate("/create-vaccination-record")
+  };
    const { vaccinations = [], isLoading, error, getAllVaccinations } = useVaccination();
 
 
