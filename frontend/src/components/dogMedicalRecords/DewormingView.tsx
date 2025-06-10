@@ -1,53 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import { PlusIcon } from "../../assets/icons";
-
-const dummyData = [
-  {
-    date: "2025-06-01",
-    drug: "Albendazole",
-    name: "Dr. Khan",
-  },
-  {
-    date: "2025-06-05",
-    drug: "Ivermectin",
-    name: "Dr. Ayesha",
-  },
-  {
-    date: "2025-06-10",
-    drug: "Fenbendazole",
-    name: "Dr. Ahmed",
-  },
-];
+import { useDeworming } from "../dogsCategory/hooks/useDeworming";
 
 const headers = [
   { label: "Date", key: "date" },
   { label: "Drug", key: "drug" },
-  { label: "Name", key: "name" },
+  { label: "Sign", key: "sign" },
 ];
 
 const ITEMS_PER_PAGE = 5;
 
 export default function DewormingView() {
-  const [filters, setFilters] = useState({ date: "", drug: "", name: "" });
+  const [filters, setFilters] = useState({ date: "", drug: "", sign: "" });
   const [currentPage, setCurrentPage] = useState(1);
+  const {
+    dewormingRecords,
+    isLoading,
+    error,
+    getAllDeworming,
+  } = useDeworming();
 
-  const handleFilterChange = (key: string, value: string) => {
+    useEffect(() => {
+    getAllDeworming();
+  }, [getAllDeworming]);
+
+
+   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   };
 
-  const filteredData = dummyData.filter((item) =>
-    Object.entries(filters).every(([key, value]) =>
-      item[key as keyof typeof item]?.toLowerCase().includes(value.toLowerCase())
-    )
-  );
+  const filteredData = dewormingRecords.filter((item) =>
+  Object.entries(filters).every(([key, value]) => {
+    const itemValue = item[key as keyof typeof item];
+    return String(itemValue).toLowerCase().includes(value.toLowerCase());
+  })
+);
 
   const paginatedData = filteredData.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
   const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
 
   const goToNewPage = () => {
@@ -72,7 +66,13 @@ export default function DewormingView() {
 
       {/* Table */}
       <div className="overflow-x-auto px-6 pb-6">
-        <table className="w-full border-collapse text-sm">
+         {isLoading ? (
+          <div className="py-6 text-center text-gray-500 dark:text-gray-400">Loading...</div>
+        ) : error ? (
+          <div className="py-6 text-center text-red-500">Error: {error}</div>
+        ) :
+        (
+            <table className="w-full border-collapse text-sm">
           <thead className="bg-gray-100 dark:bg-gray-800">
             <tr>
               {headers.map((header) => (
@@ -119,8 +119,11 @@ export default function DewormingView() {
             )}
           </tbody>
         </table>
+        )}
+      
 
         {/* Pagination */}
+           {!isLoading && filteredData.length > 0 && (
         <div className="flex justify-between items-center mt-6 text-gray-900 dark:text-gray-200">
           <button
             className="rounded border border-gray-400 bg-white px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
@@ -139,7 +142,9 @@ export default function DewormingView() {
           >
             Next
           </button>
+          
         </div>
+          )}
       </div>
     </div>
   );
