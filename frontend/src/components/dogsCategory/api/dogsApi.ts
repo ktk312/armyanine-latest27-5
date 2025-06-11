@@ -536,7 +536,7 @@ export const updateVaccination = async (
   id: string,
   data: Partial<VaccinationInput>
 ): Promise<VaccinationRecord> => {
-  console.log("----id and data inside API", id, data)
+  console.log("----id and data inside API test", id, data)
 try {
 const response = await axios.patch(endpoint.UPDATE_VACCINATION(id), data);
   return response.data;
