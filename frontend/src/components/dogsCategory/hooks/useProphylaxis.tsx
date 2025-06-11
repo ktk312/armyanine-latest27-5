@@ -16,7 +16,7 @@ export const useProphylaxis = () => {
   } = useProphylaxisStore();
 
   const getAllProphylaxis = useCallback(async () => {
-    await fetchAll();
+    await fetchAll(); //
   }, [fetchAll]);
 
 //   const getProphylaxisById = useCallback(async (id: number) => {
@@ -39,6 +39,7 @@ export const useProphylaxis = () => {
 
   const deleteProphylaxis = useCallback(async (id: number) => {
     await remove(id);
+
   }, [remove]);
 
   const selectProphylaxis = useCallback(
