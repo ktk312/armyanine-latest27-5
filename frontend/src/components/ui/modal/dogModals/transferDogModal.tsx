@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../table";
-import { GermanShepherd } from "../../../dogsCategory/types/GermanShepherd";
 import { useTransferredDog } from "../../../dogsCategory/hooks/useTransferredDog";
 import Badge from "../../badge/Badge";
 import { TransferredDog } from "../../../dogsCategory/types/transferredDog";
@@ -148,7 +147,7 @@ export const TransferDogsListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "SOLD TO", "ACC NO", "TRANSFER DATE", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME",  "ACC NO", "TRANSFER DATE", "Status"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -172,7 +171,7 @@ export const TransferDogsListModal: React.FC<ModalProps> = ({
                                         >
                                             <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
-                                            <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell>
+                                            {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.transferDate || ""}</TableCell>
 

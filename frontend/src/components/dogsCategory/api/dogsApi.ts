@@ -22,6 +22,11 @@ import { DeleteMicrochipResponse, Microchip } from "../types/microchip";
 import { ChangePasswordInput } from "../types/ChangePassword";
 import { CountryType } from "../types/country";
 import { City } from "../types/city";
+import { VaccinationInput, VaccinationRecord } from "../types/vaccination";
+import { ProphylaxisInput, ProphylaxisRecord } from "../types/prophylaxis";
+import { DewormingInput, DewormingRecord } from "../types/deworming";
+import { TrainingInput, TrainingRecord } from "../types/training";
+import { SicknessInput, SicknessRecord } from "../types/sickness";
 
 //User Login
 export const userLogin = async (
@@ -35,8 +40,11 @@ export const userLogin = async (
 
   return response.data;
 };
-export const changePassword = async (data: ChangePasswordInput, token: string) => {
-  console.log("token are", token)
+export const changePassword = async (
+  data: ChangePasswordInput,
+  token: string
+) => {
+  console.log("token are", token);
   const response = await axios.post(endpoint.CHANGE_PASSWORD, data, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,7 +65,10 @@ export const fetchDogs = async (): Promise<Dog[]> => {
 };
 
 // Filter dog on the basis of breed and city
-export const filterDogs = async (breedId: string, cityId: string): Promise<Dog[]> => {
+export const filterDogs = async (
+  breedId: string,
+  cityId: string
+): Promise<Dog[]> => {
   const response = await axios.get(endpoint.DOGS_FILTER(breedId, cityId));
   return response.data;
 };
@@ -114,7 +125,6 @@ export const createDog = async (dogData: FormData): Promise<Dog> => {
   return response.data;
 };
 
-
 // Update Dog
 export const updateDog = async (
   dogData: Partial<Dog>,
@@ -136,7 +146,6 @@ export const fetchBreedById = async (id: string): Promise<Breed> => {
   return response.data;
 };
 
-
 // Create a new Microchip
 
 export const generateMicrochip = async (
@@ -150,7 +159,10 @@ export const updateMicrochip = async (
   id: string,
   updatedData: Partial<Microchip>
 ): Promise<Microchip> => {
-  const response = await axios.patch(endpoint.UPDATE_MICROCHIP(id), updatedData);
+  const response = await axios.patch(
+    endpoint.UPDATE_MICROCHIP(id),
+    updatedData
+  );
   return response.data;
 };
 
@@ -173,11 +185,12 @@ export const getAllUnassignMicrochips = async (): Promise<{
 };
 
 // Delete Microchip
-export const deleteMicrochip = async (id: string): Promise<DeleteMicrochipResponse> => {
+export const deleteMicrochip = async (
+  id: string
+): Promise<DeleteMicrochipResponse> => {
   const res = await axios.delete(endpoint.DELETE_MICROCHIP(id));
   return res.data;
 };
-
 
 // Create a new breed
 export const createBreed = async (
@@ -232,11 +245,7 @@ export const updateDogCategory = async (
 export const createCountry = async (
   countryData: Partial<CountryType>
 ): Promise<CountryType> => {
-
-  const response = await axios.post(
-    endpoint.CREATE_COUNTRY,
-    countryData
-  );
+  const response = await axios.post(endpoint.CREATE_COUNTRY, countryData);
   return response.data;
 };
 
@@ -249,22 +258,14 @@ export const updateCountry = async (
   return response.data;
 };
 
-
-
 export const fetchAllCountry = async (): Promise<CountryType[]> => {
   const response = await axios.get(endpoint.GET_COUNTRY);
   return response.data;
 };
 
 //Fetch All Country
-export const createCity = async (
-  cityData: Partial<City>
-): Promise<City> => {
-
-  const response = await axios.post(
-    endpoint.CREATE_CITY,
-    cityData
-  );
+export const createCity = async (cityData: Partial<City>): Promise<City> => {
+  const response = await axios.post(endpoint.CREATE_CITY, cityData);
   return response.data;
 };
 
@@ -281,7 +282,9 @@ export const fetchAllCities = async (): Promise<City[]> => {
   const response = await axios.get(endpoint.GET_CITIES);
   return response.data;
 };
-export const fetchAllCitiesByCountryId = async (countryId: string): Promise<City[]> => {
+export const fetchAllCitiesByCountryId = async (
+  countryId: string
+): Promise<City[]> => {
   const response = await axios.get(endpoint.GET_CITIES_COUNTRY_ID(countryId));
   return response.data;
 };
@@ -316,7 +319,7 @@ export const updateStudCertificate = async (
 export const deletedStude = async (id: string): Promise<void> => {
   const response = await axios.delete(endpoint.DELETE_CERTIF(id));
   return response.data;
-}
+};
 
 //  GET ONE BY ID
 export const fetchStudCertificateById = async (id: string) => {
@@ -328,7 +331,6 @@ export const fetchStudCertificateById = async (id: string) => {
 export const createLitterInspection = async (
   litterData: Partial<LitterInspection>
 ): Promise<LitterInspection> => {
-
   const response = await axios.post(
     endpoint.CREATE_LITTER_INSPECTION,
     litterData
@@ -393,8 +395,6 @@ export const checkVirtualBreed = async (
   return response.data;
 };
 
-
-
 //Fetch all lineage dogs SIRE's
 export const fetchAllSireByDamID = async (
   id: string
@@ -430,7 +430,6 @@ export const fetchMonthlyWhelpingStats = async (year: string) => {
     throw new Error("Failed to fetch dashboard stats");
   }
 };
-
 
 //Dog module all breed dogs
 export const fetchGermanShepherdList = async () => {
@@ -493,8 +492,6 @@ export const fetchSoldList = async () => {
   }
 };
 
-
-
 export const fetchTransferredDogList = async () => {
   try {
     const response = await axios.get(endpoint.TRANSFERRED_DOGS);
@@ -513,4 +510,198 @@ export const fetchStandingDogList = async () => {
     console.error("Error fetching Loan Dogs:", error);
     throw new Error("Failed to fetch Loan Dogs");
   }
+};
+
+// Medical History API
+
+// VACCINATION
+
+export const addVaccination = async (
+  data: Partial<VaccinationInput>
+): Promise<VaccinationRecord> => {
+  console.log("----data-0-----", data)
+  const response = await axios.post(endpoint.ADD_VACCINATION, data);
+  console.log("----data-0-response----", response)
+
+  return response.data;
+};
+
+export const getAllVaccination = async (): Promise<VaccinationRecord[]> => {
+  const response = await axios.get(endpoint.GETALL_VACCINATION);
+  return response.data;
+};
+
+// Update Vaccination Record
+export const updateVaccination = async (
+  id: string,
+  data: Partial<VaccinationInput>
+): Promise<VaccinationRecord> => {
+  console.log("----id and data inside API", id, data)
+try {
+const response = await axios.patch(endpoint.UPDATE_VACCINATION(id), data);
+  return response.data;
+} catch (error) {
+  console.error("Failed to update vaccination", error);
+  throw error;
+}
+};
+
+// Delete Vaccination Record
+export const deleteVaccination = async (id: string): Promise<void> => {
+  const response = await axios.delete(endpoint.DELETE_VACCINATION(id));
+  return response.data;
+};
+
+//Prophylaxis Module
+// Add
+export const addProphylaxis = async (
+  data: Partial<ProphylaxisInput>
+): Promise<ProphylaxisRecord> => {
+  const res = await axios.post(endpoint.ADD_PROPHYLAXIS, data);
+  return res.data;
+};
+
+// Get All
+export const getAllProphylaxis = async (): Promise<ProphylaxisRecord[]> => {
+  const res = await axios.get(endpoint.GET_ALL_PROPHYLAXIS);
+  return res.data;
+};
+
+
+// Update ----------
+
+//shamim-changes
+export const updateProphylaxis = async (
+  id: number,
+  data: Partial<ProphylaxisInput>
+): Promise<ProphylaxisRecord> => {
+  // build the URL by calling the function
+  const url = endpoint.UPDATE_PROPHYLAXIS(id.toString());
+  console.log("PATCH →", url); //changed from PUT to PATCH
+  const res = await axios.patch(url, data);
+  return res.data;
+};
+
+// Previous code
+
+// export const updateProphylaxis = async (
+//   id: number,
+//   data: Partial<ProphylaxisInput>
+// ): Promise<ProphylaxisRecord> => {
+//   const res = await axios.put(`${endpoint.UPDATE_PROPHYLAXIS}/${id}`, data);
+//   return res.data;
+// };
+
+// Delete ------------
+
+//shamim-changes
+export const deleteProphylaxis = async (id: number) => {
+  const url = endpoint.DELETE_PROPHYLAXIS(id.toString());
+  return axios.delete(url).then(res => res.data);
+};
+
+export const getOneProphylaxis = async (id: number) => {
+  const url = endpoint.GETONE_PROPHYLAXIS(id.toString());
+  const { data } = await axios.get(url);
+  return data;
+};
+
+//previous code
+
+// export const deleteProphylaxis = async (id: number): Promise<void> => {
+//   await axios.delete(`${endpoint.DELETE_PROPHYLAXIS}/${id}`);
+// };
+
+// Dewarming Module API
+
+export const getAllDeworming = async (): Promise<DewormingRecord[]> => {
+  const res = await axios.get(endpoint.GET_ALL_DEWORMING);
+  return res.data;
+};
+
+export const getDewormingById = async (
+  id: number
+): Promise<DewormingRecord> => {
+  const res = await axios.get(`${endpoint.GET_DEWORMING_BY_ID}/${id}`);
+  return res.data;
+};
+
+export const addDeworming = async (
+  data: Partial<DewormingInput>
+): Promise<DewormingRecord> => {
+  const res = await axios.post(endpoint.ADD_DEWORMING, data);
+  return res.data;
+};
+
+export const updateDeworming = async (
+  id: number,
+  data: Partial<DewormingInput>
+): Promise<DewormingRecord> => {
+  const res = await axios.put(`${endpoint.UPDATE_DEWORMING}/${id}`, data);
+  return res.data;
+};
+
+export const deleteDeworming = async (id: number): Promise<void> => {
+  await axios.delete(`${endpoint.DELETE_DEWORMING}/${id}`);
+};
+
+// Training Module
+
+export const getAllTraining = async (): Promise<TrainingRecord[]> => {
+  const res = await axios.get(endpoint.GET_ALL_TRAINING);
+  return res.data;
+};
+
+export const getTrainingById = async (id: number): Promise<TrainingRecord> => {
+  const res = await axios.get(`${endpoint.GET_TRAINING_BY_ID}/${id}`);
+  return res.data;
+};
+
+export const addTraining = async (
+  data: Partial<TrainingInput>
+): Promise<TrainingRecord> => {
+  const res = await axios.post(endpoint.ADD_TRAINING, data);
+  return res.data;
+};
+
+export const updateTraining = async (
+  id: number,
+  data: Partial<TrainingInput>
+): Promise<TrainingRecord> => {
+  const res = await axios.put(`${endpoint.UPDATE_TRAINING}/${id}`, data);
+  return res.data;
+};
+
+export const deleteTraining = async (id: number): Promise<void> => {
+  await axios.delete(`${endpoint.DELETE_TRAINING}/${id}`);
+};
+
+// Sickness Module
+export const getAllSickness = async (): Promise<SicknessRecord[]> => {
+  const res = await axios.get(endpoint.GET_ALL_SICKNESS);
+  return res.data;
+};
+
+export const getSicknessById = async (id: number): Promise<SicknessRecord> => {
+  const res = await axios.get(`${endpoint.GET_SICKNESS_BY_ID}/${id}`);
+  return res.data;
+};
+
+export const addSickness = async (
+  data: Partial<SicknessInput>
+): Promise<SicknessRecord> => {
+  const res = await axios.post(endpoint.ADD_SICKNESS, data);
+  return res.data;
+};
+
+export const updateSickness = async (
+  id: number,
+  data: Partial<SicknessInput>
+): Promise<SicknessRecord> => {
+  const res = await axios.put(`${endpoint.UPDATE_SICKNESS}/${id}`, data);
+  return res.data;
+};
+
+export const deleteSickness = async (id: number): Promise<void> => {
+  await axios.delete(`${endpoint.DELETE_SICKNESS}/${id}`);
 };

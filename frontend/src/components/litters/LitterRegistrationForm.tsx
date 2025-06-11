@@ -86,7 +86,6 @@ export default function LitterRegistrationForm() {
     }));
 
     if (loading) return <p>Loading...</p>;
-    console.log("---location is -----__>", Location)
     const handleSubmit = async () => {
         try {
             const formattedPuppies = puppies.map(pup => ({

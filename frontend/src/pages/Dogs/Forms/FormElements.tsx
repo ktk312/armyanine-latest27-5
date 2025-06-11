@@ -35,7 +35,7 @@ export interface DogFormData {
   weight: string;
   chestDepth: string;
   chestCircumference: string;
-  fieldAchievements: string;
+  achievements: string;
   isDeath: boolean;
   isSold: boolean;
   isLoan: boolean;
@@ -51,6 +51,7 @@ export interface DogFormData {
 export default function FormElements() {
   const { createNewDog, loading, updateNewDog } = useCreateDog();
   const { selectedDog } = useDogStore();
+  console.log("---selected Dog are", selectedDog)
   const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement>(null);
@@ -86,7 +87,7 @@ export default function FormElements() {
     weight: "",
     chestDepth: "",
     chestCircumference: "",
-    fieldAchievements: "",
+    achievements: "",
     virtuesAndFaults: "",
     breedingAdvice: "",
     miscellaneousComments: "",
@@ -129,7 +130,7 @@ export default function FormElements() {
       weight: "",
       chestDepth: "",
       chestCircumference: "",
-      fieldAchievements: "",
+      achievements: "",
       virtuesAndFaults: "",
       breedingAdvice: "",
       miscellaneousComments: "",
@@ -182,7 +183,7 @@ const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
         weight: selectedDog.weight || "",
         chestDepth: selectedDog.chestDepth || "",
         chestCircumference: selectedDog.chestCircumference || "",
-        fieldAchievements: selectedDog.fieldAchievements || "",
+        achievements: selectedDog.achievements || "",
         virtuesAndFaults: selectedDog.virtuesAndFaults || "",
         breedingAdvice: selectedDog.breedingAdvice || "",
         miscellaneousComments: selectedDog.miscellaneousComments || "",
@@ -223,7 +224,7 @@ const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
         weight: "",
         chestDepth: "",
         chestCircumference: "",
-        fieldAchievements: "",
+        achievements: "",
         virtuesAndFaults: "",
         breedingAdvice: "",
         miscellaneousComments: "",
@@ -279,7 +280,7 @@ useEffect(() => {
     formDataToSend.append("weight", formData.weight);
     formDataToSend.append("chestDepth", formData.chestDepth);
     formDataToSend.append("chestCircumference", formData.chestCircumference);
-    formDataToSend.append("fieldAchievements", formData.fieldAchievements);
+    formDataToSend.append("achievements", formData.achievements);
     formDataToSend.append("virtuesAndFaults", formData.virtuesAndFaults);
     formDataToSend.append("breedingAdvice", formData.breedingAdvice);
     formDataToSend.append("miscellaneousComments", formData.miscellaneousComments);

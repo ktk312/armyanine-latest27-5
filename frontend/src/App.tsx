@@ -44,7 +44,15 @@ import CityList from "./components/dogManagement/city/CityList";
 import CountryList from "./components/dogManagement/country/CountryList";
 import CreateCountry from "./components/dogManagement/country/CreateCountry";
 import DogCategoryCreate from "./components/dogManagement/category/DogCategoryCreate";
-
+import VacinationRecord from "./pages/MedicalHistory/VacinationRecord";
+import DewormingRecord from "./components/dogMedicalRecords/DewormingView";
+import TrainingRecord from "./pages/MedicalHistory/TrainingRecord";
+import Prophylaxis from "./components/dogMedicalRecords/ProphylaxisView";
+import VaccinationRecordForm from "./pages/MedicalHistory/Form/VaccinationRecordForm";
+import DewormingRecordForm from "./pages/MedicalHistory/Form/DewormingRecordForm";
+import ProphylaxisList from "./pages/MedicalHistory/ProphylaxisList";
+import TrainingRecordForm from "./pages/MedicalHistory/Form/TrainingRecordForm";
+import EditProphylaxisRecord from "./pages/MedicalHistory/EditProphylaxisRecord";
 
 export default function App() {
   return (
@@ -52,7 +60,6 @@ export default function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-
           {/* Redirect root path to /signin */}
           <Route path="/" element={<SignIn />} />
           {/* Public Routes */}
@@ -60,8 +67,6 @@ export default function App() {
           {/* <Route path="/signup" element={<SignUp />} /> */}
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
-
-
             <Route element={<ProtectedRoute />}>
               <Route index path="/dashboard" element={<Home />} />
 
@@ -81,10 +86,10 @@ export default function App() {
               <Route path="/create-city" element={<CreateCity />} />
               <Route path="/cities" element={<CityList />} />
 
-                <Route path="/create-country" element={<CreateCountry />} />
-              <Route path="/countries" element={<CountryList/>} />
+              <Route path="/create-country" element={<CreateCountry />} />
+              <Route path="/countries" element={<CountryList />} />
 
-              <Route path="/countries" element={<CountryList/>} />
+              <Route path="/countries" element={<CountryList />} />
               {/* microchip */}
               <Route path="/microchip" element={<Microchip />} />
               {/* microchip */}
@@ -100,25 +105,42 @@ export default function App() {
               {/* Dogs Category */}
               <Route path="/dog-category-list" element={<DogCategory />} />
               {/* <Route path="/dog-categories/create" element={<DogCategoryCreate />} /> */}
-              <Route path="/dog/create/category" element={<DogCategoryCreate />} />
-
+              <Route
+                path="/dog/create/category"
+                element={<DogCategoryCreate />}
+              />
 
               {/* Dogs Breed */}
               <Route path="/dog-breed" element={<DogBreed />} />
               <Route path="/dog/create/breed" element={<DogBreedCreate />} />
 
-              <Route path="/stud-certificate" element={<StudCertificateList />} />
-              <Route path="/create-stud-certificate" element={<CreateStudCertificate />} />
-
+              <Route
+                path="/stud-certificate"
+                element={<StudCertificateList />}
+              />
+              <Route
+                path="/create-stud-certificate"
+                element={<CreateStudCertificate />}
+              />
 
               {/* Litters */}
-              <Route path="/litters-reigstration-request" element={<LittersRegRequest />} />
-              <Route path="/litters-inspection-request-list" element={<LittersInspectionRequest />} />
-              <Route path="/litter-inspection" element={<LitterInspectionForm />} />
-              <Route path="/litter-registration" element={<LitterRegistrationForm />} />
+              <Route
+                path="/litters-reigstration-request"
+                element={<LittersRegRequest />}
+              />
+              <Route
+                path="/litters-inspection-request-list"
+                element={<LittersInspectionRequest />}
+              />
+              <Route
+                path="/litter-inspection"
+                element={<LitterInspectionForm />}
+              />
+              <Route
+                path="/litter-registration"
+                element={<LitterRegistrationForm />}
+              />
               <Route path="/assign-microchip" element={<AssignMicrochip />} />
-
-
 
               {/* pedigree Tree */}
               <Route path="/database-view" element={<DatabaseView />} />
@@ -132,7 +154,34 @@ export default function App() {
               {/* siblings */}
               {/* <Route path="/siblings-data" element={<DogList />} /> */}
 
+              {/* Medical Record of every dogs */}
+              <Route path="/vaccination-view" element={<VacinationRecord />} />
+              <Route path="/deworming-view" element={<DewormingRecord />} />
+              <Route path="/training-view" element={<TrainingRecord />} />
+              <Route path="/prophylaxis-view" element={<Prophylaxis />} />
 
+              {/* Medical Form */}
+              <Route
+                path="/create-vaccination-record"
+                element={<VaccinationRecordForm />}
+              />
+              <Route
+                path="/create-deworming-record"
+                element={<DewormingRecordForm />}
+              />
+              <Route path="/create-prophylaxis" element={<ProphylaxisList />} />
+              <Route
+                path="/create-training-record"
+                element={<TrainingRecordForm />}
+              />
+
+              {/*Edit Prophylaxis */}
+              <Route
+                path="/edit-prophylaxis-records/:id"
+                element={<EditProphylaxisRecord />}
+              />
+
+              {/* Dog Breed */}
 
               {/* Ui Elements */}
               <Route path="/alerts" element={<Alerts />} />

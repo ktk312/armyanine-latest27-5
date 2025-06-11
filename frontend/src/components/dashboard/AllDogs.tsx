@@ -20,10 +20,6 @@ export default function AllDogs() {
     // const { litter, loading, error } = useFetchLitterInspection(); // ✅ Using the hook
   const {dogs, loading, error} = useFetchDogs();
 
-const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setCurrentPage(1); // Reset pagination on filter change
-};
  const openViewModal = (dog: any) => {
     setViewDog(dog);
     setIsViewModalOpen(true);
@@ -34,46 +30,57 @@ const handleFilterChange = (key: string, value: string) => {
     setViewDog(null);
   };
   const ITEMS_PER_PAGE = 5;
- const [filters, setFilters] = useState({
-        id: "",
-        name: "",
-    });
+  const [filters, setFilters] = useState({
+    id: "",
+    name: "",
+    KP: "",
+    sex: "",
+    microchip: "",
+    status: "",
+  });
+      const headerToKeyMap: Record<string, keyof typeof filters> = {
+    "S.No": "id",
+    "DOG NAME": "name",
+    "ACC NO": "KP",
+    SEX: "sex",
+    MICROCHIP: "microchip",
+    STATUS: "status",
+  };
     const [currentPage, setCurrentPage] = useState(1);
+ const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  };
 
-    const filteredData = dogs.filter((order) =>
-      Object.keys(filters).every((key) => {
-        const filterValue = filters[key as keyof typeof filters].toLowerCase().trim();
-        if (!filterValue) return true;
-  
-        let fieldValue = "";
-        switch (key) {
-          case "id":
-            fieldValue = order.id.toString();
-            break;
-          case "dogName":
-              fieldValue = order.dogName.toString();
-              break;
-          case "sireName":
-            fieldValue = order?.sire?.dogName.toLowerCase().toString() || "";
-            break;
-          case "damName":
-            fieldValue = order?.dam?.dogName.toLowerCase().toString() || "";
-            break;
-          case "matingDate":
-            fieldValue = order?.dob.toLowerCase().toString();
-            break;
-          default:
-            fieldValue = order[key as keyof typeof order]?.toString().toLowerCase() || "";
-        }
-        return fieldValue.includes(filterValue);
-      })
-    );
+   const filteredData = dogs.filter((dog) => {
+    return Object.entries(filters).every(([filterKey, filterValue]) => {
+      const value = filterValue.toLowerCase().trim();
+      if (!value) return true;
+
+      switch (filterKey) {
+        case "id":
+          return dog.id?.toString().toLowerCase().includes(value);
+        case "name":
+          return dog.dogName?.toLowerCase().includes(value);
+        case "KP":
+          return dog.KP?.toLowerCase().includes(value);
+        case "sex":
+          return dog.sex?.toLowerCase().includes(value);
+        case "microchip":
+          return dog.microchip?.chipId.toLowerCase().includes(value);
+        case "status":
+          return dog.status?.toLowerCase().includes(value);
+        default:
+          return true;
+      }
+    });
+  });
     // Pagination Logic
     const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-    const paginatedData = filteredData.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
-    );
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] text-black dark:text-white">
@@ -85,29 +92,43 @@ const handleFilterChange = (key: string, value: string) => {
         <div className="max-w-full overflow-x-auto">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                {["id","dog name", "sire", "dam", "received", "status", "actions"].map(
-                  (key, idx) => (
+               <TableRow>
+                  {[
+                    "S.No",
+                    "DOG NAME",
+                    "ACC NO",
+                    "SEX",
+                    "MICROCHIP",
+                    "STATUS",
+                    "ACTIONS",
+                  ].map((header, idx) => (
                     <TableCell
                       key={idx}
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start"
+                      className="px-5 py-3 font-medium text-left"
                     >
-                      {key.toUpperCase()}
-                      {key !== "actions" && (
-                        <input
-                          type="text"
-                          placeholder={`Search ${key}`}
-                          onChange={(e) =>
-                            handleFilterChange(key, e.target.value)
-                          }
-                          className="mt-1 w-full border rounded-md p-1 text-sm"
-                        />
-                      )}
+                      <div className="flex flex-col gap-1">
+                        <span>{header}</span>
+                        {header !== "ACTIONS" && (
+                          <input
+                            type="text"
+                            placeholder={`Search ${header}`}
+                            onChange={(e) => {
+                              const key =
+                                headerToKeyMap[
+                                header as keyof typeof headerToKeyMap
+                                ];
+                              if (key) {
+                                handleFilterChange(key, e.target.value);
+                              }
+                            }}
+                            className="mt-1 w-full border dark:border-white/[0.5] rounded-md p-1 text-sm text-gray-900 placeholder-gray-400 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500"
+                          />
+                        )}
+                      </div>
                     </TableCell>
-                  )
-                )}
-              </TableRow>
+                  ))}
+                </TableRow>
             </TableHeader>
 
             <TableBody>
@@ -120,13 +141,13 @@ const handleFilterChange = (key: string, value: string) => {
                     {order?.dogName}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
-                    {order?.sire?.dogName}
+                    {order?.KP}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
-                    {order?.dam?.dogName}
+                    {order?.sex}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
-                    {order?.dogName}
+                    {order?.microchip?.chipId}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-start">
                     <Badge
