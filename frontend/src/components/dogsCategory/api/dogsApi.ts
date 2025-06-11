@@ -519,7 +519,10 @@ export const fetchStandingDogList = async () => {
 export const addVaccination = async (
   data: Partial<VaccinationInput>
 ): Promise<VaccinationRecord> => {
+  console.log("----data-0-----", data)
   const response = await axios.post(endpoint.ADD_VACCINATION, data);
+  console.log("----data-0-response----", response)
+
   return response.data;
 };
 
@@ -530,19 +533,22 @@ export const getAllVaccination = async (): Promise<VaccinationRecord[]> => {
 
 // Update Vaccination Record
 export const updateVaccination = async (
-  id: number,
+  id: string,
   data: Partial<VaccinationInput>
 ): Promise<VaccinationRecord> => {
-  const response = await axios.patch(
-    `${endpoint.UPDATE_VACCINATION}/${id}`,
-    data
-  );
+  console.log("----id and data inside API", id, data)
+try {
+const response = await axios.patch(endpoint.UPDATE_VACCINATION(id), data);
   return response.data;
+} catch (error) {
+  console.error("Failed to update vaccination", error);
+  throw error;
+}
 };
 
 // Delete Vaccination Record
-export const deleteVaccination = async (id: number): Promise<void> => {
-  const response = await axios.delete(`${endpoint.DELETE_VACCINATION}/${id}`);
+export const deleteVaccination = async (id: string): Promise<void> => {
+  const response = await axios.delete(endpoint.DELETE_VACCINATION(id));
   return response.data;
 };
 

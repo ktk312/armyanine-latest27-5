@@ -8,6 +8,7 @@ const headers = [
   { label: "Date", key: "date" },
   { label: "Drug", key: "drug" },
   { label: "Sign", key: "sign" },
+   { label: "Actions", key: "actions" },
 ];
 
 const ITEMS_PER_PAGE = 5;
@@ -50,6 +51,20 @@ export default function DewormingView() {
     navigate("/create-deworming-record");
   };
 
+  // const handleView = (id: number) => {
+  //   console.log(`View deworming record with ID: ${id}`);
+  //   navigate(`view-deworming/${id}`);
+  // };
+
+  // const handleEdit = (id: number) => {
+  //   console.log(`Edit deworming record with ID: ${id}`);
+  //   navigate(`/edit-deworming/${id}`);
+  // };
+  // const handleDelete = (id: number) => {
+  //   console.log(`Delete deworming record with ID: ${id}`);
+  //   // Implement delete API call and refresh data as needed
+  // };
+  
   return (
     <div className="rounded-xl border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900 shadow-sm transition-colors duration-300">
       {/* Header */}
@@ -129,7 +144,8 @@ export default function DewormingView() {
             )}
           </tbody>
         </table>
-        )}
+        )
+        }
       
 
         {/* Pagination */}

@@ -21,6 +21,7 @@ export const useVaccinationStore = create<VaccinationState>((set) => ({
  create: async (data) => {
   set({ loading: true });
   try {
+    console.log("----data inside store are", data)
     const response = await addVaccination(data); // This should also accept Partial
     set((state) => ({
       records: [...state.records, response],
@@ -34,14 +35,14 @@ export const useVaccinationStore = create<VaccinationState>((set) => ({
   update: async (id, data) => {
     const res = await updateVaccination(id, data);
     set((state) => ({
-      records: state.records.map((r) => (r.id === id ? res : r)),
+      records: state.records.map((r) => (r.id.toLocaleString() === id ? res : r)),
     }));
   },
 
   remove: async (id) => {
-    const res = await deleteVaccination(id);
+    const res = await deleteVaccination(String(id));
     set((state) => ({
-      records: state.records.filter((r) => r.id !== id),
+      records: state.records.filter((r) => r.id.toLocaleString() !== id),
     }));
   },
 
