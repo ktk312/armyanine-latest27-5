@@ -76,7 +76,8 @@ const navItems: NavItem[] = [
       { name: "Vaccination Records", path: "/vaccination-view", pro: false },
       { name: "Deworming Records", path: "/deworming-view", pro: false },
       { name: "Training Records", path: "/training-view", pro: false },
-      { name: "Prophylaxis", path: "/prophylaxis-view", pro: false }, //view => creating a new prophylaxis record
+      { name: "Prophylaxis", path: "/prophylaxis-view", pro: false },
+      { name: "Sickness Records", path: "/sickness-view", pro: false },
     ],
   },
 
