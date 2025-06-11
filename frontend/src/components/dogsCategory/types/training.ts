@@ -1,3 +1,5 @@
+import { Dog } from "./dog";
+
 export interface TrainingRecord {
   id: number;
   trainerName: string;
@@ -11,6 +13,7 @@ export interface TrainingRecord {
   sensitivity?: string;
   aggression?: string;
   dogId: number;
+  dog: Dog;
   createdAt: string;
   updatedAt: string;
 }
@@ -27,6 +30,7 @@ export interface TrainingInput {
   sensitivity?: string;
   aggression?: string;
   dogId: number;
+
 }
 
 

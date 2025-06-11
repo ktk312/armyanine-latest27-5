@@ -25,7 +25,18 @@ const createProphylaxisRecord = async (req, res) => {
 // Get All
 const getAllProphylaxisRecords = async (req, res) => {
   try {
-    const records = await prisma.prophylaxisRecord.findMany();
+    const records = await prisma.prophylaxisRecord.findMany({
+      include: {
+        dog: {
+          include: {
+            breed: true
+          }
+        }
+      },
+       orderBy: {
+        id: "desc", // Change 'date' to any field you want to sort by
+      },
+    });
     res.json(records);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch records" });

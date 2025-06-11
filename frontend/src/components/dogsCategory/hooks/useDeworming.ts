@@ -36,7 +36,12 @@ export const useDeworming = () => {
     (record: typeof selected | null) => setSelected(record),
     [setSelected]
   );
-
+  const setSelectedDeworming = useCallback(
+    (record: typeof selected | null) => {
+      setSelected(record);
+    },
+    [setSelected]
+  );
   return {
     dewormingRecords: records,
     selectedDeworming: selected,
@@ -48,6 +53,7 @@ export const useDeworming = () => {
     createDeworming,
     updateDeworming,
     deleteDeworming,
+    setSelectedDeworming,
     selectDeworming,
   };
 };

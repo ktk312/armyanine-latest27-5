@@ -1,9 +1,12 @@
+import { Dog } from "./dog";
+
 export interface ProphylaxisRecord {
   id: number;
   date: string;
   prophylacticDrug: string;
   remarks: string;
   dogId: number;
+  dog: Dog;
   createdAt: string;
   updatedAt: string;
 }

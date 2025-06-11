@@ -18,19 +18,19 @@ export const useVaccinationStore = create<VaccinationState>((set) => ({
     }
   },
 
- create: async (data) => {
-  set({ loading: true });
-  try {
-    console.log("----data inside store are", data)
-    const response = await addVaccination(data); // This should also accept Partial
-    set((state) => ({
-      records: [...state.records, response],
-      loading: false,
-    }));
-  } catch (error: any) {
-    set({ error: error.message, loading: false });
-  }
-},
+  create: async (data) => {
+    set({ loading: true });
+    try {
+      console.log("----data inside store are", data)
+      const response = await addVaccination(data); // This should also accept Partial
+      set((state) => ({
+        records: [...state.records, response],
+        loading: false,
+      }));
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
 
   update: async (id, data) => {
     const res = await updateVaccination(id, data);
@@ -40,7 +40,7 @@ export const useVaccinationStore = create<VaccinationState>((set) => ({
   },
 
   remove: async (id) => {
-    const res = await deleteVaccination(String(id));
+    await deleteVaccination(String(id));
     set((state) => ({
       records: state.records.filter((r) => r.id.toLocaleString() !== id),
     }));
