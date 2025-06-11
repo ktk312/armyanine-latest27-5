@@ -37,7 +37,7 @@ export const useTraining = () => {
     selectedTraining: selected,
     isLoading: loading,
     error,
-    getAllTraining,
+    getAllTraining,//http://localhost:3000/api/training
     getTrainingById,
     createTraining,
     updateTraining,

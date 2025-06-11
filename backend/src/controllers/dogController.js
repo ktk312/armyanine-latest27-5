@@ -180,6 +180,7 @@ const getAllDogs = async (req, res) => {
 // Get a dog by ID
 const getDogById = async (req, res) => {
   console.log("Get Dog By ID API call (POST)");
+  //http://localhost:3000/api/dog/1
 
   try {
     const { id } = req.params;

@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
@@ -48,8 +46,10 @@ interface DefaultInputsProps {
   };
 }
 
-
-export default function DefaultInputs({ onChange, formData }: DefaultInputsProps) {
+export default function DefaultInputs({
+  onChange,
+  formData,
+}: DefaultInputsProps) {
   // Real data
   const { selectedDog } = useFetchDogs();
 
@@ -76,7 +76,9 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
   useEffect(() => {
     setDateOfBirth(parseDate(formData?.dob));
   }, [formData?.dob]);
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => parseDate(formData?.dob));
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() =>
+    parseDate(formData?.dob)
+  );
   const handleDateChange = (selectedDates: Date[]) => {
     if (selectedDates.length > 0) {
       const selectedDate = selectedDates[0];
@@ -89,7 +91,9 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
   };
 
   const { microchips, microchiploading } = useFetchUnassignMicrochips();
-  const [microchipOption, setmicrochipOption] = useState<{ value: string; label: string }[]>([]);
+  const [microchipOption, setmicrochipOption] = useState<
+    { value: string; label: string }[]
+  >([]);
   useEffect(() => {
     if (microchips.length > 0) {
       setmicrochipOption(
@@ -101,10 +105,11 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
     }
   }, [microchips]);
 
-
   // Breed Data
   const { breeds, loading } = useFetchBreeds();
-  const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
+  const [breedOptions, setBreedOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   useEffect(() => {
     if (breeds.length > 0) {
@@ -117,10 +122,11 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
     }
   }, [breeds]);
 
-
   // Dog Category
   const { categories, dogLoading } = useFetchDogsCategory();
-  const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -133,9 +139,10 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
     }
   }, [categories]);
 
-
   // Convert sires and dams into dropdown format
-  const { sires, dams } = useSiresAndDamsByBreed(String(dogData?.breedId) ?? "");
+  const { sires, dams } = useSiresAndDamsByBreed(
+    String(dogData?.breedId) ?? ""
+  );
 
   const sireOptions = sires.map((sire) => ({
     value: String(sire.id),
@@ -147,7 +154,6 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
     label: dam.KP ? `${dam.dogName} (${dam.KP})` : dam.dogName,
   }));
 
-
   // Country Data
 
   const { country, countryLoading } = useFetchCountries();
@@ -157,8 +163,9 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
     label: c.countryName,
   }));
 
-
-  const { city, CityLoading } = useFetchCitiesByCountry(String(dogData?.countryId));
+  const { city, CityLoading } = useFetchCitiesByCountry(
+    String(dogData?.countryId)
+  );
 
   const cityOptions = city.map((c) => ({
     value: c.id,
@@ -167,86 +174,99 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
 
   const ListofHair = [
     { value: "stock_hair", label: "Stock Hair" },
-    { value: "AUSTIN_of_WESTRIDGE-I", label: "AUSTIN of WESTRIDGE - I" }
+    { value: "AUSTIN_of_WESTRIDGE-I", label: "AUSTIN of WESTRIDGE - I" },
   ];
   const ListofHD = [
     { value: "normal", label: "Normal" },
-    { value: "high", label: "High" }
+    { value: "high", label: "High" },
   ];
   const ListofED = [
     { value: "normal", label: "Normal" },
-    { value: "high", label: "High" }
+    { value: "high", label: "High" },
   ];
   const ListGender = [
     { value: "male", label: "Male" },
-    { value: "female", label: "Female" }
+    { value: "female", label: "Female" },
   ];
-
 
   const handleBreedChange = (value: string) => {
     const breedId = parseInt(value);
-    setDogData(prev => ({ ...prev, breedId }));
+    setDogData((prev) => ({ ...prev, breedId }));
     onChange("breedId", breedId);
   };
 
   const handleCategoryChange = (value: string) => {
     const categoryId = parseInt(value);
-    setDogData(prev => ({ ...prev, categoryId }));
+    setDogData((prev) => ({ ...prev, categoryId }));
     onChange("categoryId", categoryId);
   };
 
   const handleCountryChange = (value: string) => {
     const countryId = parseInt(value);
-    setDogData(prev => ({ ...prev, countryId }));
+    setDogData((prev) => ({ ...prev, countryId }));
     onChange("countryId", countryId);
   };
 
   const handleCityChange = (value: string) => {
     const cityId = parseInt(value);
-    setDogData(prev => ({ ...prev, cityId }));
+    setDogData((prev) => ({ ...prev, cityId }));
     onChange("cityId", cityId);
   };
 
   const handleSireChange = (value: string) => {
     const sireId = parseInt(value);
-    setDogData(prev => ({ ...prev, sireId }));
+    setDogData((prev) => ({ ...prev, sireId }));
     onChange("sireId", sireId);
   };
 
   const handleDamChange = (value: string) => {
     const damId = parseInt(value);
-    setDogData(prev => ({ ...prev, damId }));
+    setDogData((prev) => ({ ...prev, damId }));
     onChange("damId", damId);
   };
   const handleMicrochips = (value: string) => {
     const microchip = value;
-    setDogData(prev => ({ ...prev, microchip }));
+    setDogData((prev) => ({ ...prev, microchip }));
     onChange("microchip", microchip);
   };
-  console.log("selectedDog?.microchip?.chipId.toString()", selectedDog?.microchip?.chipId.toString(), microchipOption)
-
+  console.log(
+    "selectedDog?.microchip?.chipId.toString()",
+    selectedDog?.microchip?.chipId.toString(),
+    microchipOption
+  );
 
   return (
     <ComponentCard title="Default Inputs">
       <div className="space-y-6">
         <div>
-          <Label>Select Breed  <span className="text-red-500">*</span></Label>
+          <Label>
+            Select Breed <span className="text-red-500">*</span>
+          </Label>
           <Select
             options={breedOptions}
             placeholder={loading ? "Loading breeds..." : "Select Option"}
             onChange={handleBreedChange}
             className="dark:bg-dark-900"
             defaultValue={selectedDog?.breed?.id?.toString()}
-
           />
-
         </div>
         <div>
-          <Label>Dog Name <span className="text-red-500">*</span></Label>
-          <Input type="text" id="input" name="dogName" placeholder="Enter dog name" value={formData?.dogName} onChange={handleChange} />
+          <Label>
+            Dog Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            type="text"
+            id="input"
+            name="dogName"
+            placeholder="Enter dog name"
+            value={formData?.dogName}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <Label>Dog Category <span className="text-red-500">*</span></Label>
+          <Label>
+            Dog Category <span className="text-red-500">*</span>
+          </Label>
           <Select
             options={categoryOptions}
             placeholder={dogLoading ? "Loading category..." : "Select Option"}
@@ -257,13 +277,22 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
         </div>
         <div>
           <Label>Location</Label>
-          <Input type="text" id="input" name="location" placeholder="Enter location" value={formData?.location} onChange={handleChange} />
+          <Input
+            type="text"
+            id="input"
+            name="location"
+            placeholder="Enter location"
+            value={formData?.location}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <Label>Country of Origin</Label>
           <Select
             options={countryOptions}
-            placeholder={countryLoading ? "Loading country..." : "Select Option"}
+            placeholder={
+              countryLoading ? "Loading country..." : "Select Option"
+            }
             onChange={handleCountryChange}
             className="dark:bg-dark-900"
             defaultValue={selectedDog?.country?.countryName}
@@ -281,10 +310,19 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
         </div>
         <div>
           <Label>Breeder</Label>
-          <Input type="text" id="input" name="breeder" placeholder="Enter breeder name" value={formData?.breeder} onChange={handleChange} />
+          <Input
+            type="text"
+            id="input"
+            name="breeder"
+            placeholder="Enter breeder name"
+            value={formData?.breeder}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          <Label>Sex <span className="text-red-500">*</span></Label>
+          <Label>
+            Sex <span className="text-red-500">*</span>
+          </Label>
           <Select
             defaultValue={selectedDog?.sex || ""}
             options={ListGender}
@@ -294,7 +332,9 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
           />
         </div>
         <div>
-          <Label htmlFor="datePicker">Date of Birth <span className="text-red-500">*</span></Label>
+          <Label htmlFor="datePicker">
+            Date of Birth <span className="text-red-500">*</span>
+          </Label>
           <div className="relative w-full flatpickr-wrapper">
             {/* <Flatpickr
               value={String(dateOfBirth)}
@@ -368,32 +408,31 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
         {!(selectedDog?.microchipId && selectedDog?.KP) && (
           <>
             <div>
-              <Label>
-                Microchips
-              </Label>
+              <Label>Microchips</Label>
               <Select
                 options={microchipOption}
-                placeholder={microchiploading ? "Loading microchip..." : "Select Option"}
+                placeholder={
+                  microchiploading ? "Loading microchip..." : "Select Option"
+                }
                 onChange={handleMicrochips}
                 className="dark:bg-dark-900"
                 defaultValue={selectedDog?.microchip?.chipId.toString()}
                 disabled={!!selectedDog?.microchipId}
               />
             </div>
-
-
           </>
         )}
         <div>
           <Label>
             ACC Reg # <span className="text-red-500">*</span>
-          </Label><Input
+          </Label>
+          <Input
             type="text"
             id="input"
             name="KP"
             value={dogData?.KP || ""}
             onChange={handleChange}
-          // disabled={!!selectedDog?.KP}
+            // disabled={!!selectedDog?.KP}
           />
           {/* <Input
                 type="text"
@@ -405,24 +444,58 @@ export default function DefaultInputs({ onChange, formData }: DefaultInputsProps
         </div>
         <div>
           <Label>Achievements in Field</Label>
-          <Input type="text" id="input" name="achievements" value={formData?.achievements} onChange={handleChange} />
+          <Input
+            type="text"
+            id="input"
+            name="achievements"
+            value={formData?.achievements}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <Label>Depth Chest</Label>
-          <Input type="text" id="input" name="chestDepth" placeholder="Depth Chest(cm)" value={formData?.chestDepth} onChange={handleChange} />
+          <Input
+            type="text"
+            id="input"
+            name="chestDepth"
+            placeholder="Depth Chest(cm)"
+            value={formData?.chestDepth}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <Label>Chest Circumference:</Label>
-          <Input type="text" name="chestCircumference" id="input" value={formData?.chestCircumference} onChange={handleChange} placeholder="Chest Circumference (cm)" />
+          <Input
+            type="text"
+            name="chestCircumference"
+            id="input"
+            value={formData?.chestCircumference}
+            onChange={handleChange}
+            placeholder="Chest Circumference (cm)"
+          />
         </div>
         <div>
           <Label>Weight</Label>
-          <Input type="text" id="input" name="weight" placeholder="Weight (kg)" value={formData?.weight} onChange={handleChange} />
+          <Input
+            type="text"
+            id="input"
+            name="weight"
+            placeholder="Weight (kg)"
+            value={formData?.weight}
+            onChange={handleChange}
+          />
         </div>
 
         <div>
           <Label>Color & Markings</Label>
-          <Input type="text" id="input" name="color" placeholder="Color & Markings" value={formData?.color} onChange={handleChange} />
+          <Input
+            type="text"
+            id="input"
+            name="color"
+            placeholder="Color & Markings"
+            value={formData?.color}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <Label>Hair</Label>
