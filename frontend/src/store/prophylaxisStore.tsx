@@ -22,6 +22,9 @@ export const useProphylaxisStore = create<ProphylaxisState>((set) => ({
   create: async (data) => {
     try {
       const newRecord = await addProphylaxis(data);
+      console.log("Fetched Prophylaxis newRecord inside store:", newRecord);
+
+
       set((state) => ({ records: [...state.records, newRecord] }));
     } catch (err: any) {
       set({ error: err.message });
