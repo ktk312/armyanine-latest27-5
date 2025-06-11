@@ -20,11 +20,6 @@ export const useVaccination = () => {
         await fetchAll();
     }, [fetchAll]);
 
-    // Fetch a single vaccination record by ID
-    //   const getVaccinationById = useCallback(async (id: number) => {
-    //     await fetchOne(id);
-    //   }, [fetchOne]);
-
     // Create new vaccination
     const createVaccination = useCallback(
         async (data: Partial<VaccinationInput>) => {
@@ -35,14 +30,15 @@ export const useVaccination = () => {
 
     // Update existing vaccination
     const updateVaccination = useCallback(
-        async (id: number, data: Partial<VaccinationInput>) => {
+        async (id: string, data: Partial<VaccinationInput>) => {
+            console.log("----id and data insde hook are", id, data)
             await update(id, data);
         },
         [update]
     );
 
     // Delete a vaccination record
-    const deleteVaccination = useCallback(async (id: number) => {
+    const deleteVaccination = useCallback(async (id: string) => {
         await remove(id);
     }, [remove]);
 
@@ -53,7 +49,12 @@ export const useVaccination = () => {
         },
         [setSelected]
     );
-
+  const setSelectedVaccination = useCallback(
+        (record: typeof selected | null) => {
+            setSelected(record);
+        },
+        [setSelected]
+    );
     return {
         vaccinations: records,
         selectedVaccination: selected,
@@ -66,5 +67,6 @@ export const useVaccination = () => {
         updateVaccination,
         deleteVaccination,
         selectVaccination,
+        setSelectedVaccination
     };
 };

@@ -1,28 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
-import { PlusIcon } from "../../assets/icons";
+import { EyeIcon, PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
 import { useVaccination } from "../dogsCategory/hooks/useVaccination";
 import { useNavigate } from "react-router-dom";
-
-// const dummyData = [
-//   {
-//     age: "3 months",
-//     vaccine: "Rabies",
-//     dateDue: "2025-06-10",
-//     dateGiven: "2025-06-01",
-//     batchNo: "RB-203",
-//     vetSign: "Dr. Khan",
-//   },
-//   {
-//     age: "6 months",
-//     vaccine: "Parvovirus",
-//     dateDue: "2025-06-15",
-//     dateGiven: "2025-06-05",
-//     batchNo: "PV-554",
-//     vetSign: "Dr. Ayesha",
-//   },
-// ];
-
+import { Tooltip } from "@mui/material";
 
 
 const TABLE_HEADERS = [
@@ -32,14 +13,14 @@ const TABLE_HEADERS = [
   { label: "Date Given", key: "dateGiven" },
   { label: "Batch No", key: "batchNo" },
   { label: "Vet Sign", key: "vetSign" },
+  { label: "Actions", key: "actions" },
 ];
 const VaccinationView = () => {
   const navigate = useNavigate();
   const goToNewPage = () => {
     navigate("/create-vaccination-record")
   };
-   const { vaccinations = [], isLoading, error, getAllVaccinations } = useVaccination();
-
+  const { vaccinations = [], isLoading, error, getAllVaccinations, setSelectedVaccination, deleteVaccination } = useVaccination();
 
   const [filters, setFilters] = useState<Record<string, string>>({
     age: "",
@@ -66,10 +47,22 @@ const VaccinationView = () => {
     })
   );
 
-   
+  const handleEditClick = (selectedVaccination: any) => {
+    // Set the selected stud certificate in the store
+    setSelectedVaccination(selectedVaccination);
 
- 
+    // Navigate to the inspection form page
+    navigate("/create-vaccination-record");
+  };
 
+  // Handle delete vaccination
+  const handleDelete = async (id: number) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this vaccination record?");
+  if (!confirmDelete) return;
+
+  await deleteVaccination(String(id));
+  alert("Deleted Successfully")
+};
   return (
     <section
       aria-labelledby="vaccination-heading"
@@ -125,31 +118,61 @@ const VaccinationView = () => {
           </thead>
           <tbody>
             {filteredVaccinations.length === 0 ? (
-               <tr>
-                  <td colSpan={TABLE_HEADERS.length} className="text-center p-4 text-gray-500">
-                    No records found.
-                  </td>
-                </tr>
-              ):
-              (filteredVaccinations.map((item, index) => (
-                 <tr
-                key={index}
-                className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                tabIndex={0}
-              >
-                <TableCell>{item?.age.toLocaleString()}</TableCell>
-                <TableCell>{item.vaccine}</TableCell>
-                <TableCell>{item?.dueDate}</TableCell>
-                <TableCell>{item?.batchNo.toLocaleString()}</TableCell>
-                <TableCell>{item?.vaccine}</TableCell>
-                <TableCell>{item?.vetSign}</TableCell>
+              <tr>
+                <td colSpan={TABLE_HEADERS.length} className="text-center p-4 text-gray-500">
+                  No records found.
+                </td>
               </tr>
+            ) :
+              (filteredVaccinations.map((item, index) => (
+                <tr
+                  key={index}
+                  className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  tabIndex={0}
+                >
+                  <TableCell>{item?.age.toLocaleString()}</TableCell>
+                  <TableCell>{item.vaccine}</TableCell>
+                  <TableCell>{item?.dueDate}</TableCell>
+                  <TableCell>{item?.batchNo.toLocaleString()}</TableCell>
+                  <TableCell>{item?.vaccine}</TableCell>
+                  <TableCell>{item?.vetSign}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <button
+                        // onClick={() => handleView(item.id)} // Assuming each item has an 'id'
+                        className="text-blue-500 hover:text-blue-700"
+                        aria-label={`View vaccination record with ID ${item.id}`}
+                      >
+                        <EyeIcon className="h-5 w-5" />
+                      </button>
+                      <Tooltip title="Edit">
+                        <button
+                          // onClick={() => handleEdit(item.id)}
+                          className="text-green-500 hover:text-green-700"
+                          aria-label={`Edit vaccination record with ID ${item.id}`}
+                          onClick={() => handleEditClick(item)}
+                        >
+                          <PencilIcon className="h-5 w-5" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Remove">
+                        <button
+                         onClick={() => handleDelete(item.id)}
+                          className="text-red-500 hover:text-red-700"
+                          aria-label={`Delete vaccination record with ID ${item.id}`}
+                        >
+                          <TrashBinIcon className="h-5 w-5" />
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </TableCell>
+                </tr>
               ))
-             
+
               )}
           </tbody>
         </table>
-        
+
       </div>
     </section>
   );

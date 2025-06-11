@@ -276,11 +276,12 @@ model Microchip {
 // Medical history of Dogs
 model VaccinationRecord {
   id        Int      @id @default(autoincrement())
-  age       Int
-  vaccine   String
-  dueDate   DateTime
-  batchNo   String
-  vetSign   String
+  age       Int?
+  vaccine   String?
+  dueDate   DateTime?
+  givenDate DateTime?
+  batchNo   String?
+  vetSign   String?
   dogId     Int
   dog       Dog      @relation(fields: [dogId], references: [id])
   createdAt DateTime @default(now())
