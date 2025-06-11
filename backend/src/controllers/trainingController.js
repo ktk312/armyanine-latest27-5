@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 // CREATE
 const createTrainingRecord = async (req, res) => {
-    console.log("TRAINING RECORDS API (POST)")
+  console.log("TRAINING RECORDS API (POST)")
   try {
     const {
       trainerName,
@@ -45,7 +45,18 @@ const createTrainingRecord = async (req, res) => {
 // GET ALL
 const getAllTrainingRecords = async (req, res) => {
   try {
-    const records = await prisma.trainingRecord.findMany();
+    const records = await prisma.trainingRecord.findMany({
+      include: {
+        dog: {
+          include: {
+            breed: true
+          },
+        }
+      },
+      orderBy: {
+        id: "desc", // Change 'date' to any field you want to sort by
+      },
+    });
     res.json(records);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch training records" });

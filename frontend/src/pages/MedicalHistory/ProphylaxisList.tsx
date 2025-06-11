@@ -10,23 +10,30 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import Label from "../../components/form/Label";
 import { FiCalendar } from "react-icons/fi";
+import { useFilteredDogs } from "../../components/dogsCategory/hooks/useFetchDogs";
 
 export default function ProphylaxisRecordForm() {
+  const [selectedDog, setSelectedDog] = useState<{ value: string; label: string } | null>(null);
+  const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
+  const [selectedBreed, setSelectedBreed] = useState<{ value: string; label: string } | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  console.log(error)
+  const { dogs, loading, } = useFilteredDogs(selectedBreed?.value || "", "")
+  console.log(loading)
   const navigate = useNavigate();
-  const { createProphylaxis, isLoading } = useProphylaxis();
-  const { breeds, getAllBreeds, loading: breedLoading } = useBreedStore();
-
+  const { createProphylaxis, isLoading, selectedProphylaxis, updateProphylaxis, setSelectedProphylaxis } = useProphylaxis();
+  const { breeds, getAllBreeds } = useBreedStore();
+  const dogOptions = dogs.map(dog => ({
+    value: dog.id.toString(), // or whatever unique identifier your dog has
+    label: dog.dogName // or whatever property you want to display as the label
+  }));
   const [formData, setFormData] = useState({
     date: "",
     prophylacticDrug: "",
     remarks: "",
-    dogId: 1,
-    breedId: "",
+    dogId: "",
   });
 
-  const [breedOptions, setBreedOptions] = useState<
-    { value: string; label: string }[]
-  >([]);
 
   // Fetch all breeds on mount
   useEffect(() => {
@@ -55,13 +62,6 @@ export default function ProphylaxisRecordForm() {
     }));
   };
 
-  const handleBreedChange = (val: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      breedId: val,
-    }));
-  };
-
   const handleDateChange = (dates: Date[]) => {
     if (dates && dates.length > 0) {
       const selectedDate = dates[0];
@@ -73,32 +73,132 @@ export default function ProphylaxisRecordForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+
+  useEffect(() => {
+    if (selectedProphylaxis) {
+      const dog = selectedProphylaxis.dog;
+
+      setFormData({
+        date: selectedProphylaxis.date.split("T")[0], // Format to yyyy-mm-dd
+        prophylacticDrug: selectedProphylaxis.prophylacticDrug.toString(),
+        remarks: selectedProphylaxis.remarks,
+        dogId: String(selectedProphylaxis.dogId),
+      });
+
+      if (dog) {
+        setSelectedDog({ value: String(dog.id), label: dog.dogName });
+      }
+    }
+  }, [selectedProphylaxis]);
+
+
+
+  // Handle update vaccination
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.date || !formData.prophylacticDrug || !formData.breedId) {
-      alert("Date, Drug, and Breed are required.");
+
+    if (!selectedProphylaxis?.id) {
+      setError("No vaccination record selected for update");
       return;
     }
+
     try {
-      await createProphylaxis({
-        date: formData.date,
+      const updatedData = {
+        dogId: Number(selectedDog?.value), // make sure this is string
+        date: new Date(formData.date).toISOString(),
         prophylacticDrug: formData.prophylacticDrug,
         remarks: formData.remarks,
-        dogId: formData.dogId,
+      };
+      await updateProphylaxis(selectedProphylaxis?.id, updatedData);
+      alert("Updated Successfully");
+      // Clear state after update
+      setFormData({
+        date: "",
+        prophylacticDrug: "",
+        remarks: "",
+        dogId: ""
       });
-      navigate("/prophylaxis-view");
+      setSelectedDog(null);
+      setSelectedBreed(null);
+      setSelectedProphylaxis(null); // clear store
+      navigate("/prophylaxis-view")
+      console.log("prophylaxis record updated successfully");
     } catch (err) {
-      console.error("Failed to create prophylaxis record:", err);
+      setError("Failed to update prophylaxis record");
+      console.error("Update error:", err);
     }
   };
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+console.log("inside the creation")
+    if (!selectedDog?.value) {
+      setError("Please select a dog");
+      return;
+    }
+
+    try {
+      const prophylaxisData = {
+        dogId: Number(selectedDog.value),
+        remarks: formData.remarks,
+        date: new Date(formData.date).toISOString(), // Format as ISO string
+        prophylacticDrug: formData.prophylacticDrug,
+      };
+
+      const response = await createProphylaxis(prophylaxisData);
+      console.log("response are", response)
+
+      // Reset form after successful submission
+      setFormData({
+        date: "",
+        remarks: "",
+        prophylacticDrug: "",
+        dogId: ""
+      });
+      setSelectedDog(null);
+      setSelectedBreed(null);
+
+      // Show success message or redirect
+      alert("Prophylaxis record created successfully");
+      navigate("/prophylaxis-view")
+      console.log("Prophylaxis record created successfully");
+    } catch (err) {
+      setError("Failed to create Prophylaxis record");
+      console.error("Error creating Prophylaxis:", err);
+    }
+  };
+
 
   return (
     <div className="max-w-2xl mx-auto mt-12 p-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg">
       <h1 className="text-3xl font-semibold text-gray-900 dark:!text-gray-100 mb-8">
-        New Prophylaxis Record
+        {selectedProphylaxis ? " Update Prophylaxis Record" : " New Prophylaxis Record"}
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={selectedProphylaxis ? handleUpdate : handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <div className="space-y-6">
+            <Label>Select Breed <span className="text-red-500">*</span></Label>
+            <Select
+              options={breedOptions}
+              placeholder="Select Breed"
+              onChange={(val) => setSelectedBreed({ value: val, label: val })}
+              defaultValue={selectedProphylaxis?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+          <div className="space-y-6">
+            <Label>Select Dog <span className="text-red-500">*</span></Label>
+            <Select
+              options={dogOptions}
+              placeholder="Select Dog"
+              onChange={(val) => setSelectedDog({ value: val, label: val })}
+              defaultValue={selectedProphylaxis?.dog?.dogName.toString()}
+            />
+          </div>
+        </div>
         {/* Date Field */}
         <div className="flex flex-col">
           <Label htmlFor="datePicker" className="mb-2">
@@ -108,6 +208,7 @@ export default function ProphylaxisRecordForm() {
             <Flatpickr
               id="datePicker"
               value={formData.date}
+              defaultValue={selectedProphylaxis?.date}
               onChange={handleDateChange}
               options={{
                 dateFormat: "Y-m-d",
@@ -136,31 +237,6 @@ export default function ProphylaxisRecordForm() {
             </span>
           </div>
         </div>
-
-        {/* Breed Select */}
-        <div className="flex flex-col">
-          <Label htmlFor="breedSelect" className="mb-2">
-            Select Breed <span className="text-red-500">*</span>
-          </Label>
-          <div className="
-            w-full h-12
-            rounded-lg
-            border border-gray-300 dark:border-gray-600
-            bg-white dark:bg-gray-700
-            shadow-sm
-            transition duration-200
-            focus-within:ring-2 focus-within:ring-brand-500 dark:focus-within:ring-brand-800
-            focus-within:border-transparent
-          ">
-            <Select
-              options={breedOptions}
-              placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
-              onChange={handleBreedChange}
-              className="w-full h-full bg-transparent px-4 text-gray-800 dark:text-gray-100 focus:outline-none"
-            />
-          </div>
-        </div>
-
         {/* Prophylactic Drug */}
         <div className="flex flex-col">
           <Label htmlFor="prophylacticDrug" className="mb-2">
@@ -171,6 +247,7 @@ export default function ProphylaxisRecordForm() {
             name="prophylacticDrug"
             id="prophylacticDrug"
             value={formData.prophylacticDrug}
+            defaultValue={selectedProphylaxis?.prophylacticDrug}
             onChange={handleChange}
             required
             placeholder="Enter drug name"
@@ -201,6 +278,7 @@ export default function ProphylaxisRecordForm() {
             id="remarks"
             rows={2}
             value={formData.remarks}
+            defaultValue={selectedProphylaxis?.remarks}
             onChange={handleChange}
             placeholder="Any notes or observations"
             className="
@@ -251,7 +329,7 @@ export default function ProphylaxisRecordForm() {
               transition duration-200
             "
           >
-            {isLoading ? "Saving..." : "Save Record"}
+            {selectedProphylaxis ? "Update Record" : "Save Record"}
           </Button>
         </div>
       </form>

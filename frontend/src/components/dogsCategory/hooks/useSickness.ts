@@ -32,12 +32,20 @@ export const useSickness = () => {
     [setSelected]
   );
 
+    const setSelectedSickness = useCallback(
+    (record: typeof selected | null) => {
+      setSelected(record);
+    },
+    [setSelected]
+  );
+
   return {
     sicknessRecords: records,
     selectedSickness: selected,
     isLoading: loading,
     error,
     getAllSickness,
+    setSelectedSickness,
     getSicknessById,
     createSickness,
     updateSickness,

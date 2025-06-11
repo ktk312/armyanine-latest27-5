@@ -25,7 +25,18 @@ const createSicknessRecord = async (req, res) => {
 // Get All
 const getAllSicknessRecords = async (req, res) => {
   try {
-    const records = await prisma.sicknessRecord.findMany();
+    const records = await prisma.sicknessRecord.findMany({
+      include: {
+        dog: {
+          include: {
+            breed: true
+          }
+        }
+      },
+      orderBy: {
+        id: "desc", // Change 'date' to any field you want to sort by
+      },
+    });
     res.json(records);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch sickness records" });

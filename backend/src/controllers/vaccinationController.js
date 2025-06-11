@@ -41,6 +41,9 @@ const getAllVaccinationRecords = async (req, res) => {
                     },
                 },
             },
+            orderBy: {
+                id: "desc", // Change 'date' to any field you want to sort by
+            },
         });
         res.json(records);
     } catch (error) {
@@ -66,38 +69,38 @@ const getVaccinationRecordById = async (req, res) => {
 
 // Update
 const updateVaccinationRecord = async (req, res) => {
-  console.log("Vaccination Updated POST");
+    console.log("Vaccination Updated POST");
 
-  try {
-    const id = Number(req.params.id);
-    const { age, vaccine, dueDate, givenDate, batchNo, vetSign } = req.body;
+    try {
+        const id = Number(req.params.id);
+        const { age, vaccine, dueDate, givenDate, batchNo, vetSign } = req.body;
 
-    console.log("Updating with:", age, vaccine, dueDate, batchNo, vetSign, id, givenDate);
+        console.log("Updating with:", age, vaccine, dueDate, batchNo, vetSign, id, givenDate);
 
-    const existingVaccination = await prisma.vaccinationRecord.findUnique({ where: { id } });
+        const existingVaccination = await prisma.vaccinationRecord.findUnique({ where: { id } });
 
-    if (!existingVaccination) {
-      return res.status(404).json({ error: "Vaccination record not found" });
+        if (!existingVaccination) {
+            return res.status(404).json({ error: "Vaccination record not found" });
+        }
+
+        const updated = await prisma.vaccinationRecord.update({
+            where: { id },
+            data: {
+                age: parseInt(age),
+                vaccine,
+                dueDate: dueDate ? new Date(dueDate) : undefined,
+                givenDate: givenDate ? new Date(givenDate) : undefined,
+                batchNo,
+                vetSign,
+            },
+        });
+
+        console.log("Updated record:", updated);
+        res.json(updated);
+    } catch (error) {
+        console.error("Update error:", error);
+        res.status(500).json({ error: "Failed to update vaccination record" });
     }
-
-    const updated = await prisma.vaccinationRecord.update({
-      where: { id },
-      data: {
-        age: parseInt(age),
-        vaccine,
-        dueDate: dueDate ? new Date(dueDate) : undefined,
-        givenDate: givenDate ? new Date(givenDate) : undefined,
-        batchNo,
-        vetSign,
-      },
-    });
-
-    console.log("Updated record:", updated);
-    res.json(updated);
-  } catch (error) {
-    console.error("Update error:", error);
-    res.status(500).json({ error: "Failed to update vaccination record" });
-  }
 };
 
 

@@ -31,7 +31,12 @@ export const useTraining = () => {
     (record: typeof selected | null) => setSelected(record),
     [setSelected]
   );
-
+  const setSelectedTraining = useCallback(
+    (record: typeof selected | null) => {
+      setSelected(record);
+    },
+    [setSelected]
+  );
   return {
     trainingRecords: records,
     selectedTraining: selected,
@@ -42,6 +47,7 @@ export const useTraining = () => {
     createTraining,
     updateTraining,
     deleteTraining,
+    setSelectedTraining,
     selectTraining,
   };
 };

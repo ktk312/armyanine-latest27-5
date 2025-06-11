@@ -1,9 +1,12 @@
+import { Dog } from "./dog";
+
 export interface DewormingRecord {
   id: number;
   date: string;
   drug: string;
   sign: string;
   dogId: number;
+  dog?: Dog;
   createdAt: string;
   updatedAt: string;
 }

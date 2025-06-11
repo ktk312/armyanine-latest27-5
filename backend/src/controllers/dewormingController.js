@@ -25,7 +25,18 @@ const createDewormingRecord = async (req, res) => {
 // Get All
 const getAllDewormingRecords = async (req, res) => {
   try {
-    const records = await prisma.dewormingRecord.findMany();
+    const records = await prisma.dewormingRecord.findMany({
+      include: {
+        dog: {
+          include: {
+            breed: true
+          }
+        }
+      },
+      orderBy: {
+        id: "desc", // Change 'date' to any field you want to sort by
+      },
+    });
     res.json(records);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch deworming records" });

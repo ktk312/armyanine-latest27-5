@@ -637,12 +637,12 @@ export const updateDeworming = async (
   id: number,
   data: Partial<DewormingInput>
 ): Promise<DewormingRecord> => {
-  const res = await axios.put(`${endpoint.UPDATE_DEWORMING}/${id}`, data);
+  const res = await axios.patch(endpoint.UPDATE_DEWORMING(String(id)), data);
   return res.data;
 };
 
 export const deleteDeworming = async (id: number): Promise<void> => {
-  await axios.delete(`${endpoint.DELETE_DEWORMING}/${id}`);
+  await axios.delete(endpoint.DELETE_DEWORMING(String(id)));
 };
 
 // Training Module
@@ -668,12 +668,12 @@ export const updateTraining = async (
   id: number,
   data: Partial<TrainingInput>
 ): Promise<TrainingRecord> => {
-  const res = await axios.put(`${endpoint.UPDATE_TRAINING}/${id}`, data);
+  const res = await axios.patch(endpoint.UPDATE_TRAINING(String(id)), data);
   return res.data;
 };
 
 export const deleteTraining = async (id: number): Promise<void> => {
-  await axios.delete(`${endpoint.DELETE_TRAINING}/${id}`);
+  await axios.delete(endpoint.DELETE_TRAINING(String(id)));
 };
 
 // Sickness Module

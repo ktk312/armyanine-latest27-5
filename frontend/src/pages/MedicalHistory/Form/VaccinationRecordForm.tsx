@@ -5,7 +5,7 @@ import Label from "../../../components/form/Label";
 import { useBreedStore } from "../../../store/breedStore";
 import { useFilteredDogs } from "../../../components/dogsCategory/hooks/useFetchDogs";
 import { useVaccination } from "../../../components/dogsCategory/hooks/useVaccination";
-import { Navigate, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const VaccinationRecordForm = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +22,8 @@ const VaccinationRecordForm = () => {
   const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<{ value: string; label: string } | null>(null);
   const [error, setError] = useState<string | undefined>(undefined);
-  const { dogs, loading, } = useFilteredDogs(selectedBreed?.value || "", "")
+  console.log(error)
+  const { dogs } = useFilteredDogs(selectedBreed?.value || "", "")
   const { createVaccination, selectedVaccination, setSelectedVaccination, updateVaccination } = useVaccination();
   const navigate = useNavigate();
   const dogOptions = dogs.map(dog => ({
@@ -73,9 +74,9 @@ const VaccinationRecordForm = () => {
         batchNo: formData.batchNo,
         vetSign: formData.vetSign,
       };
-console.log("---before update", updatedData)
-      const response = await updateVaccination(selectedVaccination.id.toString(), updatedData);
-       alert("Updated Successfully");
+      console.log("---before update", updatedData)
+      await updateVaccination(selectedVaccination.id.toString(), updatedData);
+      alert("Updated Successfully");
       // Clear state after update
       setFormData({
         age: "",
@@ -89,7 +90,7 @@ console.log("---before update", updatedData)
       setSelectedDog(null);
       setSelectedBreed(null);
       setSelectedVaccination(null); // clear store
-navigate("/vaccination-view")
+      navigate("/vaccination-view")
       console.log("Vaccination record updated successfully");
     } catch (err) {
       setError("Failed to update vaccination record");
@@ -149,7 +150,7 @@ navigate("/vaccination-view")
   ];
   const { breeds, getAllBreeds } = useBreedStore();
 
-  // Get Litters
+  // Get Breed
   useEffect(() => {
     const fetchBreeds = async () => {
       try {
@@ -184,7 +185,7 @@ navigate("/vaccination-view")
           id="vaccination-form-heading"
           className="text-xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight"
         >
-          Add Vaccination Record
+          {selectedVaccination ? "Update Vaccination Record" : "Add Vaccination Record"}
         </h2>
       </header>
 

@@ -20,7 +20,7 @@ const VaccinationView = () => {
   const goToNewPage = () => {
     navigate("/create-vaccination-record")
   };
-  const { vaccinations = [], isLoading, error, getAllVaccinations, setSelectedVaccination, deleteVaccination } = useVaccination();
+  const { vaccinations = [], getAllVaccinations, setSelectedVaccination, deleteVaccination } = useVaccination();
 
   const [filters, setFilters] = useState<Record<string, string>>({
     age: "",
@@ -30,6 +30,7 @@ const VaccinationView = () => {
     batchNo: "",
     vetSign: "",
   });
+  console.log(setFilters)
 
   useEffect(() => {
     getAllVaccinations();
@@ -133,6 +134,7 @@ const VaccinationView = () => {
                   <TableCell>{item?.age.toLocaleString()}</TableCell>
                   <TableCell>{item.vaccine}</TableCell>
                   <TableCell>{item?.dueDate}</TableCell>
+                   <TableCell>{item?.givenDate}</TableCell>
                   <TableCell>{item?.batchNo.toLocaleString()}</TableCell>
                   <TableCell>{item?.vaccine}</TableCell>
                   <TableCell>{item?.vetSign}</TableCell>

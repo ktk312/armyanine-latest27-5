@@ -19,9 +19,9 @@ export const useProphylaxis = () => {
     await fetchAll(); //
   }, [fetchAll]);
 
-//   const getProphylaxisById = useCallback(async (id: number) => {
-//     await fetchOne(id);
-//   }, [fetchOne]);
+  //   const getProphylaxisById = useCallback(async (id: number) => {
+  //     await fetchOne(id);
+  //   }, [fetchOne]);
 
   const createProphylaxis = useCallback(
     async (data: Partial<ProphylaxisInput>) => {
@@ -48,6 +48,13 @@ export const useProphylaxis = () => {
     },
     [setSelected]
   );
+  const setSelectedProphylaxis = useCallback(
+    (record: typeof selected | null) => {
+      setSelected(record);
+    },
+    [setSelected]
+  );
+
 
   return {
     prophylaxisRecords: records,
@@ -57,6 +64,7 @@ export const useProphylaxis = () => {
 
     getAllProphylaxis,
     // getProphylaxisById,
+    setSelectedProphylaxis,
     createProphylaxis,
     updateProphylaxis,
     deleteProphylaxis,
