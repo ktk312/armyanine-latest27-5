@@ -53,6 +53,7 @@ import DewormingRecordForm from "./pages/MedicalHistory/Form/DewormingRecordForm
 import ProphylaxisList from "./pages/MedicalHistory/ProphylaxisList";
 import TrainingRecordForm from "./pages/MedicalHistory/Form/TrainingRecordForm";
 import EditProphylaxisRecord from "./pages/MedicalHistory/EditProphylaxisRecord";
+import SicknessRecord from "./pages/MedicalHistory/SicknessRecord";
 
 export default function App() {
   return (
@@ -159,6 +160,7 @@ export default function App() {
               <Route path="/deworming-view" element={<DewormingRecord />} />
               <Route path="/training-view" element={<TrainingRecord />} />
               <Route path="/prophylaxis-view" element={<Prophylaxis />} />
+              <Route path="/sickness-view" element={<SicknessRecord />} />
 
               {/* Medical Form */}
               <Route
