@@ -5054,7 +5054,7 @@ const DatabaseView = () => {
             )}
           </>
         ) : (
-          <Box className="dog-details bg-white dark:!bg-gray-800 dark:!text-white">
+          <Box className="dog-details w-[240px] md:w-auto bg-white dark:!bg-gray-800 dark:!text-white">
             {isMobile ? (
               <Tabs
               orientation="vertical"

@@ -197,7 +197,7 @@ export default function SicknessRecordForm() {
           </label>
           <input
             type="text"
-            name="disease"
+            name="diseases"
             value={formData.diseases}
             onChange={handleChange}
             required
