@@ -196,7 +196,7 @@ const MedicalHistory: React.FC<Props> = ({ dogId }) => {
   const groups = buildDisplayGroups();
 
   return (
-    <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+    <div className="w-[240px] md:w-auto p-6 md:p-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
       <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-600 dark:!text-white mb-10">
         Dog Medical & Training History
       </h1>
