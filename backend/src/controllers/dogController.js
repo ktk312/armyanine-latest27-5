@@ -1450,21 +1450,24 @@ const getDogProgeny = async (req, res) => {
 
 const getFilteredDogs = async (req, res) => {
   console.log("Filter All Dog API Called");
-  try {
-    // Safely parse breedId and cityId from query
-    const breedId = req.query.breedId ? parseInt(req.query.breedId) : null;
-    const cityId = req.query.cityId ? parseInt(req.query.cityId) : null;
 
-    // Only include filters if they are valid numbers
-    const filters = [];
-    if (!isNaN(breedId)) {
-      filters.push({ breedId: { equals: breedId } });
-    }
-    if (!isNaN(cityId)) {
-      filters.push({ cityId: { equals: cityId } });
-    }
+  try {
+   const breedId = parseInt(req.query.breedId);
+const cityId = parseInt(req.query.cityId);
+
+    const where = {};
+
+    // Add filters only if they are valid numbers
+if (!isNaN(breedId)) {
+  where.breedId = breedId;
+}
+
+if (!isNaN(cityId)) {
+  where.cityId = cityId;
+}
+console.log("where are", where)
     const dogs = await prisma.dog.findMany({
-      where: filters.length > 0 ? { AND: filters } : undefined,
+      where, // dynamically applies 0, 1 or 2 filters
       include: {
         sire: true,
         dam: true,
@@ -1478,12 +1481,15 @@ const getFilteredDogs = async (req, res) => {
         id: "desc",
       },
     });
-    res.json(dogs);
+
+    res.status(200).json(dogs);
   } catch (error) {
     console.error("Error fetching filtered dogs:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 module.exports = {
   getFilteredDogs,
