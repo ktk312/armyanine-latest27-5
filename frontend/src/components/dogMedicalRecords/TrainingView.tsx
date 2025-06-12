@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 import { EyeIcon, PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons"; // Optional: for New button
 import { useNavigate } from "react-router-dom";
 import { useTraining } from "../dogsCategory/hooks/useTraining";
 import { Tooltip } from "@mui/material";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 
 // Dummy data – replace with API response or context state
 export const performanceMetrics = [
@@ -13,6 +14,9 @@ export const performanceMetrics = [
   "Sensitivity",
   "Aggression",
 ] as const;
+const getNestedValue = (obj: any, path: string): any => {
+  return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+};
 
 export type PerformanceMetric = typeof performanceMetrics[number];
 
@@ -31,6 +35,21 @@ export interface TrainingRecord {
   sensitivity: string;
   ratings: Ratings;
 }
+const ITEMS_PER_PAGE = 5;
+const columns = [
+  { label: "S.No", key: "id" },
+  { label: "Dog Name", key: "dog.dogName" },
+  { label: "Trainer", key: "trainerName" },
+  { label: "Category", key: "trainingCategory" },
+  { label: "Start Date", key: "trainingStartedOn" },
+  { label: "End Date", key: "trainingCompleted" },
+  { label: "Intelligence", key: "intelligence" },
+  { label: "Willingness", key: "willingness" },
+  { label: "Energy", key: "energy" },
+  { label: "Sensitivity", key: "sensitivity" },
+   { label: "Aggression", key: "aggression" },
+  { label: "Action", key: "action" },
+];
 export default function TrainingListView() {
   const navigate = useNavigate();
   const {
@@ -41,7 +60,38 @@ export default function TrainingListView() {
     setSelectedTraining,
     deleteTraining
   } = useTraining();
+  const [filters, setFilters] = useState<Record<string, string>>(
+    Object.fromEntries(columns.map((col) => [col.key, ""]))
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  };
 
+  const filteredData = trainingRecords.filter((item) =>
+    Object.entries(filters).every(([key, value]) => {
+      if (!key || !value) return true;
+      let raw = getNestedValue(item, key);
+
+      if (raw instanceof Date) {
+        raw = raw.toLocaleDateString();
+      } else if (key.includes("Date") && typeof raw === "string") {
+        // Parse and format string dates for consistent filtering
+        const parsed = new Date(raw);
+        raw = isNaN(parsed.getTime()) ? raw : parsed.toLocaleDateString();
+      }
+
+      const stringValue = raw != null ? String(raw).toLowerCase() : "";
+      return stringValue.includes(value.toLowerCase());
+    })
+  );
+
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
   // Fetch records on component mount
   useEffect(() => {
     getAllTraining();
@@ -59,13 +109,13 @@ export default function TrainingListView() {
     navigate("/create-training-record");
   };
 
-   const handleDelete = async (id: number) => {
-  const confirmDelete = window.confirm("Are you sure you want to delete this training record?");
-  if (!confirmDelete) return;
+  const handleDelete = async (id: number) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this training record?");
+    if (!confirmDelete) return;
 
-  await deleteTraining((id));
-  alert("Deleted Successfully")
-};
+    await deleteTraining((id));
+    alert("Deleted Successfully")
+  };
 
 
 
@@ -94,103 +144,95 @@ export default function TrainingListView() {
         ) : trainingRecords.length === 0 ? (
           <div className="text-center text-gray-600 dark:text-gray-400">No training records found.</div>
         ) : (
-          <table className="w-full table-auto border-collapse text-sm">
-            <thead className="bg-gray-100 dark:bg-gray-800 text-left text-gray-700 dark:text-gray-300">
-              <tr>
-                <th className="px-4 py-3">Trainer</th>
-                <th className="px-4 py-3">Category</th>
-                <th className="px-4 py-3">Start</th>
-                <th className="px-4 py-3">End</th>
-                {performanceMetrics.map((metric) => (
-                  <th key={metric} className="px-4 py-3">
-                    {metric}
-                  </th>
+          <Table>
+            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+              <TableRow>
+                {columns.map(({ label, key }, idx) => (
+                  <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-gray-500 text-start dark:text-gray-300">
+                    {label}
+                    {key && (
+                      <input
+                        type="text"
+                        placeholder={`Search ${label}`}
+                        value={filters[key]}
+                        onChange={(e) => handleFilterChange(key, e.target.value)}
+                        className="mt-1 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm rounded-md px-2 py-1 text-gray-900 dark:text-white"
+                      />
+                    )}
+                  </TableCell>
                 ))}
-                <th className="px-4 py-3">Actions</th>
+              </TableRow>
+            </TableHeader>
 
-              </tr>
-            </thead>
-            <tbody>
-              {trainingRecords.map((record, index) => (
-                <tr
-                  key={index}
-                  className={`transition-colors duration-200 ${index % 2 === 0
-                    ? "bg-white dark:bg-gray-900"
-                    : "bg-gray-50 dark:bg-gray-800"
-                    } hover:bg-blue-50 dark:hover:bg-blue-900`}
-                >
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.trainerName}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.trainingCategory}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.trainingStartedOn}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.trainingCompleted}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.intelligence}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.willingness}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.energy}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.sensitivity}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-gray-100">
-                    {record?.aggression}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button
-                        // onClick={() => handleView(record.id)}
-                        className="text-blue-500 hover:text-blue-700"
-                        aria-label={`View training record with ID ${record.id}`}
-                      >
-                        <EyeIcon className="h-5 w-5" />
-                      </button>
-                       <Tooltip title="Edit">
-                      <button
-                        onClick={() => handleEditClick(record)}
-                        className="text-green-500 hover:text-green-700"
-                        aria-label={`Edit training record with ID ${record.id}`}
-                      >
-                        <PencilIcon className="h-5 w-5" />
-                      </button>
-                      </Tooltip>
-                       <Tooltip title="Remove">
-                      <button
-                        onClick={() => handleDelete(record.id)}
-                        className="text-red-500 hover:text-red-700"
-                        aria-label={`Delete training record with ID ${record.id}`}
-                      >
-                        <TrashBinIcon className="h-5 w-5" />
-                      </button>
-                      </Tooltip>
-                    </div>
-                  </td>
+            <TableBody>
+              {paginatedData.map((order, index) => {
+                  const formattedStartDate = order.trainingStartedOn ? new Date(order.trainingStartedOn).toLocaleDateString() : "";
+                  const formattedCompletedDate = order.trainingCompleted ? new Date(order.trainingCompleted).toLocaleDateString() : "";
 
-                  {/* {performanceMetrics.map((metric) => (
-                  <td
-                    key={metric}
-                    className="px-4 py-3 text-gray-900 dark:text-gray-100"
-                  >
-                     {(record as TrainingRecord).ratings[metric] ?? "-"}
+                return (
+                <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
+                  <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.dog?.dogName}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.trainerName}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.trainingCategory}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{formattedStartDate}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{formattedCompletedDate}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.intelligence}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.willingness}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.energy}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.sensitivity}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.aggression}</TableCell>
+                  <TableCell className="px-4 py-3 text-start">
+                    <Tooltip title="view">
+                      <button className="text-blue-500 mx-1">
+                        <EyeIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Edit">
+                      <button className="text-blue-500 mx-1"
+                        onClick={() => {
+                          handleEditClick(order);
+                        }}>
+                        <PencilIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Remove">
+                      <button className="text-red-500 mx-1" onClick={() => {
+                        handleDelete(order?.id);
+                      }}>
+                        <TrashBinIcon />
+                      </button>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              )
+})}
+            </TableBody>
+          </Table>
 
-                  </td>
-                ))} */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
         )}
+        {/* ✅ Pagination Controls */}
+        <div className="flex justify-between items-center mt-6 px-2 text-sm text-gray-700 dark:text-gray-300">
+          <button
+            className="px-3 py-1 border rounded-md dark:border-gray-600 dark:bg-gray-800 disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-3 py-1 border rounded-md dark:border-gray-600 dark:bg-gray-800 disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            Next
+          </button>
+        </div>
       </div>
+
     </div>
   );
 }

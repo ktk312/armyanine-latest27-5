@@ -698,7 +698,7 @@ export const updateSickness = async (
   id: number,
   data: Partial<SicknessInput>
 ): Promise<SicknessRecord> => {
-  const res = await axios.put(`${endpoint.UPDATE_SICKNESS}/${id}`, data);
+  const res = await axios.patch(endpoint.UPDATE_SICKNESS(String(id)), data);
   return res.data;
 };
 

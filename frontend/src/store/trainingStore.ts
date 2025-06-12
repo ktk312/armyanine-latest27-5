@@ -69,4 +69,9 @@ export const useTrainingStore = create<TrainingState>((set) => ({
   },
 
   setSelected: (record) => set({ selected: record }),
+  
+
+// Add this method to the store:
+clearSelectedTraining: () => set({ selected: null }),
+
 }));

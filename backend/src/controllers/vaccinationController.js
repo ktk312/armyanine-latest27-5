@@ -73,7 +73,7 @@ const updateVaccinationRecord = async (req, res) => {
 
     try {
         const id = Number(req.params.id);
-        const { age, vaccine, dueDate, givenDate, batchNo, vetSign } = req.body;
+        const { age, vaccine, dueDate, givenDate, batchNo, vetSign, dogId } = req.body;
 
         console.log("Updating with:", age, vaccine, dueDate, batchNo, vetSign, id, givenDate);
 
@@ -86,6 +86,7 @@ const updateVaccinationRecord = async (req, res) => {
         const updated = await prisma.vaccinationRecord.update({
             where: { id },
             data: {
+                // dogId: parseInt(dogId),
                 age: parseInt(age),
                 vaccine,
                 dueDate: dueDate ? new Date(dueDate) : undefined,

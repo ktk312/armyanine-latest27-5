@@ -50,9 +50,8 @@ import TrainingRecord from "./pages/MedicalHistory/TrainingRecord";
 import Prophylaxis from "./components/dogMedicalRecords/ProphylaxisView";
 import VaccinationRecordForm from "./pages/MedicalHistory/Form/VaccinationRecordForm";
 import DewormingRecordForm from "./pages/MedicalHistory/Form/DewormingRecordForm";
-import ProphylaxisList from "./pages/MedicalHistory/ProphylaxisList";
+import ProphylaxisList from "./pages/MedicalHistory/Form/ProphylaxisForm";
 import TrainingRecordForm from "./pages/MedicalHistory/Form/TrainingRecordForm";
-import EditProphylaxisRecord from "./pages/MedicalHistory/EditProphylaxisRecord";
 import SicknessRecord from "./pages/MedicalHistory/SicknessRecord";
 import SicknessRecordForm from "./pages/MedicalHistory/Form/SicknessRecordForm";
 
@@ -180,12 +179,6 @@ export default function App() {
               <Route
                 path="/create-training-record"
                 element={<TrainingRecordForm />}
-              />
-
-              {/*Edit Prophylaxis */}
-              <Route
-                path="/edit-prophylaxis-records/:id"
-                element={<EditProphylaxisRecord />}
               />
 
               {/* Dog Breed */}

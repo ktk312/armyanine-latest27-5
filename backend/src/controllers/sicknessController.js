@@ -59,13 +59,17 @@ const getSicknessRecordById = async (req, res) => {
 
 // Update
 const updateSicknessRecord = async (req, res) => {
+console.log("Sickness Update API PATCH")
+
   try {
     const id = Number(req.params.id);
-    const { date, diseases, treatment } = req.body;
-
+    const { date, diseases, treatment, dogId } = req.body;
+    
+console.log(date, diseases, treatment, dogId)
     const updated = await prisma.sicknessRecord.update({
       where: { id },
       data: {
+        // dogId: dogId,
         date: date ? new Date(date) : undefined,
         diseases,
         treatment,
