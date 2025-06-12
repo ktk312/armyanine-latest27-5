@@ -5057,6 +5057,7 @@ const DatabaseView = () => {
           <Box className="dog-details bg-white dark:!bg-gray-800 dark:!text-white">
             {isMobile ? (
               <Tabs
+              orientation="vertical"
                 value={selectedSection}
                 onChange={(_, newValue) => setSelectedSection(newValue)}
                 variant="scrollable"
@@ -5071,7 +5072,7 @@ const DatabaseView = () => {
                     value={name}
                     icon={icon}
                     iconPosition="start"
-                    sx={{ textTransform: "none", fontWeight: 500 }}
+                    sx={{fontWeight: 500,alignItems: 'flex-start'}}
                   />
                 ))}
               </Tabs>
