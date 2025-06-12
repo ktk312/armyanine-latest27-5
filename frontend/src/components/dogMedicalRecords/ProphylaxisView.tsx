@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import Button from "../ui/button/Button";
@@ -9,16 +9,21 @@ import {
   EyeIcon,
 } from "../../assets/icons";
 import { useProphylaxis } from "../dogsCategory/hooks/useProphylaxis";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 
-// Define a type for the prophylaxis record
-interface ProphylaxisRecord {
-  id: number;
-  date: string;
-  prophylacticDrug: string;
-  remarks: string;
-}
+const ITEMS_PER_PAGE = 5;
+const getNestedValue = (obj: any, path: string): any => {
+  return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+};
 
-const headers = ["Date", "Prophylactic Drug", "Remarks", "Actions"];
+const columns = [
+  { label: "S.No", key: "id" },
+  { label: "Dog Name", key: "dog.dogName" },
+  { label: "Prophylactic Drug", key: "prophylacticDrug" },
+  { label: "remarks", key: "remarks" },
+  { label: "Date", key: "date" },
+  { label: "Action", key: "action" },
+];
 
 export default function ProphylaxisView() {
   const navigate = useNavigate();
@@ -31,7 +36,34 @@ export default function ProphylaxisView() {
     setSelectedProphylaxis
 
   } = useProphylaxis();
+  const [filters, setFilters] = useState<Record<string, string>>(
+    Object.fromEntries(columns.map((col) => [col.key, ""]))
+  ); 
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const filteredData = prophylaxisRecords.filter((item) =>
+    Object.entries(filters).every(([key, value]) => {
+      if (!key || !value) return true;
+      let raw = getNestedValue(item, key);
+
+      if (raw instanceof Date) {
+        raw = raw.toLocaleDateString();
+      } else if (key.includes("Date") && typeof raw === "string") {
+        // Parse and format string dates for consistent filtering
+        const parsed = new Date(raw);
+        raw = isNaN(parsed.getTime()) ? raw : parsed.toLocaleDateString();
+      }
+
+      const stringValue = raw != null ? String(raw).toLowerCase() : "";
+      return stringValue.includes(value.toLowerCase());
+    })
+  );
+
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
   // Use useCallback to memoize the goToNewPage function
   const goToNewPage = useCallback(() => {
     navigate("/create-prophylaxis");
@@ -47,13 +79,10 @@ export default function ProphylaxisView() {
     alert("Deleted Successfully")
   };
 
-
-  // Use useCallback to memoize the openViewModal function
-  const openViewModal = useCallback((record: ProphylaxisRecord): void => {
-    alert(
-      `Date: ${record.date}\nProphylactic Drug: ${record.prophylacticDrug}\nRemarks: ${record.remarks}`
-    );
-  }, []);
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  };
 
   // Function to handle edit
   const handleEditClick = (selectedVaccination: any) => {
@@ -104,85 +133,86 @@ export default function ProphylaxisView() {
 
       {/* Table Container */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-800">
-            <tr>
-              {headers.map((header) => (
-                <th
-                  key={header}
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
-                >
-                  {header}
-                </th>
+        <Table>
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            <TableRow>
+              {columns.map(({ label, key }, idx) => (
+                <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-gray-500 text-start dark:text-gray-300">
+                  {label}
+                  {key && (
+                    <input
+                      type="text"
+                      placeholder={`Search ${label}`}
+                      value={filters[key]}
+                      onChange={(e) => handleFilterChange(key, e.target.value)}
+                      className="mt-1 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm rounded-md px-2 py-1 text-gray-900 dark:text-white"
+                    />
+                  )}
+                </TableCell>
               ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-            {prophylaxisRecords.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={headers.length}
-                  className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400"
-                >
-                  No prophylaxis records found.
-                </td>
-              </tr>
-            ) : (
-              prophylaxisRecords.map((record) => (
-                <tr
-                  key={record.id}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {record.date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {record.prophylacticDrug}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                    {record.remarks}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-center">
-                      {/* View Button */}
-                      <Tooltip title="View Prophylaxis">
-                        <button
-                          className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-full p-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                          onClick={() => openViewModal(record)}
-                          aria-label="View Prophylaxis"
-                        >
-                          <EyeIcon className="h-5 w-5" />
-                        </button>
-                      </Tooltip>
-                      {/* Edit Button */}
-                      <Tooltip title="Edit Prophylaxis">
-                        <button
-                          className="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-900 rounded-full p-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
-                          onClick={() => handleEditClick(record)} // Use handleEdit
-                          aria-label="Edit"
-                        >
-                          <PencilIcon className="h-5 w-5" />
-                        </button>
-                      </Tooltip>
-                      {/* Delete Button */}
-                      <Tooltip title="Remove">
-                        <button
-                          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-100 dark:hover:bg-red-900 rounded-full p-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-400"
-                          onClick={() => handleDelete(record.id)}
-                          aria-label="Delete Prophylaxis"
-                        >
-                          <TrashBinIcon className="h-5 w-5" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {paginatedData.map((order, index) => {
+              const formattedDate = order.date ? new Date(order.date).toLocaleDateString() : "";
+
+              return (
+                <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
+                  <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.dog?.dogName}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.prophylacticDrug}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{order.remarks}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{formattedDate}</TableCell>
+                  <TableCell className="px-4 py-3 text-start">
+                    <Tooltip title="view">
+                      <button className="text-blue-500 mx-1">
+                        <EyeIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Edit">
+                      <button className="text-blue-500 mx-1"
+                        onClick={() => {
+                          handleEditClick(order);
+                        }}>
+                        <PencilIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title="Remove">
+                      <button className="text-red-500 mx-1" onClick={() => {
+                        handleDelete(order?.id);
+                      }}>
+                        <TrashBinIcon />
+                      </button>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+        {/* ✅ Pagination Controls */}
+        <div className="flex justify-between items-center mt-6 px-2 text-sm text-gray-700 dark:text-gray-300">
+          <button
+            className="px-3 py-1 border rounded-md dark:border-gray-600 dark:bg-gray-800 disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-3 py-1 border rounded-md dark:border-gray-600 dark:bg-gray-800 disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            Next
+          </button>
+        </div>
       </div>
+
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function DogsCategoryList() {
   const Navigate = useNavigate();
 
   // 🐶 Fetch categories from API
-  const { dogLoading, error, categories = []} = useFetchDogsCategory();
+  const { dogLoading, error, categories = [] } = useFetchDogsCategory();
   const { setSelectedDogcategory } = useFetchDogsCategory();
   //  const {setSelectedDogcategory} = useFetchDogsCategory();
 
@@ -77,7 +77,7 @@ export default function DogsCategoryList() {
   );
 
   // 📍 Redirect on Edit
-  const updateDogCategory = (data:any) => {
+  const updateDogCategory = (data: any) => {
     setSelectedDogcategory(data)
     Navigate("/dog/create/category"); // Adjust the path as needed
   };
@@ -87,14 +87,14 @@ export default function DogsCategoryList() {
       <div className="flex justify-between items-center mb-6 p-5">
         <h2 className="text-xl font-semibold">Dogs Categories - List</h2>
         <Button
-  onClick={() => {
-    setSelectedDogcategory(null); // ✅ Reset selectedCategory before navigating
-    Navigate("/dog/create/category");
-  }}
-  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center gap-2"
->
-  <PlusIcon className="w-5 h-5 text-white" /> Create 
-</Button>
+          onClick={() => {
+            setSelectedDogcategory(null); // ✅ Reset selectedCategory before navigating
+            Navigate("/dog/create/category");
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center gap-2"
+        >
+          <PlusIcon className="w-5 h-5 text-white" /> Create
+        </Button>
 
 
       </div>
@@ -143,10 +143,10 @@ export default function DogsCategoryList() {
                       <button className="text-blue-500 mx-1">
                         <EyeIcon />
                       </button>
-                      <button className="text-blue-500 mx-1" 
-                       onClick={() => {
-                        updateDogCategory(order);
-                     }}>
+                      <button className="text-blue-500 mx-1"
+                        onClick={() => {
+                          updateDogCategory(order);
+                        }}>
                         <PencilIcon />
                       </button>
                       {/* <button className="text-red-500 mx-1">

@@ -61,11 +61,12 @@ const getDewormingRecordById = async (req, res) => {
 const updateDewormingRecord = async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { date, drug, sign } = req.body;
-
+    const { date, drug, sign, dogId } = req.body;
+console.log(date, drug, sign, dogId)
     const updated = await prisma.dewormingRecord.update({
       where: { id },
       data: {
+        // dogId,
         date: date ? new Date(date) : undefined,
         drug,
         sign,

@@ -30,7 +30,7 @@ const TrainingRecordForm = () => {
    console.log(error)
 
 
-  const { selectedTraining, updateTraining, createTraining } = useTraining();
+  const { selectedTraining, updateTraining, createTraining, setSelectedTraining } = useTraining();
   const [ratings, setRatings] = useState<Record<string, string>>({});
   const navigate = useNavigate();
  
@@ -126,6 +126,33 @@ const TrainingRecordForm = () => {
       navigate("/training-view")
     }
   };
+
+  useEffect(() => {
+  if (!selectedTraining) {
+    setTrainerName("");
+    setTrainingStartedOn("");
+    setTrainingCompletedOn("");
+    setTrainingCategory("");
+    setRatings({});
+    setSelectedBreed(null);
+    setSelectedDog(null);
+  }
+}, []);
+
+// Reset selected dog when breed changes only in create mode
+  useEffect(() => {
+    if (!selectedTraining) {
+      setSelectedDog(null);
+    }
+  }, [selectedBreed]);
+
+  // Clear store when component unmounts
+  useEffect(() => {
+    return () => {
+      setSelectedTraining(null);
+    };
+  }, [setSelectedTraining]);
+
   return (
     <section
       className="rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm transition-colors duration-300 overflow-hidden p-6"
@@ -135,28 +162,28 @@ const TrainingRecordForm = () => {
     >
       {/* Form Inputs for Trainer Information */}
       <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        {!selectedTraining &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="space-y-6">
             <Label>Select Breed <span className="text-red-500">*</span></Label>
             <Select
               options={breedOptions}
               placeholder="Select Breed"
               onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              defaultValue={selectedTraining?.dog?.breed?.id.toString()}            // disabled={!!selectedBreed?.value}
+              // defaultValue={selectedTraining?.dog?.breed?.id.toString()}            // disabled={!!selectedBreed?.value}
             />
           </div>
-        </div>
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+        </div>)}
+        {!selectedTraining &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
           <div className="space-y-6">
             <Label>Select Dog <span className="text-red-500">*</span></Label>
             <Select
               options={dogOptions}
               placeholder="Select Dog"
               onChange={(val) => setSelectedDog({ value: val, label: val })}
-              defaultValue={selectedTraining?.dog?.dogName.toString()}
+              // defaultValue={selectedTraining?.dog?.dogName.toString()}
             />
           </div>
-        </div>
+        </div>)}
         <label className="flex flex-col text-gray-900 dark:text-gray-100">
           <span className="mb-1 font-semibold">Trainer Name</span>
           <input

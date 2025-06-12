@@ -61,11 +61,12 @@ const getProphylaxisRecordById = async (req, res) => {
 const updateProphylaxisRecord = async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { date, prophylacticDrug, remarks } = req.body;
+    const { date, prophylacticDrug, remarks, dogId } = req.body;
 
     const updated = await prisma.prophylaxisRecord.update({
       where: { id },
       data: {
+        // dogId,
         date: date ? new Date(date) : undefined,
         prophylacticDrug,
         remarks,

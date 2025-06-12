@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/ui/button/Button";
-import { useProphylaxis } from "../../components/dogsCategory/hooks/useProphylaxis";
-import { useBreedStore } from "../../store/breedStore";
-import Select from "../../components/form/Select";
+import Button from "../../../components/ui/button/Button";
+import { useProphylaxis } from "../../../components/dogsCategory/hooks/useProphylaxis";
+import { useBreedStore } from "../../../store/breedStore";
+import Select from "../../../components/form/Select";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
-import Label from "../../components/form/Label";
+import Label from "../../../components/form/Label";
 import { FiCalendar } from "react-icons/fi";
-import { useFilteredDogs } from "../../components/dogsCategory/hooks/useFetchDogs";
+import { useFilteredDogs } from "../../../components/dogsCategory/hooks/useFetchDogs";
 
 export default function ProphylaxisRecordForm() {
   const [selectedDog, setSelectedDog] = useState<{ value: string; label: string } | null>(null);
@@ -177,28 +177,28 @@ console.log("inside the creation")
       </h1>
 
       <form onSubmit={selectedProphylaxis ? handleUpdate : handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+       {!selectedProphylaxis &&( <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="space-y-6">
             <Label>Select Breed <span className="text-red-500">*</span></Label>
             <Select
               options={breedOptions}
               placeholder="Select Breed"
               onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              defaultValue={selectedProphylaxis?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
+              // defaultValue={selectedProphylaxis?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
             />
           </div>
-        </div>
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+        </div>)}
+        {!selectedProphylaxis &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
           <div className="space-y-6">
             <Label>Select Dog <span className="text-red-500">*</span></Label>
             <Select
               options={dogOptions}
               placeholder="Select Dog"
               onChange={(val) => setSelectedDog({ value: val, label: val })}
-              defaultValue={selectedProphylaxis?.dog?.dogName.toString()}
+              // defaultValue={selectedProphylaxis?.dog?.dogName.toString()}
             />
           </div>
-        </div>
+        </div>)}
         {/* Date Field */}
         <div className="flex flex-col">
           <Label htmlFor="datePicker" className="mb-2">

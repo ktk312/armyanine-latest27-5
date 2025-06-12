@@ -158,28 +158,31 @@ export default function DewormingRecordForm() {
         {selectedDeworming ? "Update Deworming Record" : "New Deworming Record"}
       </h1>
       <form onSubmit={selectedDeworming ? handleUpdate : handleSubmit} className="space-y-5">
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+         {!selectedDeworming && (
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="space-y-6">
             <Label>Select Breed <span className="text-red-500">*</span></Label>
             <Select
               options={breedOptions}
               placeholder="Select Breed"
               onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              defaultValue={selectedDeworming?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
+              // defaultValue={selectedDeworming?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+         )}
+         
+       {!selectedDeworming &&( <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
           <div className="space-y-6">
             <Label>Select Dog <span className="text-red-500">*</span></Label>
             <Select
               options={dogOptions}
               placeholder="Select Dog"
               onChange={(val) => setSelectedDog({ value: val, label: val })}
-              defaultValue={selectedDeworming?.dog?.dogName.toString()}
+              // defaultValue={selectedDeworming?.dog?.dogName.toString()}
             />
           </div>
-        </div>
+        </div>)}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Date
@@ -225,9 +228,9 @@ export default function DewormingRecordForm() {
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          {/* <Button variant="outline" onClick={() => navigate(-1)}>
             Cancel
-          </Button>
+          </Button> */}
           <Button
             variant="primary"
             className="w-full sm:w-auto"

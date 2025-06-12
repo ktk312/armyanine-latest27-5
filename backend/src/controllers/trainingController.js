@@ -92,11 +92,13 @@ const updateTrainingRecord = async (req, res) => {
       energy,
       sensitivity,
       aggression,
+      dogId
     } = req.body;
 
     const updated = await prisma.trainingRecord.update({
       where: { id },
       data: {
+        // dogId,
         trainerName,
         trainingStartedOn: trainingStartedOn ? new Date(trainingStartedOn) : undefined,
         trainingCompleted: trainingCompleted ? new Date(trainingCompleted) : undefined,

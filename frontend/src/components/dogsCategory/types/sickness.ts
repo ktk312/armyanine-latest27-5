@@ -1,9 +1,12 @@
+import { Dog } from "./dog";
+
 export interface SicknessRecord {
   id: number;
   date: string;
   diseases: string;
   treatment: string;
   dogId: number;
+  dog: Dog;
   createdAt: string;
   updatedAt: string;
 }
