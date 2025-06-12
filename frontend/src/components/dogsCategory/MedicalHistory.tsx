@@ -24,6 +24,10 @@ import {
   FaCalendarAlt,
   FaClock,
   FaInfoCircle,
+  FaBrain,
+  FaHandHoldingHeart,
+  FaBolt,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 
 type Props = {
@@ -36,6 +40,11 @@ interface GroupItem {
   subtitle?: string;
   details?: string;
   age?: string;
+  willingness?: string;
+  intelligence?: string;
+  energy?: string;
+  sensitivity?: string;
+  aggression?: string;
 }
 
 interface DisplayGroup {
@@ -163,7 +172,11 @@ const MedicalHistory: React.FC<Props> = ({ dogId }) => {
             t.trainingCompleted
           ).toLocaleDateString()}`,
           subtitle: `Trainer: ${t.trainerName}`,
-          details: `Performance: ${t.performance || "N/A"}`,
+          willingness: `Willingness: ${t.willingness}`,
+          intelligence: `Intelligence: ${t.intelligence}`,
+          aggression: `Aggression: ${t.aggression}`,
+          energy: `Energy: ${t.energy}`,
+          sensitivity: `Sensitivity: ${t.sensitivity}`,
         })),
         latestDate:
           trainings.length > 0
@@ -248,6 +261,36 @@ const MedicalHistory: React.FC<Props> = ({ dogId }) => {
                       <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
                         <FaNotesMedical className="text-gray-400" />{" "}
                         {item.details}
+                      </p>
+                    )}
+                    {/* training */}
+                    {item.intelligence && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <FaBrain className="text-gray-400" />{" "}
+                        {item.intelligence}
+                      </p>
+                    )}
+                    {item.willingness && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <FaHandHoldingHeart className="text-gray-400" />{" "}
+                        {item.willingness}
+                      </p>
+                    )}
+                    {item.energy && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <FaBolt className="text-gray-400" /> {item.energy}
+                      </p>
+                    )}
+                    {item.sensitivity && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <FaHeartbeat className="text-gray-400" />{" "}
+                        {item.sensitivity}
+                      </p>
+                    )}
+                    {item.aggression && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <FaExclamationTriangle className="text-gray-400" />{" "}
+                        {item.aggression}
                       </p>
                     )}
                   </div>
