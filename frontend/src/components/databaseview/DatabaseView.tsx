@@ -2565,7 +2565,6 @@
 //   AccountTree as PedigreeIcon,
 // } from "@mui/icons-material";
 
-
 // interface MappedDog {
 //   id: number;
 //   title: string;
@@ -3473,7 +3472,7 @@
 //                     label="Chest Circumference"
 //                     value={selectedDog.chestCircumference}
 //                   />
-//              
+//
 //                   <DetailItem label="Weight" value={selectedDog.weight} />
 //                   <DetailItem
 //                     label="Virtues and Faults"
@@ -3514,8 +3513,7 @@
 
 // export default DatabaseView;
 
-
-//table 
+//table
 
 // import { useEffect, useState } from "react";
 // import {
@@ -4510,7 +4508,10 @@ import DogList from "../dogsCategory/DogSiblingsList";
 import PedigreeTree from "../dogsCategory/react-tree";
 import VirtualBreeding from "../dogsCategory/virtualBreeding";
 import Progeny from "../progeny/Progeny";
-import { useFetchDogs, useFilteredDogs } from "../dogsCategory/hooks/useFetchDogs";
+import {
+  useFetchDogs,
+  useFilteredDogs,
+} from "../dogsCategory/hooks/useFetchDogs";
 import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 import {
@@ -4527,8 +4528,10 @@ import {
   Science as ScienceIcon,
   FamilyRestroom as FamilyIcon,
   AccountTree as PedigreeIcon,
+  MedicalServices as Medical,
 } from "@mui/icons-material";
-import './styles/DatabaseView.css'; // Import the separated CSS file
+import "./styles/DatabaseView.css"; // Import the separated CSS file
+import MedicalHistory from "../dogsCategory/MedicalHistory";
 
 // Custom Material-UI theme
 const canineTheme = createTheme({
@@ -4613,11 +4616,15 @@ const DetailItem = ({
         minWidth: { xs: 100, sm: 130 },
         letterSpacing: "0.02em",
       }}
-       className="dark:!text-white/90"
+      className="dark:!text-white/90"
     >
       {label}:
     </Typography>
-    <Typography variant="body2" sx={{ color: "text.secondary" }} className="dark:!text-white/90">
+    <Typography
+      variant="body2"
+      sx={{ color: "text.secondary" }}
+      className="dark:!text-white/90"
+    >
       {value || "N/A"}
     </Typography>
   </Box>
@@ -4634,7 +4641,10 @@ const DatabaseView = () => {
     value: string;
     label: string;
   } | null>(null);
-  const {dogs, loading, error} = useFilteredDogs(selectedBreed?.value || "", selectedCity?.value || "")
+  const { dogs, loading, error } = useFilteredDogs(
+    selectedBreed?.value || "",
+    selectedCity?.value || ""
+  );
   const [selectedDog, setSelectedDog] = useState<null | MappedDog>(null);
   const [selectedSection, setSelectedSection] = useState("Basic Data");
   const [searchQuery, setSearchQuery] = useState("");
@@ -4647,11 +4657,14 @@ const DatabaseView = () => {
     { name: "Siblings", icon: <FamilyIcon /> },
     { name: "Progeny", icon: <PsychologyIcon /> },
     { name: "Virtual Breeding", icon: <ScienceIcon /> },
+    { name: "Medical History", icon: <Medical /> },
   ];
 
   const mappedDogs: MappedDog[] = dogs.map((dog) => ({
     id: dog.id || 0,
-    title: `${dog.showTitle ? dog.showTitle + " " : ""}${dog.dogName || "Unknown"}`,
+    title: `${dog.showTitle ? dog.showTitle + " " : ""}${
+      dog.dogName || "Unknown"
+    }`,
     registrationNumber: dog.KP || "N/A",
     imageUrl: dog.friendlyUrl ? `http://localhost:3000${dog.friendlyUrl}` : "",
     breed: dog.breed?.breed || "Unknown",
@@ -4741,7 +4754,7 @@ const DatabaseView = () => {
 
   return (
     <ThemeProvider theme={canineTheme}>
-      <div className="database-view dark:border-gray-800 dark:border-white/[0.05] dark:bg-white/[0.03] dark:text-white/90">
+      <div className="database-view dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90">
         {selectedDog && (
           <Button
             startIcon={<ArrowBackIcon />}
@@ -4787,15 +4800,12 @@ const DatabaseView = () => {
                   fontSize: { xs: "1rem", sm: "1.125rem" },
                 }}
                 className="dark:text-white/90"
-              >
-                Comprehensive registry of working dogs
-              </Typography>
+              ></Typography>
             </Box>
 
             <Box className="filter-section">
               <Box sx={{ flex: 1 }}>
                 <SelectInputs
-
                   title="Select Breed"
                   placeholder={
                     breedLoading ? "Loading breeds..." : "Filter by Breed"
@@ -4803,9 +4813,7 @@ const DatabaseView = () => {
                   options={breedOptions}
                   value={selectedBreed?.value || ""}
                   onChange={(val) => {
-                    setSelectedBreed(
-                      val ? { value: val, label: val } : null
-                    );
+                    setSelectedBreed(val ? { value: val, label: val } : null);
                     setCurrentPage(1);
                   }}
                   className="w-full"
@@ -4820,15 +4828,16 @@ const DatabaseView = () => {
                   options={cityOptions}
                   value={selectedCity?.value || ""}
                   onChange={(val) => {
-                    setSelectedCity(
-                      val ? { value: val, label: val } : null
-                    );
+                    setSelectedCity(val ? { value: val, label: val } : null);
                     setCurrentPage(1);
                   }}
                   className="w-full"
                 />
               </Box>
-              <Box sx={{ flex: 1, position: "relative" }} className="dark:text-white/90">
+              <Box
+                sx={{ flex: 1, position: "relative" }}
+                className="dark:text-white/90"
+              >
                 <SearchIcon
                   sx={{
                     position: "absolute",
@@ -4858,7 +4867,11 @@ const DatabaseView = () => {
                   setCurrentPage(1);
                 }}
                 variant="outlined"
-                sx={{ mt: { xs: 2, md: 0 }, color: "primary.main", borderColor: "primary.main" }}
+                sx={{
+                  mt: { xs: 2, md: 0 },
+                  color: "primary.main",
+                  borderColor: "primary.main",
+                }}
                 aria-label="Clear filters"
               >
                 Clear Filters
@@ -4867,7 +4880,10 @@ const DatabaseView = () => {
 
             {error && (
               <Box sx={{ textAlign: "center", color: "error.main", p: 4 }}>
-                Error loading dogs: {typeof error === "string" ? error : (error as any)?.message || "Please try again later."}
+                Error loading dogs:{" "}
+                {typeof error === "string"
+                  ? error
+                  : (error as any)?.message || "Please try again later."}
               </Box>
             )}
 
@@ -4877,7 +4893,9 @@ const DatabaseView = () => {
                   <CircularProgress sx={{ color: "primary.main" }} />
                 </Box>
               ) : filteredDogs.length === 0 ? (
-                <Box sx={{ textAlign: "center", color: "text.secondary", p: 6 }}>
+                <Box
+                  sx={{ textAlign: "center", color: "text.secondary", p: 6 }}
+                >
                   No dogs found matching your criteria.
                 </Box>
               ) : (
@@ -5010,8 +5028,9 @@ const DatabaseView = () => {
                     return (
                       <Button
                         key={page}
-                        className={`pagination-button ${isCurrent ? "active" : ""
-                          }`}
+                        className={`pagination-button ${
+                          isCurrent ? "active" : ""
+                        }`}
                         onClick={() => handlePageChange(page)}
                         aria-label={`Page ${page}`}
                         aria-current={isCurrent ? "page" : undefined}
@@ -5062,8 +5081,9 @@ const DatabaseView = () => {
                   <Button
                     key={name}
                     startIcon={icon}
-                    className={`nav-button ${selectedSection === name ? "active" : ""
-                      }`}
+                    className={`nav-button ${
+                      selectedSection === name ? "active" : ""
+                    }`}
                     onClick={() => setSelectedSection(name)}
                     sx={{
                       textTransform: "none",
@@ -5137,7 +5157,7 @@ const DatabaseView = () => {
                         fontSize: { xs: "0.875rem", sm: "1rem" },
                         fontWeight: 500,
                       }}
-                         className="dark:!text-white/90"
+                      className="dark:!text-white/90"
                     >
                       {selectedDog.sex.toLowerCase() === "male" ? (
                         <MaleIcon
@@ -5150,7 +5170,8 @@ const DatabaseView = () => {
                           sx={{ verticalAlign: "middle", mr: 0.5 }}
                         />
                       ) : null}
-                      <strong  className="dark:!text-white/90">Sex:</strong> {selectedDog.sex}
+                      <strong className="dark:!text-white/90">Sex:</strong>{" "}
+                      {selectedDog.sex}
                     </Typography>
                   </Box>
                 </Box>
@@ -5164,16 +5185,15 @@ const DatabaseView = () => {
                     value={
                       selectedDog.birthDate
                         ? new Date(selectedDog.birthDate).toLocaleDateString(
-                          undefined,
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )
+                            undefined,
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
                         : "N/A"
                     }
-                     
                   />
                   <DetailItem
                     icon={<LocationIcon />}
@@ -5210,13 +5230,13 @@ const DatabaseView = () => {
                       value={
                         selectedDog.deathDate
                           ? new Date(selectedDog.deathDate).toLocaleDateString(
-                            undefined,
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )
+                              undefined,
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )
                           : "N/A"
                       }
                     />
@@ -5265,6 +5285,9 @@ const DatabaseView = () => {
               <Progeny dogId={selectedDog.id} />
             )}
             {selectedSection === "Virtual Breeding" && <VirtualBreeding />}
+            {selectedSection === "Medical History" && (
+              <MedicalHistory dogId={selectedDog.id} />
+            )}
           </Box>
         )}
       </div>
