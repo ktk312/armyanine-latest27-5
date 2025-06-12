@@ -79,9 +79,49 @@ export const api_keys = {
   SOLD_DOG: "list-sold-view",
   LOANED_DOG: "loan-dog-list",
   TRANSFERRED_DOGS: "transferred-dog-list",
-  BULLDOGS: "bulldogd-list"
+  BULLDOGS: "bulldogd-list",
 
+
+  // Medical History of dogs
+  // VACCINATION
+  ADD_VACCINATION: "add-vaccinations",
+  UPDATE_VACCINATION: "update-vaccinations",
+  GETALL_VACCINATION: "get-all-vaccinations",
+  GETONE_VACCINATION: "get-vaccinations",
+  DELETE_VACCINATION: "delete-vaccinations",
+
+  //prophylaxis
+  ADD_PROPHYLAXIS: "add-prophylaxis",
+  GET_ALL_PROPHYLAXIS: "get-all-prophylaxis",
+  UPDATE_PROPHYLAXIS: "update-prophylaxis",
+  DELETE_PROPHYLAXIS: "delete-prophylaxis",
+  GETONE_PROPHYLAXIS: "get-one-prophylaxis",
+
+  // Dewarning
+  GET_ALL_DEWORMING: "get-all-deworming",
+  GET_DEWORMING_BY_ID: "get-one-deworming",
+  ADD_DEWORMING: "add-deworming",
+  UPDATE_DEWORMING: "update-deworming",
+  DELETE_DEWORMING: "deete-deworming",
+
+  // training 
+
+  GET_ALL_TRAINING: "get-all-training",
+  GET_TRAINING_BY_ID: "get-one-training",
+  ADD_TRAINING: "add-training",
+  UPDATE_TRAINING: "update-training",
+  DELETE_TRAINING: "delete-training",
+
+  // sickness
+
+  GET_ALL_SICKNESS: "get-all-sickness",
+  GET_SICKNESS_BY_ID: "get-one-sickness",
+  ADD_SICKNESS: "add-sickness",
+  UPDATE_SICKNESS: "update-sickness",
+  DELETE_SICKNESS: "delete-sickness",
 };
+
+
 export const endpoint = {
 
   //Dashboard
@@ -165,4 +205,44 @@ export const endpoint = {
   SOLD_DOG: `${BASE_URL}/dog/list/sold/view`,
   LOANED_DOG: `${BASE_URL}/dog/loan/view`,
   TRANSFERRED_DOGS: `${BASE_URL}/dog/transferred/view`,
+
+  // Medical Histoy of Dog
+
+  // Vaccination
+  ADD_VACCINATION: `${BASE_URL}/vaccinations`,
+  UPDATE_VACCINATION: (id: string) => `${BASE_URL}/vaccinations/${id}`,
+  GETALL_VACCINATION: `${BASE_URL}/vaccinations`,
+  GETONE_VACCINATION: (id: string) => `${BASE_URL}/vaccinations/${id}`,
+  DELETE_VACCINATION: (id: string) => `${BASE_URL}/vaccinations/${id}`,
+
+  //prophylaxis
+  ADD_PROPHYLAXIS: `${BASE_URL}/prophylaxis`,
+  UPDATE_PROPHYLAXIS: (id: string) => `${BASE_URL}/prophylaxis/${id}`,
+  GET_ALL_PROPHYLAXIS: `${BASE_URL}/prophylaxis`,
+  GETONE_PROPHYLAXIS: (id: string) => `${BASE_URL}/prophylaxis/${id}`,
+  DELETE_PROPHYLAXIS: (id: string) => `${BASE_URL}/prophylaxis/${id}`,
+
+  // Dewarming
+  ADD_DEWORMING: `${BASE_URL}/deworming`,
+  UPDATE_DEWORMING: (id: string) => `${BASE_URL}/deworming/${id}`,
+  GET_ALL_DEWORMING: `${BASE_URL}/deworming`,
+  GET_DEWORMING_BY_ID: (id: string) => `${BASE_URL}/deworming/${id}`,
+  DELETE_DEWORMING: (id: string) => `${BASE_URL}/deworming/${id}`,
+
+  // Training
+  ADD_TRAINING: `${BASE_URL}/training`,
+  UPDATE_TRAINING: (id: string) => `${BASE_URL}/training/${id}`,
+  GET_ALL_TRAINING: `${BASE_URL}/training`,
+  GET_TRAINING_BY_ID: (id: string) => `${BASE_URL}/training/${id}`,
+  DELETE_TRAINING: (id: string) => `${BASE_URL}/training/${id}`,
+
+
+  // Sickness
+
+   ADD_SICKNESS: `${BASE_URL}/sickness`,
+  UPDATE_SICKNESS: (id: string) => `${BASE_URL}/sickness/${id}`,
+  GET_ALL_SICKNESS: `${BASE_URL}/sickness`,
+  GET_SICKNESS_BY_ID: (id: string) => `${BASE_URL}/sickness/${id}`,
+  DELETE_SICKNESS: (id: string) => `${BASE_URL}/sickness/${id}`,
+
 };

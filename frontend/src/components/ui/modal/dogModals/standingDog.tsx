@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../table"
 import { GermanShepherd } from "../../../dogsCategory/types/GermanShepherd";
 import { useStandingDog } from "../../../dogsCategory/hooks/useStandingDog";
 import Badge from "../../badge/Badge";
+import { StandingDog } from "../../../dogsCategory/types/standingDog";
 
 interface ModalProps {
     isOpen: boolean;
@@ -31,6 +32,14 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
         KP: "",
         status: "",
     });
+
+    const headerToFilterKey: Record<string, keyof typeof filters> = {
+        "S.No": "id",
+        "DOG NAME": "dogName",
+        "ACC No": "KP",
+        "Status": "status",
+    };
+
     const { sires, dams } = useStandingDog();
 
     const ITEMS_PER_PAGE = 5;
@@ -44,7 +53,7 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
         .filter(dog =>
             Object.entries(filters).every(([key, value]) => {
                 if (!value) return true;
-                const dogValue = String(dog[key as keyof GermanShepherd]).toLowerCase();
+                const dogValue = String(dog[key as keyof StandingDog]).toLowerCase();
                 return dogValue.includes(value.toLowerCase());
             })
         );
@@ -146,14 +155,19 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 text-gray-800 dark:text-white/90">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "SOLD TO", "KP", "Status"].map((header, idx) => (
-                                            <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-gray-50 text-start">
+                                        {["S.No", "DOG NAME", "ACC No", "Status"].map((header, idx) => (
+                                            <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-black-50 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
                                                     <input
                                                         type="text"
                                                         placeholder={`Search ${header}`}
-                                                        onChange={(e) => handleFilterChange(header.replace(" ", "").toLowerCase(), e.target.value)}
+                                                        onChange={(e) => {
+                                                            const filterKey = headerToFilterKey[header];
+                                                            if (filterKey) {
+                                                                handleFilterChange(filterKey, e.target.value);
+                                                            }
+                                                        }}
                                                         className="mt-1 w-full border rounded-md p-1 text-sm"
                                                     />
                                                 )}
@@ -170,7 +184,7 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
                                         >
                                             <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
-                                            <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell>
+                                            {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-4 py-3 text-start">
                                                 <Badge
