@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
-import { EyeIcon, PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons"; // Optional: for New button
+import { PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons"; // Optional: for New button
 import { useNavigate } from "react-router-dom";
 import { useTraining } from "../dogsCategory/hooks/useTraining";
 import { Tooltip } from "@mui/material";
@@ -47,7 +47,7 @@ const columns = [
   { label: "Willingness", key: "willingness" },
   { label: "Energy", key: "energy" },
   { label: "Sensitivity", key: "sensitivity" },
-   { label: "Aggression", key: "aggression" },
+  { label: "Aggression", key: "aggression" },
   { label: "Action", key: "action" },
 ];
 export default function TrainingListView() {
@@ -166,47 +166,42 @@ export default function TrainingListView() {
 
             <TableBody>
               {paginatedData.map((order, index) => {
-                  const formattedStartDate = order.trainingStartedOn ? new Date(order.trainingStartedOn).toLocaleDateString() : "";
-                  const formattedCompletedDate = order.trainingCompleted ? new Date(order.trainingCompleted).toLocaleDateString() : "";
+                const formattedStartDate = order.trainingStartedOn ? new Date(order.trainingStartedOn).toLocaleDateString() : "";
+                const formattedCompletedDate = order.trainingCompleted ? new Date(order.trainingCompleted).toLocaleDateString() : "";
 
                 return (
-                <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                  <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.dog?.dogName}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.trainerName}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.trainingCategory}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{formattedStartDate}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{formattedCompletedDate}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.intelligence}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.willingness}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.energy}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.sensitivity}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.aggression}</TableCell>
-                  <TableCell className="px-4 py-3 text-start">
-                    <Tooltip title="view">
-                      <button className="text-blue-500 mx-1">
-                        <EyeIcon />
-                      </button>
-                    </Tooltip>
-                    <Tooltip title="Edit">
-                      <button className="text-blue-500 mx-1"
-                        onClick={() => {
-                          handleEditClick(order);
+                  <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.id}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.dog?.dogName}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.trainerName}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.trainingCategory}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{formattedStartDate}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{formattedCompletedDate}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.intelligence}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.willingness}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.energy}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.sensitivity}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.aggression}</TableCell>
+                    <TableCell className="px-4 py-3 text-start">
+                      <Tooltip title="Edit">
+                        <button className="text-blue-500 mx-1"
+                          onClick={() => {
+                            handleEditClick(order);
+                          }}>
+                          <PencilIcon />
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Remove">
+                        <button className="text-red-500 mx-1" onClick={() => {
+                          handleDelete(order?.id);
                         }}>
-                        <PencilIcon />
-                      </button>
-                    </Tooltip>
-                    <Tooltip title="Remove">
-                      <button className="text-red-500 mx-1" onClick={() => {
-                        handleDelete(order?.id);
-                      }}>
-                        <TrashBinIcon />
-                      </button>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              )
-})}
+                          <TrashBinIcon />
+                        </button>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
 

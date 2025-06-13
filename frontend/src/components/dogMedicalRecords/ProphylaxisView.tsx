@@ -5,8 +5,7 @@ import Button from "../ui/button/Button";
 import {
   PlusIcon,
   PencilIcon,
-  TrashBinIcon,
-  EyeIcon,
+  TrashBinIcon
 } from "../../assets/icons";
 import { useProphylaxis } from "../dogsCategory/hooks/useProphylaxis";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
@@ -38,7 +37,7 @@ export default function ProphylaxisView() {
   } = useProphylaxis();
   const [filters, setFilters] = useState<Record<string, string>>(
     Object.fromEntries(columns.map((col) => [col.key, ""]))
-  ); 
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredData = prophylaxisRecords.filter((item) =>
@@ -159,17 +158,12 @@ export default function ProphylaxisView() {
 
               return (
                 <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                  <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.dog?.dogName}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.prophylacticDrug}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.remarks}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{formattedDate}</TableCell>
-                  <TableCell className="px-4 py-3 text-start">
-                    <Tooltip title="view">
-                      <button className="text-blue-500 mx-1">
-                        <EyeIcon />
-                      </button>
-                    </Tooltip>
+                  <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.id}</TableCell>
+                  <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.dog?.dogName}</TableCell>
+                  <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.prophylacticDrug}</TableCell>
+                  <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.remarks}</TableCell>
+                  <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{formattedDate}</TableCell>
+                  <TableCell className="px-4 py-3 text-start text-gray-900 dark:text-white">
                     <Tooltip title="Edit">
                       <button className="text-blue-500 mx-1"
                         onClick={() => {

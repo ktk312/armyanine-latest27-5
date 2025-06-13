@@ -443,6 +443,7 @@ layer(base);
   appearance: none;
   background-image: none !important;
   font-weight: 500;
+  color: #000000;
 }
 .flatpickr-month
   .flatpickr-current-month
@@ -775,4 +776,67 @@ span.flatpickr-weekday,
 
 .simplebar-scrollbar.simplebar-visible:before {
   @apply opacity-100;
+}
+
+
+
+
+/* Date Picker Dark Mode CSS Style */
+.flatpickr-calendar .flatpickr-rContainer{
+  background-color: white;
+  color: black;
+}
+
+.dark .flatpickr-day.today {
+  border-color: #636569; /* brand or primary color */
+}
+
+.dark .flatpickr-calendar .flatpickr-rContainer {
+    background-color: #101828;
+    color: black;
+}
+
+.flatpickr-months .flatpickr-next-month {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    height: 34px;
+    padding: 10px;
+    z-index: 3;
+    color: #1a1919 !important;
+    fill: #000000 !important;
+}
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    height: 34px;
+    padding: 10px;
+    z-index: 3;
+    color: #000000 !important;
+    fill: #000000 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+    background-color: #ffffff !important;
+    outline: none;
+    padding: 0;
+    color: black !important;
+}
+.dark .flatpickr-monthDropdown-months{
+  color: #f9fafb !important;
+}
+.dark .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+    background-color: #1d2939 !important;
+    color: #f9fafb !important;
 }

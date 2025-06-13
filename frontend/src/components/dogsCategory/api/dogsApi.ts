@@ -683,7 +683,7 @@ export const getAllSickness = async (): Promise<SicknessRecord[]> => {
 };
 
 export const getSicknessById = async (id: number): Promise<SicknessRecord> => {
-  const res = await axios.get(`${endpoint.GET_SICKNESS_BY_ID}/${id}`);
+  const res = await axios.get(endpoint.GET_SICKNESS_BY_ID(String(id)));
   return res.data;
 };
 
@@ -703,5 +703,5 @@ export const updateSickness = async (
 };
 
 export const deleteSickness = async (id: number): Promise<void> => {
-  await axios.delete(`${endpoint.DELETE_SICKNESS}/${id}`);
+  await axios.delete(endpoint.DELETE_SICKNESS(String(id)));
 };

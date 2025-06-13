@@ -149,7 +149,7 @@ const MedicalHistory: React.FC<Props> = ({ dogId }) => {
         category: "Sickness",
         icon: <FaHeartbeat className="w-5 h-5 text-red-500" />,
         items: sicknesses.map((s) => ({
-          title: `Condition: ${s.diseases}`,
+          title: `Disease: ${s.diseases}`,
           dateLabel: `Date: ${new Date(s.date).toLocaleDateString()}`,
           subtitle: `Treatment: ${s.treatment}`,
         })),

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
-import { EyeIcon, PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
+import { PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
 import { useSickness } from "../dogsCategory/hooks/useSickness";
 import { useNavigate } from "react-router";
 import { Tooltip } from "@mui/material";
@@ -134,46 +134,42 @@ export default function SicknessView() {
 
             <TableBody>
               {paginatedData.map((order, index) => {
-              const formattedDate = order.date ? new Date(order.date).toLocaleDateString() : "";
+                const formattedDate = order.date ? new Date(order.date).toLocaleDateString() : "";
 
-                return(
-                <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                  <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.dog?.dogName}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.diseases}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{order.treatment}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{formattedDate}</TableCell>
-                  <TableCell className="px-4 py-3 text-start">
-                    <Tooltip title="view">
-                      <button className="text-blue-500 mx-1">
-                        <EyeIcon />
-                      </button>
-                    </Tooltip>
-                    <Tooltip title="Edit">
-                      <button className="text-blue-500 mx-1"
-                        onClick={() => {
-                          handleEditClick(order);
+                return (
+                  <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.id}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.dog?.dogName}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.diseases}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.treatment}</TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{formattedDate}</TableCell>
+                    <TableCell className="px-4 py-3 text-start">
+                      <Tooltip title="Edit">
+                        <button className="text-blue-500 mx-1"
+                          onClick={() => {
+                            handleEditClick(order);
+                          }}>
+                          <PencilIcon />
+                        </button>
+                      </Tooltip>
+                      <Tooltip title="Remove">
+                        <button className="text-red-500 mx-1" onClick={() => {
+                          handleDelete(order?.id);
                         }}>
-                        <PencilIcon />
-                      </button>
-                    </Tooltip>
-                    <Tooltip title="Remove">
-                      <button className="text-red-500 mx-1" onClick={() => {
-                        handleDelete(order?.id);
-                      }}>
-                        <TrashBinIcon />
-                      </button>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              )})}
+                          <TrashBinIcon />
+                        </button>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         )}
 
         {/* Pagination */}
         {!isLoading && filteredData.length > 0 && (
-          <div className="flex justify-between items-center mt-6 text-gray-900 dark:text-gray-200">
+          <div className="flex justify-between items-center mt-6 text-gray-700 dark:text-gray-300">
             <button
               className="rounded border border-gray-400 bg-white px-3 py-1 text-sm font-medium transition-colors hover:bg-gray-100 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
               disabled={currentPage === 1}
