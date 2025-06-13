@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../ui/button/Button";
-import { EyeIcon, PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
+import { PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
 import { useVaccination } from "../dogsCategory/hooks/useVaccination";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
@@ -143,17 +143,12 @@ const VaccinationView = () => {
                   <TableCell className="px-5 py-4 text-start">{item.batchNo.toLocaleString()}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.vetSign ?? ""}</TableCell>
                   <TableCell className="px-4 py-3 text-start flex gap-2">
-                    <Tooltip title="View">
-                      <button className="text-blue-500">
-                        <EyeIcon />
-                      </button>
-                    </Tooltip>
                     <Tooltip title="Edit">
                       <button className="text-blue-500" onClick={() => handleEditClick(item)}>
                         <PencilIcon />
                       </button>
                     </Tooltip>
-                    <Tooltip title="Delete">
+                    <Tooltip title="Remove">
                       <button className="text-red-500" onClick={() => handleDelete(item.id)}>
                         <TrashBinIcon />
                       </button>

@@ -7,14 +7,13 @@ import {
   TableRow,
 } from "../../ui/table/index";
 import {
-  // TrashBinIcon,
-  EyeIcon,
   PencilIcon,
   PlusIcon,
 } from "../../../assets/icons";
 import Button from "../../ui/button/Button";
 import { useNavigate } from "react-router";
 import { useFetchDogsCategory } from "../../dogsCategory/hooks/useFetchCategory";
+import { Tooltip } from "@mui/material";
 
 interface Order {
   id: number;
@@ -140,18 +139,14 @@ export default function DogsCategoryList() {
                     <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
                     <TableCell className="px-5 py-4 text-start">{order.name}</TableCell>
                     <TableCell className="px-4 py-3 text-start">
-                      <button className="text-blue-500 mx-1">
-                        <EyeIcon />
-                      </button>
-                      <button className="text-blue-500 mx-1"
-                        onClick={() => {
-                          updateDogCategory(order);
-                        }}>
-                        <PencilIcon />
-                      </button>
-                      {/* <button className="text-red-500 mx-1">
-                        <TrashBinIcon />
-                      </button> */}
+                      <Tooltip title="Edit">
+                        <button className="text-blue-500 mx-1"
+                          onClick={() => {
+                            updateDogCategory(order);
+                          }}>
+                          <PencilIcon />
+                        </button>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -4509,7 +4509,6 @@ import PedigreeTree from "../dogsCategory/react-tree";
 import VirtualBreeding from "../dogsCategory/virtualBreeding";
 import Progeny from "../progeny/Progeny";
 import {
-  useFetchDogs,
   useFilteredDogs,
 } from "../dogsCategory/hooks/useFetchDogs";
 import { useBreedStore } from "../../store/breedStore";
