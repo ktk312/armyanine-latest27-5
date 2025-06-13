@@ -21,6 +21,8 @@ export default function SicknessRecordForm() {
   const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<{ value: string; label: string } | null>(null);
   const [error, setError] = useState<string | undefined>(undefined);
+  console.log(error)
+
   const { dogs } = useFilteredDogs(selectedBreed?.value || "", "")
 
   const { createSickness, selectedSickness, setSelectedSickness, updateSickness } = useSickness();
@@ -141,6 +143,7 @@ export default function SicknessRecordForm() {
       });
       setSelectedDog(null);
       setSelectedBreed(null);
+      navigate("/sickness-view")
 
       // Show success message or redirect
       console.log("Sickness record created successfully");

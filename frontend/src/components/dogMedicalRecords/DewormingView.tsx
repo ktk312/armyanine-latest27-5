@@ -1,10 +1,10 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Button from "../ui/button/Button";
-import { EyeIcon, PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
+import { PencilIcon, PlusIcon, TrashBinIcon } from "../../assets/icons";
 import { useDeworming } from "../dogsCategory/hooks/useDeworming";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
+import { Tooltip } from "@mui/material";
 
 const ITEMS_PER_PAGE = 5;
 const getNestedValue = (obj: any, path: string): any => {
@@ -134,26 +134,27 @@ export default function DewormingView() {
                   const formattedDate = order.date ? new Date(order.date).toLocaleDateString() : "";
                   return (
                     <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                      <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
-                      <TableCell className="px-5 py-4 text-start">{order.dog?.dogName}</TableCell>
-                      <TableCell className="px-5 py-4 text-start">{order.drug}</TableCell>
-                      <TableCell className="px-5 py-4 text-start">{order.sign}</TableCell>
-                      <TableCell className="px-5 py-4 text-start">{formattedDate}</TableCell>
-                      <TableCell className="px-4 py-3 text-start">
-                        <button className="text-blue-500 mx-1">
-                          <EyeIcon />
-                        </button>
-                        <button className="text-blue-500 mx-1"
-                          onClick={() => {
-                            handleEditClick(order);
+                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.id}</TableCell>
+                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.dog?.dogName}</TableCell>
+                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.drug}</TableCell>
+                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.sign}</TableCell>
+                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{formattedDate}</TableCell>
+                      <TableCell className="px-4 py-3 text-start text-gray-900 dark:text-white">
+                        <Tooltip title="Edit">
+                          <button className="text-blue-500 mx-1"
+                            onClick={() => {
+                              handleEditClick(order);
+                            }}>
+                            <PencilIcon />
+                          </button>
+                        </Tooltip>
+                        <Tooltip title="Remove">
+                          <button className="text-red-500 mx-1" onClick={() => {
+                            handleDelete(order?.id);
                           }}>
-                          <PencilIcon />
-                        </button>
-                        <button className="text-red-500 mx-1" onClick={() => {
-                          handleDelete(order?.id);
-                        }}>
-                          <TrashBinIcon />
-                        </button>
+                            <TrashBinIcon />
+                          </button>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   )
