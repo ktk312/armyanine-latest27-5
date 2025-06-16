@@ -39,9 +39,9 @@ const DogList: React.FC<DogSiblingsProps> = ({ dogId }) => {
 
   // 💥 Use your updated return here:
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 py-10 px-4 transition-colors duration-300">
-      <h1 className="text-3xl font-bold text-center text-blue-600 dark:text-blue-400 mb-8">
-        🐾 Dog Siblings
+    <div className="bg-gray-50 dark:bg-transparent border border-gray-700 py-10 px-4 transition-colors duration-300 rounded-lg">
+      <h1 className="text-3xl font-bold text-center text-blue-600 dark:!text-blue-400 mb-8">
+        Dog Siblings
       </h1>
 
       {loading && <p className="text-center text-gray-700 dark:text-gray-300">Loading...</p>}

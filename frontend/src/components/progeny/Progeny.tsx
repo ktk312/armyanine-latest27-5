@@ -265,12 +265,8 @@ const Progeny: React.FC<DogPedigreeProps> = ({ dogId }) => {
     url ? `http://localhost:3000${url}` : 'http://localhost:3000/uploads/dogs/defaultdog.jpg';
 
   return (
-    <div className="p-4 max-w-4xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white">
-        Progeny of Dog #{dogId}
-      </h1>
-
-      <div className="grid gap-6">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="grid gap-4">
         {progenyData.map((progeny) => (
           <div
             key={progeny.id}

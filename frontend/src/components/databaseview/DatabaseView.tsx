@@ -4508,9 +4508,7 @@ import DogList from "../dogsCategory/DogSiblingsList";
 import PedigreeTree from "../dogsCategory/react-tree";
 import VirtualBreeding from "../dogsCategory/virtualBreeding";
 import Progeny from "../progeny/Progeny";
-import {
-  useFilteredDogs,
-} from "../dogsCategory/hooks/useFetchDogs";
+import { useFilteredDogs } from "../dogsCategory/hooks/useFetchDogs";
 import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 import {
@@ -4531,6 +4529,13 @@ import {
 } from "@mui/icons-material";
 import "./styles/DatabaseView.css"; // Import the separated CSS file
 import MedicalHistory from "../dogsCategory/MedicalHistory";
+import {
+  FaCalendarTimes,
+  FaRulerHorizontal,
+  FaRulerVertical,
+  FaSkull,
+  FaWeight,
+} from "react-icons/fa";
 
 // Custom Material-UI theme
 const canineTheme = createTheme({
@@ -4600,10 +4605,12 @@ const DetailItem = ({
   icon,
   label,
   value,
+  bgColor,
 }: {
   icon?: React.ReactNode;
   label: string;
   value: string | number;
+  bgColor?: string;
 }) => (
   <Box className="flex items-center gap-2 mb-3 animate-fade-in dark:!text-white/90">
     {icon && <Box sx={{ color: "primary.main" }}>{icon}</Box>}
@@ -4756,18 +4763,20 @@ const DatabaseView = () => {
       <div className="database-view dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90">
         {selectedDog && (
           <Button
+            className="dark:!bg-gray-800 dark:hover:!bg-gray-700 dark:!text-white dark:hover:!text-white"
             startIcon={<ArrowBackIcon />}
             onClick={handleBack}
             sx={{
-              mb: 4,
+              mb: 1,
               fontWeight: 600,
               color: "text.secondary",
-              background: "rgba(255, 255, 255, 0.95)",
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
               "&:hover": {
                 backgroundColor: "primary.main",
                 color: "white",
               },
-              padding: { xs: "0.5rem 1rem", sm: "0.75rem 1.5rem" },
+              px: { xs: 2, sm: 3 }, // paddingX shorthand
+              py: { xs: 1, sm: 1.5 }, // paddingY shorthand
             }}
             aria-label="Back to dog list"
           >
@@ -4859,6 +4868,7 @@ const DatabaseView = () => {
                 />
               </Box>
               <Button
+                className="dark:!text-white/90 dark:!border-gray-700 "
                 onClick={() => {
                   setSelectedBreed(null);
                   setSelectedCity(null);
@@ -4868,7 +4878,7 @@ const DatabaseView = () => {
                 variant="outlined"
                 sx={{
                   mt: { xs: 2, md: 0 },
-                  color: "primary.main",
+                  color: "dark:primary.main",
                   borderColor: "primary.main",
                 }}
                 aria-label="Clear filters"
@@ -5053,241 +5063,271 @@ const DatabaseView = () => {
             )}
           </>
         ) : (
-          <Box className="dog-details w-[240px] md:w-auto bg-white dark:!bg-gray-800 dark:!text-white">
-            {isMobile ? (
-              <Tabs
-              orientation="vertical"
-                value={selectedSection}
-                onChange={(_, newValue) => setSelectedSection(newValue)}
-                variant="scrollable"
-                scrollButtons="auto"
-                aria-label="Dog details navigation"
-                sx={{ mb: 3 }}
-              >
-                {navItems.map(({ name, icon }) => (
-                  <Tab
-                    key={name}
-                    label={name}
-                    value={name}
-                    icon={icon}
-                    iconPosition="start"
-                    sx={{fontWeight: 500,alignItems: 'flex-start'}}
-                  />
-                ))}
-              </Tabs>
-            ) : (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 3 }}>
-                {navItems.map(({ name, icon }) => (
-                  <Button
-                    key={name}
-                    startIcon={icon}
-                    className={`nav-button ${
-                      selectedSection === name ? "active" : ""
-                    }`}
-                    onClick={() => setSelectedSection(name)}
-                    sx={{
-                      textTransform: "none",
-                      fontWeight: 500,
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                      color: "text.secondary",
-                      "&:hover": {
-                        color: "primary.main",
-                      },
-                      position: "relative",
-                      "&.active::after": {
-                        content: '""',
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "2px",
-                        background: "primary.main",
-                        animation: "slideIn 0.3s ease",
-                      },
-                    }}
-                    aria-label={`${name} section`}
+          <Box className="bg-white dark:!bg-gray-800 dark:!text-white p-4 rounded-xl shadow-sm w-full max-w-screen-xl mx-auto">
+            <Box className="flex flex-col md:flex-row">
+              {/* Navigation Left (Sidebar or Tabs) */}
+              <Box className="w-full md:w-1/3 lg:w-1/4">
+                {isMobile ? (
+                  <Tabs
+                    orientation="vertical"
+                    value={selectedSection}
+                    onChange={(_, newValue) => setSelectedSection(newValue)}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="Dog details navigation"
+                    sx={{ mb: 3 }}
                   >
-                    {name}
-                  </Button>
-                ))}
-              </Box>
-            )}
-
-            {selectedSection === "Basic Data" && (
-              <Box>
-                <Box className="dog-details-header bg-white dark:!bg-gray-800">
-                  <Avatar
-                    src={selectedDog.imageUrl}
-                    alt={`${selectedDog.title} picture`}
-                    sx={{
-                      width: { xs: 140, sm: 160, md: 200 },
-                      height: { xs: 140, sm: 160, md: 200 },
-                      borderRadius: 2,
-                    }}
-                    variant="rounded"
-                    className="avatar-img"
-                    imgProps={{ loading: "lazy" }}
-                  />
-                  <Box sx={{ flex: 1 }} className="dark:!text-white">
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        mb: 1,
-                        fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
-                        color: "primary.main",
-                      }}
-                      className="dark:!text-white/90"
-                    >
-                      {selectedDog.title}
-                    </Typography>
-                    <Typography
-                      variant="subtitle1"
-                      sx={{
-                        color: "text.secondary",
-                        mb: 2,
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                      }}
-                      className="dark:!text-white/90"
-                    >
-                      Reg #: {selectedDog.registrationNumber}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontSize: { xs: "0.875rem", sm: "1rem" },
-                        fontWeight: 500,
-                      }}
-                      className="dark:!text-white/90"
-                    >
-                      {selectedDog.sex.toLowerCase() === "male" ? (
-                        <MaleIcon
-                          color="secondary"
-                          sx={{ verticalAlign: "middle", mr: 0.5 }}
-                        />
-                      ) : selectedDog.sex.toLowerCase() === "female" ? (
-                        <FemaleIcon
-                          color="error"
-                          sx={{ verticalAlign: "middle", mr: 0.5 }}
-                        />
-                      ) : null}
-                      <strong className="dark:!text-white/90">Sex:</strong>{" "}
-                      {selectedDog.sex}
-                    </Typography>
+                    {navItems.map(({ name, icon }) => (
+                      <Tab
+                        key={name}
+                        label={name}
+                        value={name}
+                        icon={icon}
+                        className={`justify-start ${
+                          selectedSection === name
+                            ? "text-primary-main dark:!text-white"
+                            : "text-gray-500 dark:!text-white/70"
+                        }`}
+                        iconPosition="start"
+                        sx={{ fontWeight: 500, alignItems: "flex-start" }}
+                      />
+                    ))}
+                  </Tabs>
+                ) : (
+                  <Box className="flex flex-col gap-2">
+                    {navItems.map(({ name, icon }) => (
+                      <Button
+                        key={name}
+                        startIcon={icon}
+                        onClick={() => setSelectedSection(name)}
+                        className={`justify-start ${
+                          selectedSection === name
+                            ? "text-primary-main dark:!text-white"
+                            : "text-gray-500 dark:!text-white/70"
+                        }`}
+                        sx={{
+                          textTransform: "none",
+                          fontWeight: 500,
+                          fontSize: { sm: "0.95rem", md: "1rem" },
+                          justifyContent: "flex-start",
+                          color:
+                            selectedSection === name
+                              ? "primary.main  "
+                              : "text.secondary",
+                          "&:hover": {
+                            color: "primary.main",
+                          },
+                        }}
+                      >
+                        {name}
+                      </Button>
+                    ))}
                   </Box>
-                </Box>
-
-                <Divider sx={{ mb: 4, borderColor: "rgba(0, 0, 0, 0.1)" }} />
-
-                <Box className="details-grid">
-                  <DetailItem
-                    icon={<CakeIcon />}
-                    label="Birth Date"
-                    value={
-                      selectedDog.birthDate
-                        ? new Date(selectedDog.birthDate).toLocaleDateString(
-                            undefined,
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )
-                        : "N/A"
-                    }
-                  />
-                  <DetailItem
-                    icon={<LocationIcon />}
-                    label="Location"
-                    value={selectedDog.location}
-                  />
-                  <DetailItem
-                    icon={<FlagIcon />}
-                    label="Country"
-                    value={selectedDog.country}
-                  />
-                  <DetailItem
-                    icon={<FingerprintIcon />}
-                    label="Microchip"
-                    value={selectedDog.microchip ?? ""}
-                  />
-                  <DetailItem
-                    icon={<FamilyIcon />}
-                    label="Sire"
-                    value={selectedDog.sire}
-                  />
-                  <DetailItem
-                    icon={<FamilyIcon />}
-                    label="Dam"
-                    value={selectedDog.dam}
-                  />
-                  <DetailItem
-                    label="Is Deceased"
-                    value={selectedDog.isDeath ? "Yes" : "No"}
-                  />
-                  {selectedDog.isDeath && (
-                    <DetailItem
-                      label="Death Date"
-                      value={
-                        selectedDog.deathDate
-                          ? new Date(selectedDog.deathDate).toLocaleDateString(
-                              undefined,
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              }
-                            )
-                          : "N/A"
-                      }
-                    />
-                  )}
-                  <DetailItem label="Category" value={selectedDog.category} />
-                  <DetailItem
-                    label="Chest Depth"
-                    value={selectedDog.chestDepth}
-                  />
-                  <DetailItem
-                    label="Chest Circumference"
-                    value={selectedDog.chestCircumference}
-                  />
-                  <DetailItem
-                    label="Field Achievements"
-                    value={selectedDog.achievements}
-                  />
-                  <DetailItem label="Weight" value={selectedDog.weight} />
-                  <DetailItem
-                    label="Virtues and Faults"
-                    value={selectedDog.virtuesAndFaults}
-                  />
-                  <DetailItem
-                    label="Breeding Advice"
-                    value={selectedDog.breedingAdvice}
-                  />
-                  <DetailItem
-                    label="Miscellaneous Comments"
-                    value={selectedDog.miscellaneousComments}
-                  />
-                  <DetailItem
-                    label="Progeny Trainability"
-                    value={selectedDog.progenyTrainability}
-                  />
-                </Box>
+                )}
               </Box>
-            )}
 
-            {selectedSection === "Pedigree" && (
-              <PedigreeTree dogId={selectedDog.id} />
-            )}
-            {selectedSection === "Siblings" && (
-              <DogList dogId={selectedDog.id} />
-            )}
-            {selectedSection === "Progeny" && (
-              <Progeny dogId={selectedDog.id} />
-            )}
-            {selectedSection === "Virtual Breeding" && <VirtualBreeding />}
-            {selectedSection === "Medical History" && (
-              <MedicalHistory dogId={selectedDog.id} />
-            )}
+              {/* Content Right */}
+              <Box className="w-full md:w-2/3 lg:w-3/4">
+                {selectedSection === "Basic Data" && (
+                  <Box>
+                    <Box className="flex flex-col sm:flex-row gap-4 items-start sm:items-center bg-white dark:!bg-gray-800 mb-4">
+                      <Avatar
+                        src={selectedDog.imageUrl}
+                        alt={`${selectedDog.title} picture`}
+                        sx={{
+                          width: { xs: 140, sm: 160, md: 200 },
+                          height: { xs: 140, sm: 160, md: 200 },
+                          borderRadius: 2,
+                        }}
+                        variant="rounded"
+                        className="avatar-img"
+                        imgProps={{ loading: "lazy" }}
+                      />
+                      <Box className="flex-1 dark:!text-white">
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            mb: 1,
+                            fontSize: {
+                              xs: "1.5rem",
+                              sm: "2rem",
+                              md: "2.5rem",
+                            },
+                            color: "primary.main",
+                          }}
+                          className="dark:!text-white/90"
+                        >
+                          {selectedDog.title}
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            color: "text.secondary",
+                            mb: 2,
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                          }}
+                          className="dark:!text-white/90"
+                        >
+                          Reg #: {selectedDog.registrationNumber}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: { xs: "0.875rem", sm: "1rem" },
+                            fontWeight: 500,
+                          }}
+                          className="dark:!text-white/90"
+                        >
+                          {selectedDog.sex.toLowerCase() === "male" ? (
+                            <MaleIcon
+                              color="secondary"
+                              sx={{ verticalAlign: "middle", mr: 0.5 }}
+                            />
+                          ) : selectedDog.sex.toLowerCase() === "female" ? (
+                            <FemaleIcon
+                              color="error"
+                              sx={{ verticalAlign: "middle", mr: 0.5 }}
+                            />
+                          ) : null}
+                          <strong className="dark:!text-white/90">Sex:</strong>{" "}
+                          {selectedDog.sex}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Divider
+                      sx={{ mb: 4, borderColor: "rgba(0, 0, 0, 0.1)" }}
+                    />
+                    <Box className="details-container">
+                      {/* Two-column section: Items WITH icons */}
+                      <div className="grid md:grid-cols-1 sm:grid-cols-2">
+                        <DetailItem
+                          icon={<CakeIcon />}
+                          label="Birth Date"
+                          value={
+                            selectedDog.birthDate
+                              ? new Date(
+                                  selectedDog.birthDate
+                                ).toLocaleDateString(undefined, {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                })
+                              : "N/A"
+                          }
+                        />
+                        <DetailItem
+                          icon={<LocationIcon />}
+                          label="Location"
+                          value={selectedDog.location}
+                        />
+                        <DetailItem
+                          icon={<FlagIcon />}
+                          label="Country"
+                          value={selectedDog.country}
+                        />
+                        <DetailItem
+                          icon={<FingerprintIcon />}
+                          label="Microchip"
+                          value={selectedDog.microchip ?? "N/A"}
+                        />
+                        <DetailItem
+                          icon={<FamilyIcon />}
+                          label="Sire"
+                          value={selectedDog.sire}
+                        />
+                        <DetailItem
+                          icon={<FamilyIcon />}
+                          label="Dam"
+                          value={selectedDog.dam}
+                        />
+                        <DetailItem
+                          icon={<FaSkull />}
+                          label="Is Deceased"
+                          value={selectedDog.isDeath ? "Yes" : "No"}
+                        />
+                        {selectedDog.isDeath && (
+                          <DetailItem
+                            label="Death Date"
+                            icon={<FaCalendarTimes />}
+                            value={
+                              selectedDog.deathDate
+                                ? new Date(
+                                    selectedDog.deathDate
+                                  ).toLocaleDateString(undefined, {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })
+                                : "N/A"
+                            }
+                          />
+                        )}
+                        <DetailItem
+                          icon={<FlagIcon />}
+                          label="Category"
+                          value={selectedDog.category}
+                        />
+                        <DetailItem
+                          icon={<FaRulerVertical />}
+                          label="Chest Depth"
+                          value={selectedDog.chestDepth}
+                        />
+                        <DetailItem
+                          icon={<FaRulerHorizontal />}
+                          label="Chest Circumference"
+                          value={selectedDog.chestCircumference}
+                        />
+                        <DetailItem
+                          icon={<FaWeight />}
+                          label="Weight"
+                          value={selectedDog.weight}
+                        />
+                      </div>
+
+                      {/* One-column section: Items WITHOUT icons */}
+                      <div className="flex flex-col gap-4">
+                        <DetailItem
+                          label="Field Achievements"
+                          bgColor="#f5f5f5"
+                          value={selectedDog.achievements}
+                        />
+                        <DetailItem
+                          label="Virtues and Faults"
+                          value={selectedDog.virtuesAndFaults}
+                        />
+                        <DetailItem
+                          label="Breeding Advice"
+                          value={selectedDog.breedingAdvice}
+                        />
+                        <DetailItem
+                          label="Miscellaneous Comments"
+                          value={selectedDog.miscellaneousComments}
+                        />
+                        <DetailItem
+                          label="Progeny Trainability"
+                          value={selectedDog.progenyTrainability}
+                        />
+                      </div>
+                    </Box>
+                  </Box>
+                )}
+
+                {selectedSection === "Pedigree" && (
+                  <PedigreeTree dogId={selectedDog.id} />
+                )}
+                {selectedSection === "Siblings" && (
+                  <DogList dogId={selectedDog.id} />
+                )}
+                {selectedSection === "Progeny" && (
+                  <Progeny dogId={selectedDog.id} />
+                )}
+                {selectedSection === "Virtual Breeding" && <VirtualBreeding />}
+                {selectedSection === "Medical History" && (
+                  <MedicalHistory dogId={selectedDog.id} />
+                )}
+              </Box>
+            </Box>
           </Box>
         )}
       </div>
