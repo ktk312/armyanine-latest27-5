@@ -11,6 +11,8 @@ interface RadioInputsProps {
     isTransfer: boolean;
     CDN: boolean;
     CNS: boolean;
+    cdnDate?: string;
+    cnsDate?: string;
     deathDate?: string;
     soldDate?: string;
     loanDate?: string;
@@ -167,6 +169,14 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
             onChange={() => onChange("CDN", false)}
             label="No"
           />
+          {formData.CDN && (
+            <Input
+              type="date"
+              className="mt-2 border rounded p-2 text-sm"
+              value={formData.cdnDate || ""}
+              onChange={(e) => onChange("cdnDate", e.target.value)}
+            />
+          )}
         </div>
       </ComponentCard>
       <ComponentCard title="C&S">
@@ -187,6 +197,14 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
             onChange={() => onChange("CNS", false)}
             label="No"
           />
+          {formData.CNS && (
+            <Input
+              type="date"
+              className="mt-2 border rounded p-2 text-sm"
+              value={formData.cnsDate || ""}
+              onChange={(e) => onChange("cnsDate", e.target.value)}
+            />
+          )}
         </div>
       </ComponentCard>
     </>

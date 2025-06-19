@@ -134,7 +134,7 @@ export default function DewormingView() {
                   const formattedDate = order.date ? new Date(order.date).toLocaleDateString() : "";
                   return (
                     <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.id}</TableCell>
+                      <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{index + 1}</TableCell>
                       <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.dog?.dogName}</TableCell>
                       <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.drug}</TableCell>
                       <TableCell className="px-5 py-4 text-start text-gray-900 dark:text-white">{order.sign}</TableCell>

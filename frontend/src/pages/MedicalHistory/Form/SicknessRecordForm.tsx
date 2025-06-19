@@ -53,7 +53,7 @@ export default function SicknessRecordForm() {
 
   const dogOptions = dogs.map(dog => ({
     value: dog.id.toString(), // or whatever unique identifier your dog has
-    label: dog.dogName // or whatever property you want to display as the label
+    label: dog.KP + ' - ' + dog.dogName, // or whatever property you want to display as the label
   }));
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -155,28 +155,28 @@ export default function SicknessRecordForm() {
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md">
       <h1 className="text-2xl font-semibold text-gray-900 dark:!text-gray-100 mb-6">
-                 {selectedSickness ? " Updatw Sickness Record" : " New Sickness Record"}
+        {selectedSickness ? " Updatw Sickness Record" : " New Sickness Record"}
       </h1>
       <form onSubmit={selectedSickness ? handleUpdate : handleSubmit} className="space-y-5">
-        {!selectedSickness &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        {!selectedSickness && (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="space-y-6">
             <Label>Select Breed <span className="text-red-500">*</span></Label>
             <Select
               options={breedOptions}
               placeholder="Select Breed"
               onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              // defaultValue={selectedSickness?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
+            // defaultValue={selectedSickness?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
             />
           </div>
         </div>)}
-        {!selectedSickness &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+        {!selectedSickness && (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
           <div className="space-y-6">
             <Label>Select Dog <span className="text-red-500">*</span></Label>
             <Select
               options={dogOptions}
               placeholder="Select Dog"
               onChange={(val) => setSelectedDog({ value: val, label: val })}
-              // defaultValue={selectedSickness?.dog?.dogName.toString()}
+            // defaultValue={selectedSickness?.dog?.dogName.toString()}
             />
           </div>
         </div>)}

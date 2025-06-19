@@ -152,9 +152,9 @@ export const endpoint = {
   UPDATE_MICROCHIP: (id: string) => `${BASE_URL}/microchip/${id}`,
   // Breed Endpoints
   GET_BREEDS: `${BASE_URL}/breeds`,
-  GET_BREED_BY_ID: (id: string) => `${BASE_URL}/breed/${id}`,
+  GET_BREED_BY_ID: (id: string) => `${BASE_URL}/breeds/${id}`,
   ADD_BREED: `${BASE_URL}/breeds`,
-  UPDATE_BREED: (id: string) => `${BASE_URL}/breed/${id}`,
+  UPDATE_BREED: (id: string) => `${BASE_URL}/breeds/${id}`,
   DELETE_BREED: (id: string) => `${BASE_URL}/breed/${id}`,
 
   // Category Endpoints
@@ -239,7 +239,7 @@ export const endpoint = {
 
   // Sickness
 
-   ADD_SICKNESS: `${BASE_URL}/sickness`,
+  ADD_SICKNESS: `${BASE_URL}/sickness`,
   UPDATE_SICKNESS: (id: string) => `${BASE_URL}/sickness/${id}`,
   GET_ALL_SICKNESS: `${BASE_URL}/sickness`,
   GET_SICKNESS_BY_ID: (id: string) => `${BASE_URL}/sickness/${id}`,

@@ -134,7 +134,7 @@ const VaccinationView = () => {
                   key={item.id}
                   className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                 >
-                  <TableCell className="px-5 py-4 text-start">{item.id}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.dog?.dogName || ""}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.age.toLocaleString()}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.vaccine ?? ""}</TableCell>

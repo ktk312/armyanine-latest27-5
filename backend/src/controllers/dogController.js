@@ -30,7 +30,9 @@ const createDog = async (req, res) => {
       status,
       KP,
       CDN,
+      cdnDate,
       CNS,
+      cnsDate,
       color,
       HD,
       ED,
@@ -116,6 +118,8 @@ const createDog = async (req, res) => {
           deathDate,
           soldDate,
           loanDate,
+          cdnDate,
+          cnsDate,
           transferDate,
           chestDepth,
           chestCircumference,
@@ -168,6 +172,13 @@ const getAllDogs = async (req, res) => {
       orderBy: {
         id: "desc",
       },
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+
+      }
     });
 
     res.status(200).json(dogs);
@@ -236,7 +247,9 @@ const updateDog = async (req, res) => {
       KP,
       location,
       CDN,
+      cdnDate,
       CNS,
+      cnsDate,
       microchip,
       deathDate,
       virtuesAndFaults,
@@ -306,6 +319,10 @@ const updateDog = async (req, res) => {
         isTransfer: parsedIsTransfer,
         CDN: parsedCDN,
         CNS: parsedCNS,
+
+        cdnDate,
+
+        cnsDate,
         virtuesAndFaults,
         breedingAdvice,
         miscellaneousComments,
@@ -367,7 +384,10 @@ const getDogsByBreed = async (req, res) => {
     const { breedId } = req.params;
     // Fetch dogs filtered by breedId
     const dogs = await prisma.dog.findMany({
-      where: { breedId: parseInt(breedId) },
+      where: {
+        breedId: parseInt(breedId),
+        isDeath: false,
+      },
       include: {
         breed: true,
         sire: true,
@@ -1452,20 +1472,28 @@ const getFilteredDogs = async (req, res) => {
   console.log("Filter All Dog API Called");
 
   try {
-   const breedId = parseInt(req.query.breedId);
-const cityId = parseInt(req.query.cityId);
+    const breedId = parseInt(req.query.breedId);
+    const cityId = parseInt(req.query.cityId);
 
     const where = {};
 
     // Add filters only if they are valid numbers
-if (!isNaN(breedId)) {
-  where.breedId = breedId;
-}
+    if (!isNaN(breedId)) {
+      where.breedId = breedId;
+    }
 
-if (!isNaN(cityId)) {
-  where.cityId = cityId;
-}
-console.log("where are", where)
+    if (!isNaN(cityId)) {
+      where.cityId = cityId;
+    }
+
+    where.isDeath = false; // Always exclude deceased dogs
+    where.isSold = false;
+    where.isLoan = false;
+    where.isTransfer = false;
+
+
+
+    console.log("where are", where)
     const dogs = await prisma.dog.findMany({
       where, // dynamically applies 0, 1 or 2 filters
       include: {

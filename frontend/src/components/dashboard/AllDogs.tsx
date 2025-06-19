@@ -8,7 +8,7 @@ import {
 import Badge from "../ui/badge/Badge";
 import { EyeIcon } from "../../assets/icons";
 import { useState } from "react";
-import {Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { useFetchDogs } from "../dogsCategory/hooks/useGetDogs";
 import { DogDetailsModal } from "../ui/modal/dogModals/dogProfileModal";
 
@@ -17,10 +17,10 @@ export default function AllDogs() {
   const [viewDog, setViewDog] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
-    // const { litter, loading, error } = useFetchLitterInspection(); // ✅ Using the hook
-  const {dogs, loading, error} = useFetchDogs();
+  // const { litter, loading, error } = useFetchLitterInspection(); // ✅ Using the hook
+  const { dogs, loading, error } = useFetchDogs();
 
- const openViewModal = (dog: any) => {
+  const openViewModal = (dog: any) => {
     setViewDog(dog);
     setIsViewModalOpen(true);
   };
@@ -38,7 +38,7 @@ export default function AllDogs() {
     microchip: "",
     status: "",
   });
-      const headerToKeyMap: Record<string, keyof typeof filters> = {
+  const headerToKeyMap: Record<string, keyof typeof filters> = {
     "S.No": "id",
     "DOG NAME": "name",
     "ACC NO": "KP",
@@ -46,13 +46,13 @@ export default function AllDogs() {
     MICROCHIP: "microchip",
     STATUS: "status",
   };
-    const [currentPage, setCurrentPage] = useState(1);
- const handleFilterChange = (key: string, value: string) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   };
 
-   const filteredData = dogs.filter((dog) => {
+  const filteredData = dogs.filter((dog) => {
     return Object.entries(filters).every(([filterKey, filterValue]) => {
       const value = filterValue.toLowerCase().trim();
       if (!value) return true;
@@ -75,8 +75,8 @@ export default function AllDogs() {
       }
     });
   });
-    // Pagination Logic
-    const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
@@ -92,50 +92,50 @@ export default function AllDogs() {
         <div className="max-w-full overflow-x-auto">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-               <TableRow>
-                  {[
-                    "S.No",
-                    "DOG NAME",
-                    "ACC NO",
-                    "SEX",
-                    "MICROCHIP",
-                    "STATUS",
-                    "ACTIONS",
-                  ].map((header, idx) => (
-                    <TableCell
-                      key={idx}
-                      isHeader
-                      className="px-5 py-3 font-medium text-left"
-                    >
-                      <div className="flex flex-col gap-1">
-                        <span>{header}</span>
-                        {header !== "ACTIONS" && (
-                          <input
-                            type="text"
-                            placeholder={`Search ${header}`}
-                            onChange={(e) => {
-                              const key =
-                                headerToKeyMap[
-                                header as keyof typeof headerToKeyMap
-                                ];
-                              if (key) {
-                                handleFilterChange(key, e.target.value);
-                              }
-                            }}
-                            className="mt-1 w-full border dark:border-white/[0.5] rounded-md p-1 text-sm text-gray-900 placeholder-gray-400 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500"
-                          />
-                        )}
-                      </div>
-                    </TableCell>
-                  ))}
-                </TableRow>
+              <TableRow>
+                {[
+                  "S.No",
+                  "DOG NAME",
+                  "ACC NO",
+                  "SEX",
+                  "MICROCHIP",
+                  "STATUS",
+                  "ACTIONS",
+                ].map((header, idx) => (
+                  <TableCell
+                    key={idx}
+                    isHeader
+                    className="px-5 py-3 font-medium text-left"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span>{header}</span>
+                      {header !== "ACTIONS" && (
+                        <input
+                          type="text"
+                          placeholder={`Search ${header}`}
+                          onChange={(e) => {
+                            const key =
+                              headerToKeyMap[
+                              header as keyof typeof headerToKeyMap
+                              ];
+                            if (key) {
+                              handleFilterChange(key, e.target.value);
+                            }
+                          }}
+                          className="mt-1 w-full border dark:border-white/[0.5] rounded-md p-1 text-sm text-gray-900 placeholder-gray-400 dark:bg-gray-800 dark:text-gray-200 dark:placeholder-gray-500"
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+                ))}
+              </TableRow>
             </TableHeader>
 
             <TableBody>
               {paginatedData.map((order, index) => (
-                <TableRow key={order?.id}  className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
+                <TableRow key={order?.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
                   <TableCell className="px-5 py-4 text-start ">
-                    {order?.id}
+                    {index + 1}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
                     {order?.dogName}
@@ -144,7 +144,7 @@ export default function AllDogs() {
                     {order?.KP}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
-                    {order?.sex}
+                    {(order?.sex ?? "").charAt(0).toUpperCase() + (order?.sex ?? "").slice(1)}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
                     {order?.microchip?.chipId}
@@ -164,14 +164,14 @@ export default function AllDogs() {
                     </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 text-start">
-                   <Tooltip title="Eye">
-                        <button className="text-blue-500 mx-1"
-                          onClick={() => openViewModal(order)}
+                    <Tooltip title="Eye">
+                      <button className="text-blue-500 mx-1"
+                        onClick={() => openViewModal(order)}
 
-                        >
-                          <EyeIcon />
-                        </button>
-                      </Tooltip>
+                      >
+                        <EyeIcon />
+                      </button>
+                    </Tooltip>
                     {/* <Tooltip title="Remove">
                       <button className="text-red-500 mx-1">
                         <TrashBinIcon />
@@ -207,12 +207,12 @@ export default function AllDogs() {
           </div>
         </div>
       )}
-       {/* View Dog Details Modal */}
-            <DogDetailsModal
-              isOpen={isViewModalOpen}
-              onClose={closeViewModal}
-              dog={viewDog}
-            />
+      {/* View Dog Details Modal */}
+      <DogDetailsModal
+        isOpen={isViewModalOpen}
+        onClose={closeViewModal}
+        dog={viewDog}
+      />
     </div>
   );
 }

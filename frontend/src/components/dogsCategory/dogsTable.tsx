@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Button from "../ui/button/Button";
 import {
@@ -10,14 +10,10 @@ import {
 } from "../ui/table";
 import { EyeIcon, PencilIcon, PlusIcon } from "../../assets/icons";
 import Badge from "../ui/badge/Badge";
-import { GermanSheperdListModal } from "../ui/modal/dogModals/germanShepherdModal";
 import { SoldDogsListModal } from "../ui/modal/dogModals/soldDogsModal";
 import { LoanDogListModal } from "../ui/modal/dogModals/loanDogModal";
 import { Tooltip } from "@mui/material";
 import { useFetchDogs } from "./hooks/useFetchDogs";
-import { useGermanShepherds } from "./hooks/useGermanShepherd";
-import { useLabradorRetriever } from "./hooks/useLabradorRetriever";
-import { LabradorRetrieverListModal } from "../ui/modal/dogModals/labradorRetrieverModal";
 import { useSoldDog } from "./hooks/useSoldDog";
 import { useLoanDogs } from "./hooks/useLoanDogs";
 import { useTransferredDog } from "./hooks/useTransferredDog";
@@ -25,25 +21,73 @@ import { TransferDogsListModal } from "../ui/modal/dogModals/transferDogModal";
 import { StandingDogListModal } from "../ui/modal/dogModals/standingDog";
 import { useStandingDog } from "./hooks/useStandingDog";
 import { DogDetailsModal } from "../ui/modal/dogModals/dogProfileModal";
-import { BelgianMalinoisListModal } from "../ui/modal/dogModals/belgianMalinoisModal";
-import { useBelgianMalinois } from "./hooks/useBelgianMalinois";
+import { useBreedStore } from "../../store/breedStore";
+import { Breed, Dog } from "./types/dog";
+import { BreedModal } from "../ui/modal/dogModals/breedModal";
+import { useSiresAndDamsByBreed } from "./hooks/useSireAndDam";
 
 const ITEMS_PER_PAGE = 5;
 
 export default function BasicTableOne() {
-  const [activeIndex, setActiveIndex] = useState<null | number>(null);
-  const handleCloseModal = () => setActiveIndex(null);
+  // const [activeIndex, setActiveIndex] = useState<null | number>(null);
+  // New
+  const [activeModalType, setActiveModalType] = useState<string | null>(null);
+  const handleCloseModal = () => setActiveModalType(null);
   const navigate = useNavigate();
 
   const { dogs, loading, error, setSelectedDog } = useFetchDogs();
-  const { total } = useGermanShepherds();
-  const { totalLabradorRetriever } = useLabradorRetriever();
-    const { totalBelgianMalinois } = useBelgianMalinois();
+
   const { totalSoldDog } = useSoldDog();
   const { totalLoanDog } = useLoanDogs();
   const { totalTransferredDog } = useTransferredDog();
   const { totalStandingDog } = useStandingDog();
+  const { breeds, getAllBreeds } = useBreedStore();
 
+
+
+  const [activeBreedModal, setActiveBreedModal] = useState<{
+    isOpen: boolean;
+    breedName: string;
+    breedId: number;
+  }>({ isOpen: false, breedName: "", breedId: 0 });
+
+  // When opening the modal:
+  // const handleOpenBreedModal = (breed: Breed) => {
+  //   setActiveBreedModal({
+  //     isOpen: true,
+  //     breedName: breed.name,
+  //     breedId: breed.id
+  //   });
+  // };
+
+  // Fetch sires and dams for the specific breed
+  const { sires, dams } = useSiresAndDamsByBreed(activeModalType?.split('-')[1] ?? '');
+  console.log("Active Breed Modal id :", activeBreedModal.breedId);
+
+  console.log("Sires:", sires);
+  console.log("Dams:", dams);
+
+
+
+  useEffect(() => {
+    const fetchBreeds = async () => {
+      try {
+        await getAllBreeds();
+      } catch (err) {
+        console.error("Error fetching breeds:", err);
+      }
+    };
+    fetchBreeds();
+  }, [getAllBreeds]);
+
+  const calculateBreedCount = (breedId: number, dogs: Dog[]): number => {
+    return dogs.reduce((count, dog) =>
+      dog.breedId === breedId ? count + 1 : count,
+      0);
+  };
+
+
+  console.log("Breeds:", breeds);
   const [viewDog, setViewDog] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
@@ -57,14 +101,17 @@ export default function BasicTableOne() {
     setViewDog(null);
   };
 
-  const dogStatistics = [
-    {
-      label: "Labrador Retriever",
-      value: totalLabradorRetriever,
-      modalType: "Labrador",
-    },
-    { label: "Belgian Malinois", value: totalBelgianMalinois, modalType: "Belgian" },
-    { label: "German Shepherd", value: total, modalType: "germanShepherd" },
+  const breedStatistics = breeds.map(breed => ({
+    label: breed.breed, // Using the 'breed' property from your response
+    value: calculateBreedCount(breed.id, dogs), // You'll need to get the count from your backend or calculate it
+    modalType: `breed-${breed.id}`, // Create unique modal type based on breed ID
+    type: 'breed' as const,
+    id: breed.id
+  }));
+
+
+  const specialStatistics = [
+
     { label: "Standing Dogs", value: totalStandingDog, modalType: "Standing" },
     { label: "Sold Dogs", value: totalSoldDog, modalType: "Sold" },
     { label: "Loaned Dogs", value: totalLoanDog, modalType: "Loaned" },
@@ -74,6 +121,40 @@ export default function BasicTableOne() {
       modalType: "Transferred",
     },
   ];
+
+
+
+
+  const dogStatistics = [
+    // ...breeds.map(breed => ({
+    //   label: breed.breed,
+    //   value: 0,
+    //   modalType: `breed-${breed.id}`,
+    //   type: 'breed' as const,
+    //   id: breed.id
+    // })),
+    ...breedStatistics,
+    ...specialStatistics // Your existing special categories
+  ];
+  //   {
+  //     label: "Labrador Retriever",
+  //     value: totalLabradorRetriever,
+  //     modalType: "Labrador",
+  //   },
+  //   { label: "Belgian Malinois", value: totalBelgianMalinois, modalType: "Belgian" },
+  //   { label: "German Shepherd", value: total, modalType: "germanShepherd" },
+  //   { label: "Standing Dogs", value: totalStandingDog, modalType: "Standing" },
+  //   { label: "Sold Dogs", value: totalSoldDog, modalType: "Sold" },
+  //   { label: "Loaned Dogs", value: totalLoanDog, modalType: "Loaned" },
+  //   {
+  //     label: "Transferred Dogs",
+  //     value: totalTransferredDog,
+  //     modalType: "Transferred",
+  //   },
+
+
+
+
 
   const [filters, setFilters] = useState({
     id: "",
@@ -132,6 +213,8 @@ export default function BasicTableOne() {
     navigate("/form-elements");
   };
 
+
+
   return (
     <>
       <div className="overflow-hidden rounded-xl border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900 transition-colors duration-300">
@@ -139,7 +222,7 @@ export default function BasicTableOne() {
           {dogStatistics.map((stat, index) => (
             <div
               key={index}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => setActiveModalType(stat.modalType)}
               className="cursor-pointer rounded-xl bg-gray-50 p-5 text-center shadow-sm transition-colors duration-300 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
             >
               <h3 className="font-semibold text-gray-700 dark:text-gray-200">
@@ -151,29 +234,63 @@ export default function BasicTableOne() {
             </div>
           ))}
 
-          {activeIndex === 0 && (
-            <LabradorRetrieverListModal
-              isOpen={true}
-              onClose={handleCloseModal}
-            />
-          )}
-          {activeIndex === 1 && (
-            <BelgianMalinoisListModal isOpen={true} onClose={handleCloseModal} />
-          )}
-          {activeIndex === 2 && (
-            <GermanSheperdListModal isOpen={true} onClose={handleCloseModal} />
-          )}
-          {activeIndex === 3 && (
-            <StandingDogListModal isOpen={true} onClose={handleCloseModal} />
-          )}
-          {activeIndex === 4 && (
-            <SoldDogsListModal isOpen={true} onClose={handleCloseModal} />
-          )}
-          {activeIndex === 5 && (
-            <LoanDogListModal isOpen={true} onClose={handleCloseModal} />
-          )}
-          {activeIndex === 6 && (
-            <TransferDogsListModal isOpen={true} onClose={handleCloseModal} />
+          {activeModalType && (
+            <>
+              {/* Dynamic Breed Modal */}
+              {activeModalType.startsWith('breed-') && (
+                (() => {
+                  // Debugging logs - keep these temporarily
+                  const breedId = parseInt(activeModalType.split('-')[1]);
+                  const currentBreed = breeds.find(b => b.id === breedId);
+                  // const sires = useSiresAndDamsByBreed(breedId.toString()).sires;
+                  // const dams = useSiresAndDamsByBreed(breedId.toString()).dams;
+
+                  // console.log('--- Debugging Breed Modal ---');
+                  // console.log('Active Breed ID:', breedId);
+                  // console.log('All Sires:', sires);
+                  // console.log('All Dams:', dams);
+                  // console.log('Filtered Sires:', sires.filter(s => s.breedId === breedId));
+                  // console.log('Filtered Dams:', dams.filter(d => d.breedId === breedId));
+                  // console.log('Current Breed:', currentBreed);
+
+                  return (
+                    <BreedModal
+                      isOpen={true}
+                      onClose={handleCloseModal}
+                      breedName={currentBreed?.breed || `Breed ${breedId}`}
+                      sires={sires.filter(sire => {
+                        const match = sire.breedId === breedId;
+                        if (!match) {
+                          console.log('Sire excluded:', sire, 'BreedId:', sire.breedId, 'Expected:', breedId);
+                        }
+                        return match;
+                      })}
+                      dams={dams.filter(dam => {
+                        const match = dam.breedId === breedId;
+                        if (!match) {
+                          console.log('Dam excluded:', dam, 'BreedId:', dam.breedId, 'Expected:', breedId);
+                        }
+                        return match;
+                      })}
+                    />
+                  );
+                })()
+              )}
+
+              {/* Special Category Modals */}
+              {activeModalType === "Standing" && (
+                <StandingDogListModal isOpen={true} onClose={handleCloseModal} />
+              )}
+              {activeModalType === "Sold" && (
+                <SoldDogsListModal isOpen={true} onClose={handleCloseModal} />
+              )}
+              {activeModalType === "Loaned" && (
+                <LoanDogListModal isOpen={true} onClose={handleCloseModal} />
+              )}
+              {activeModalType === "Transferred" && (
+                <TransferDogsListModal isOpen={true} onClose={handleCloseModal} />
+              )}
+            </>
           )}
         </div>
 
@@ -251,7 +368,7 @@ export default function BasicTableOne() {
                     }
                   >
                     <TableCell className="px-5 py-4 text-left text-gray-900 dark:text-gray-100">
-                    {dog?.id}
+                      {index + 1}
                     </TableCell>
                     <TableCell className="px-5 py-4 text-left text-gray-900 dark:text-gray-100">
                       {dog?.dogName}
@@ -260,7 +377,7 @@ export default function BasicTableOne() {
                       {dog?.KP}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-left text-gray-900 dark:text-gray-100">
-                      {dog?.sex}
+                      {(dog?.sex ?? "").charAt(0).toUpperCase() + (dog?.sex ?? "").slice(1)}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-left text-gray-900 dark:text-gray-100">
                       {dog?.microchip?.chipId}

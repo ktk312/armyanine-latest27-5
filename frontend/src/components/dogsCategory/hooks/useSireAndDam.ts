@@ -12,14 +12,15 @@ export const useSiresAndDams = () => {
 };
 
 export const useSiresAndDamsByBreed = (id: string) => {
-  const {getSiresAndDamsByBreedId, sires, dams, Parentloading, error } = useParentDogStore();
+  console.log("useSiresAndDamsByBreed called with id:", id);
+  const { getSiresAndDamsByBreedId, sires, dams, Parentloading, error } = useParentDogStore();
 
   useEffect(() => {
-    if(id){
+    if (id) {
       getSiresAndDamsByBreedId(id); // Fetch data on component mount
 
     }
   }, [id, getSiresAndDamsByBreedId]);
 
-  return {getSiresAndDamsByBreedId, sires, dams, Parentloading, error };
+  return { getSiresAndDamsByBreedId, sires, dams, Parentloading, error };
 };

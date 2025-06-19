@@ -29,7 +29,7 @@ const VaccinationRecordForm = () => {
 
   const dogOptions = dogs.map((dog) => ({
     value: dog.id.toString(),
-    label: dog.dogName,
+    label: dog.KP + ' - ' + dog.dogName,
   }));
 
   const handleChange = (key: string, value: string) => {

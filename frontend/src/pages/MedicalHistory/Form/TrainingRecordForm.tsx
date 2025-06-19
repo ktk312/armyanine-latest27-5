@@ -25,15 +25,15 @@ const TrainingRecordForm = () => {
   const [selectedDog, setSelectedDog] = useState<{ value: string; label: string } | null>(null);
   const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<{ value: string; label: string } | null>(null);
-  const { dogs} = useFilteredDogs(selectedBreed?.value || "", "")
+  const { dogs } = useFilteredDogs(selectedBreed?.value || "", "")
   const [error, setError] = useState<string | undefined>(undefined);
-   console.log(error)
+  console.log(error)
 
 
   const { selectedTraining, updateTraining, createTraining, setSelectedTraining } = useTraining();
   const [ratings, setRatings] = useState<Record<string, string>>({});
   const navigate = useNavigate();
- 
+
   const { breeds, getAllBreeds } = useBreedStore();
 
   // Get Breed
@@ -63,7 +63,7 @@ const TrainingRecordForm = () => {
   };
   const dogOptions = dogs.map(dog => ({
     value: dog.id.toString(), // or whatever unique identifier your dog has
-    label: dog.dogName // or whatever property you want to display as the label
+    label: dog.KP + ' - ' + dog.dogName, // or whatever property you want to display as the label
   }));
   // Prefill form if selectedTraining is present
   useEffect(() => {
@@ -128,18 +128,18 @@ const TrainingRecordForm = () => {
   };
 
   useEffect(() => {
-  if (!selectedTraining) {
-    setTrainerName("");
-    setTrainingStartedOn("");
-    setTrainingCompletedOn("");
-    setTrainingCategory("");
-    setRatings({});
-    setSelectedBreed(null);
-    setSelectedDog(null);
-  }
-}, []);
+    if (!selectedTraining) {
+      setTrainerName("");
+      setTrainingStartedOn("");
+      setTrainingCompletedOn("");
+      setTrainingCategory("");
+      setRatings({});
+      setSelectedBreed(null);
+      setSelectedDog(null);
+    }
+  }, []);
 
-// Reset selected dog when breed changes only in create mode
+  // Reset selected dog when breed changes only in create mode
   useEffect(() => {
     if (!selectedTraining) {
       setSelectedDog(null);
@@ -162,25 +162,25 @@ const TrainingRecordForm = () => {
     >
       {/* Form Inputs for Trainer Information */}
       <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {!selectedTraining &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        {!selectedTraining && (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="space-y-6">
             <Label>Select Breed <span className="text-red-500">*</span></Label>
             <Select
               options={breedOptions}
               placeholder="Select Breed"
               onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              // defaultValue={selectedTraining?.dog?.breed?.id.toString()}            // disabled={!!selectedBreed?.value}
+            // defaultValue={selectedTraining?.dog?.breed?.id.toString()}            // disabled={!!selectedBreed?.value}
             />
           </div>
         </div>)}
-        {!selectedTraining &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+        {!selectedTraining && (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
           <div className="space-y-6">
             <Label>Select Dog <span className="text-red-500">*</span></Label>
             <Select
               options={dogOptions}
               placeholder="Select Dog"
               onChange={(val) => setSelectedDog({ value: val, label: val })}
-              // defaultValue={selectedTraining?.dog?.dogName.toString()}
+            // defaultValue={selectedTraining?.dog?.dogName.toString()}
             />
           </div>
         </div>)}

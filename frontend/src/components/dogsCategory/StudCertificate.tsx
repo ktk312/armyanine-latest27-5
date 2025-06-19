@@ -196,7 +196,7 @@ export default function StudCertificate() {
                 }
               >
                 <TableCell className="px-5 py-4 text-start">
-                  {order?.id}
+                  {index + 1}
                 </TableCell>
                 <TableCell className="px-5 py-4 text-start">
                   {order?.sire?.dogName}

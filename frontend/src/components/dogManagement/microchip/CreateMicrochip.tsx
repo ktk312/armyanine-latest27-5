@@ -45,7 +45,7 @@ const CreateMicrochip: React.FC = () => {
     try {
       if (selectedMicrochip) {
         await handleEditMicrochip(String(selectedMicrochip.id), { chipId: form.chipId });
-        
+
         alert("Microchip updated successfully!");
         navigate("/microchip")
       } else {
@@ -68,7 +68,7 @@ const CreateMicrochip: React.FC = () => {
     }
   };
 
- return (
+  return (
     <div className="bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-10 transition-all duration-300">
         <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-6 text-center">
@@ -94,7 +94,7 @@ const CreateMicrochip: React.FC = () => {
               onChange={handleInputChange}
               required
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              placeholder="Enter country name"
+              placeholder="Enter microchip"
             />
           </div>
 
@@ -108,8 +108,8 @@ const CreateMicrochip: React.FC = () => {
                 ? "Updating..."
                 : "Creating..."
               : selectedMicrochip
-                ? "Update Country"
-                : "Add New Country"}
+                ? "Update Microchip"
+                : "Add New Microchip"}
           </button>
 
           {message && (

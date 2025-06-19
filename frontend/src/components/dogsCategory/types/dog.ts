@@ -63,6 +63,8 @@ export interface Dog {
   title: string;
   CDN: Boolean;
   CNS: Boolean;
+  cdnDate: string | null;
+  cnsDate: string | null;
   chestDepth: string;
   chestCircumference: string;
   weight: string
@@ -92,7 +94,7 @@ export interface DogStore {
   editOneDog: (dogData: FormData, id: string) => Promise<Dog>; // ✅ Optional, if using update
   getDogsCount: () => Promise<void>; // ✅ Optional, if using count
   filteredDog: (breedId: string, cityId: string) => Promise<Dog[]>;
-resetSelectedDog: () => void;
+  resetSelectedDog: () => void;
 }
 
 export interface FetchDogsResponse {

@@ -25,7 +25,7 @@ export default function ProphylaxisRecordForm() {
   const { breeds, getAllBreeds } = useBreedStore();
   const dogOptions = dogs.map(dog => ({
     value: dog.id.toString(), // or whatever unique identifier your dog has
-    label: dog.dogName // or whatever property you want to display as the label
+    label: dog.KP + ' - ' + dog.dogName, // or whatever property you want to display as the label
   }));
   const [formData, setFormData] = useState({
     date: "",
@@ -132,7 +132,7 @@ export default function ProphylaxisRecordForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-console.log("inside the creation")
+    console.log("inside the creation")
     if (!selectedDog?.value) {
       setError("Please select a dog");
       return;
@@ -177,25 +177,25 @@ console.log("inside the creation")
       </h1>
 
       <form onSubmit={selectedProphylaxis ? handleUpdate : handleSubmit} className="space-y-6">
-       {!selectedProphylaxis &&( <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        {!selectedProphylaxis && (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <div className="space-y-6">
             <Label>Select Breed <span className="text-red-500">*</span></Label>
             <Select
               options={breedOptions}
               placeholder="Select Breed"
               onChange={(val) => setSelectedBreed({ value: val, label: val })}
-              // defaultValue={selectedProphylaxis?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
+            // defaultValue={selectedProphylaxis?.dog?.breed?.breed.toString()}            // disabled={!!selectedBreed?.value}
             />
           </div>
         </div>)}
-        {!selectedProphylaxis &&(<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
+        {!selectedProphylaxis && (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-2">
           <div className="space-y-6">
             <Label>Select Dog <span className="text-red-500">*</span></Label>
             <Select
               options={dogOptions}
               placeholder="Select Dog"
               onChange={(val) => setSelectedDog({ value: val, label: val })}
-              // defaultValue={selectedProphylaxis?.dog?.dogName.toString()}
+            // defaultValue={selectedProphylaxis?.dog?.dogName.toString()}
             />
           </div>
         </div>)}

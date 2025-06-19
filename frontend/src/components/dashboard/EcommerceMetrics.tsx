@@ -38,7 +38,7 @@ export default function EcommerceMetrics() {
               C&S
             </span>
             <h4 className="mt-2 font-bold text-gray-800 te-title-sm:18pxxt dark:text-white/90 ml-35 ">
-              {dogStats?.soldDogs}
+              {dogStats?.cns ?? 0}
             </h4>
           </div>
         </div>
@@ -55,7 +55,7 @@ export default function EcommerceMetrics() {
               C&D
             </span>
             <h4 className="mt-2 font-bold text-gray-800 te-title-sm:18pxxt dark:text-white/90 ml-35 ">
-              {dogStats?.deathDogs}
+              {dogStats?.cnd ?? 0}
             </h4>
           </div>
         </div>

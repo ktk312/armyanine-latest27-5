@@ -137,7 +137,7 @@ export default function DogsCategoryList() {
                 {paginatedData.map((order, index) => (
                   <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
                     <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
-                    <TableCell className="px-5 py-4 text-start">{order.name}</TableCell>
+                    <TableCell className="px-5 py-4 text-start">{(order?.name ?? "").charAt(0).toUpperCase() + (order?.name ?? "").slice(1)}</TableCell>
                     <TableCell className="px-4 py-3 text-start">
                       <Tooltip title="Edit">
                         <button className="text-blue-500 mx-1"

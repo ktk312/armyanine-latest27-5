@@ -1,7 +1,8 @@
 export interface DogStats {
   totalDogs: number;
-  soldDogs: number;
-  deathDogs: number;
+  cnd: number;
+  cns: number;
+  deadDogs: number;
   mortalityPercentage: string; // e.g. "12.34%"
 }
 

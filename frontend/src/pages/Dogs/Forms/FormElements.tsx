@@ -41,6 +41,8 @@ export interface DogFormData {
   isLoan: boolean;
   CNS: boolean;
   CDN: boolean;
+  cdnDate?: string;
+  cnsDate?: string;
   isTransfer: boolean;
   virtuesAndFaults: string,
   breedingAdvice: string,
@@ -69,6 +71,8 @@ export default function FormElements() {
     CDN: false,
     CNS: false,
     dob: new Date().toISOString(), // Format as YYYY-MM-DD
+    cdnDate: new Date().toISOString(),
+    cnsDate: new Date().toISOString(),
     sex: "",
     categoryId: null,
     countryId: null,
@@ -111,6 +115,8 @@ export default function FormElements() {
       isTransfer: false,
       CDN: false,
       CNS: false,
+      cdnDate: '',
+      cnsDate: '',
       dob: "",
       sex: "",
       categoryId: null,
@@ -145,7 +151,7 @@ export default function FormElements() {
 
   };
 
-const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
+  const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
 
 
   //Initilize form when selected Dog changes
@@ -164,6 +170,8 @@ const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
         isTransfer: Boolean(selectedDog.isTransfer),
         CDN: Boolean(selectedDog.CDN),
         CNS: Boolean(selectedDog.CNS),
+        cdnDate: selectedDog.cdnDate || '',
+        cnsDate: selectedDog.cnsDate || '',
         dob: selectedDog.dob || new Date().toISOString(),
         sex: selectedDog.sex || "",
         categoryId: selectedDog.categoryId ?? null,
@@ -201,11 +209,13 @@ const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
         isTransfer: false,
         CDN: false,
         CNS: false,
+        cdnDate: '',
+        cnsDate: '',
         dob: "",
         deathDate: "",
         soldDate: "",
         loanDate: "",
-        transferDate:"",
+        transferDate: "",
         sex: "",
         categoryId: null,
         countryId: null,
@@ -233,12 +243,12 @@ const resetSelectedDog = useDogStore(state => state.resetSelectedDog);
       });
     }
   }, [selectedDog]);
-// Clear selectedDog when component unmounts
-useEffect(() => {
-  return () => {
-    resetSelectedDog();
-  };
-}, [resetSelectedDog]); 
+  // Clear selectedDog when component unmounts
+  useEffect(() => {
+    return () => {
+      resetSelectedDog();
+    };
+  }, [resetSelectedDog]);
   // Handle input changes
   const handleInputChange = (name: string, value: string | number | boolean | File) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -285,6 +295,8 @@ useEffect(() => {
     formDataToSend.append("breedingAdvice", formData.breedingAdvice);
     formDataToSend.append("miscellaneousComments", formData.miscellaneousComments);
     formDataToSend.append("progenyTrainability", formData.progenyTrainability);
+    formDataToSend.append("cdnDate", formData.cdnDate || '');
+    formDataToSend.append("cnsDate", formData.cnsDate || "");
 
     // Convert booleans to strings
     formDataToSend.append("isDeath", String(formData.isDeath));

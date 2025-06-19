@@ -94,7 +94,9 @@ model Dog {
   isTransfer         Boolean   @default(false)
   transferDate       String?
   CDN                Boolean?  @default(false)
+  cdnDate            String?
   CNS                Boolean?  @default(false)
+  cnsDate            String?
   sex                String
   achievements       String?
   createdAt          DateTime  @default(now())
@@ -145,7 +147,7 @@ model Dog {
   trainingRecords    TrainingRecord[]
   prophylaxisRecords ProphylaxisRecord[]
   dewormingRecords   DewormingRecord[]
-   sicknessRecords SicknessRecord[]
+  sicknessRecords    SicknessRecord[]
 }
 
 model DogImage {
@@ -275,7 +277,7 @@ model Microchip {
 
 // Medical history of Dogs
 model VaccinationRecord {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   age       Int?
   vaccine   String?
   dueDate   DateTime?
@@ -283,9 +285,9 @@ model VaccinationRecord {
   batchNo   String?
   vetSign   String?
   dogId     Int
-  dog       Dog      @relation(fields: [dogId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  dog       Dog       @relation(fields: [dogId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model TrainingRecord {
@@ -294,7 +296,7 @@ model TrainingRecord {
   trainingStartedOn DateTime
   trainingCompleted DateTime
   trainingCategory  String?
-  performance       String? 
+  performance       String?
   intelligence      String?
   willingness       String?
   energy            String?
@@ -327,6 +329,7 @@ model DewormingRecord {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 model SicknessRecord {
   id        Int      @id @default(autoincrement())
   date      DateTime

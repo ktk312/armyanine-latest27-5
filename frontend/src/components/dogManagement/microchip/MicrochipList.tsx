@@ -122,7 +122,7 @@ export default function Microchip() {
                           placeholder={`Search ${header}`}
                           onChange={(e) =>
                             handleFilterChange(
-                                idx === 0 ? "id" : "chipId",
+                              idx === 0 ? "id" : "chipId",
                               e.target.value
                             )
                           }
@@ -136,9 +136,9 @@ export default function Microchip() {
 
               <TableBody>
                 {paginatedData.map((order, index) => (
-                  <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                    <TableCell className="px-5 py-4 text-start">{order?.id}</TableCell>
-                    <TableCell className="px-5 py-4 text-start">{order?.chipId}</TableCell>
+                  <TableRow key={index + 1} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
+                    <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
+                    <TableCell className="px-5 py-4 text-start"> {typeof order?.chipId === 'string' ? order.chipId : JSON.stringify(order?.chipId)}</TableCell>
                     <TableCell className="px-4 py-3 text-start">
                       {/* <button className="text-blue-500 mx-1">
                         <EyeIcon />

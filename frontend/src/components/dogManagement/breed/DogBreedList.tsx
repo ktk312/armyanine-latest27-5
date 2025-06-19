@@ -128,7 +128,7 @@ export default function DogBreedPage() {
                 {paginatedData.map((order, index) => (
                   <TableRow key={order.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
                     <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
-                    <TableCell className="px-5 py-4 text-start">{order.breed}</TableCell>
+                    <TableCell className="px-5 py-4 text-start">{(order?.breed ?? "").charAt(0).toUpperCase() + (order?.breed ?? "").slice(1)}</TableCell>
                     <TableCell className="px-4 py-3 text-start">
                       {/* <button className="text-blue-500 mx-1">
                         <EyeIcon />
@@ -139,7 +139,7 @@ export default function DogBreedPage() {
                         }}>
                         <PencilIcon />
                       </button>
-                      {/* <button className="text-red-500 mx-1">
+                      {/* <button className="text-red-500 mFx-1">
                         <TrashBinIcon />
                       </button> */}
                     </TableCell>
