@@ -63,10 +63,10 @@ export default function AssignMicrochipForm({ puppies, setPuppies }: LitterFormT
         { value: "female", label: "Female" },
     ];
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700   rounded-xl">
             {puppies.map((puppy, index) => (
-                <Card key={index} className="p-4">
-                    <CardContent className="grid grid-cols-3 gap-4">
+                <Card elevation={0} key={index} className="bg-white dark:bg-gray-900 elevation-none shadow-none">
+                    <CardContent className="grid grid-cols-3 gap-4 bg-red dark:bg-gray-900 shadow-none  ">
                         {/* Puppy Name */}
                         <div>
                             <Label>Puppy Name <span className="text-red-500">*</span></Label>
