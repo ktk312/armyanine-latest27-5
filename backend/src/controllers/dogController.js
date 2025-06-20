@@ -844,6 +844,35 @@ const transferredDogList = async (req, res) => {
   }
 };
 
+
+
+//Get All Dead Dog
+const deadDogList = async (req, res) => {
+  console.log("GET ALL DEAD DOG (GET");
+
+  try {
+    const List = await prisma.dog.findMany({
+      where: { isDeath: true },
+      orderBy: {
+        id: "desc",
+      },
+    });
+    const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
+    const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
+    const total = await prisma.dog.count({
+      where: { isDeath: true },
+    });
+    res.status(200).json({
+      sires,
+      dams,
+      total,
+    });
+  } catch (error) {
+    console.error("Error fetching dogs:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const getDogDetails = async (req, res) => {
   try {
     const dogId = parseInt(req.params.id);
@@ -1522,6 +1551,7 @@ const getFilteredDogs = async (req, res) => {
 module.exports = {
   getFilteredDogs,
   transferredDogList,
+  deadDogList,
   belgianDogList,
   standingDogList,
   soldDogList,

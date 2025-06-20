@@ -142,7 +142,7 @@ export default function LittersInspectionReqList() {
                   )
                 )} */}
 
-                {["id", "sireName", "damName", "matingDate", "status", "actions"].map(
+                {["s.no", "sireName", "damName", "matingDate", "status", "actions"].map(
                   (key, idx) => (
                     <TableCell
                       key={idx}
@@ -150,7 +150,7 @@ export default function LittersInspectionReqList() {
                       className="px-5 py-3 font-medium text-gray-500 text-start"
                     >
                       {key.toUpperCase()}
-                      {key !== "actions" && (
+                      {key !== "actions" && key != "s.no" && (
                         <input
                           type="text"
                           placeholder={`Search ${key}`}
@@ -168,7 +168,7 @@ export default function LittersInspectionReqList() {
               {paginatedData.map((order, index) => (
                 <TableRow key={order?.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
                   <TableCell className="px-5 py-4 text-start">
-                    {order?.id}
+                    {index + 1}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
                     {order?.sire?.dogName}

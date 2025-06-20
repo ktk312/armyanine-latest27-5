@@ -11,7 +11,7 @@ const getNestedValue = (obj: any, path: string): any => {
   return path.split(".").reduce((acc, part) => acc && acc[part], obj);
 };
 const columns = [
-  { label: "S.No", key: "id" },
+  { label: "S.No", key: "" },
   { label: "Dog Name", key: "dog.dogName" },
   { label: "Drug", key: "drug" },
   { label: "Sign", key: "sign" },

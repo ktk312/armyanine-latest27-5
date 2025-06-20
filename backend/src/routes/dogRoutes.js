@@ -4,7 +4,7 @@ const dogController = require("../controllers/dogController");
 const upload = require("../config/multerConfig");
 
 // Create a new dog
-router.post("/", upload.single('file') , dogController.createDog);
+router.post("/", upload.single('file'), dogController.createDog);
 
 // Get all dogs
 router.get("/", dogController.getAllDogs);
@@ -16,7 +16,7 @@ router.get("/totalDogs/count", dogController.getDogsCount);
 router.get("/:id", dogController.getDogById);
 
 // Update a dog
-router.patch("/:id",upload.single('file'), dogController.updateDog);
+router.patch("/:id", upload.single('file'), dogController.updateDog);
 
 // Delete a dog
 router.delete("/:id", dogController.deleteDog);
@@ -67,6 +67,9 @@ router.get("/loan/view", dogController.loanDogList);
 
 // Get All transferred dogs List
 router.get("/transferred/view", dogController.transferredDogList);
+
+// Get All Dead dogs List
+router.get("/dead/view", dogController.deadDogList);
 
 // seacrch dog by location or breed 
 router.get("/filter/view", dogController.getFilteredDogs);

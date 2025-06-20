@@ -124,7 +124,7 @@ export const RegistrationViewModal: React.FC<ModalProps> = ({
                                         <div className="flex items-center gap-2">
                                             <span className="text-gray-500 dark:text-gray-400">DOB:</span>
                                             <span className="text-gray-800 dark:text-white">
-                                                {dog?.litter?.matingDate ? new Date(dog?.litter?.matingDate).toLocaleDateString() : "N/A"}
+                                                {dog?.litter?.dob ? new Date(dog?.litter?.dob).toLocaleDateString() : "N/A"}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">

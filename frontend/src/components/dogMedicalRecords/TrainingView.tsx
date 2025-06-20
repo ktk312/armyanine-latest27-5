@@ -37,7 +37,7 @@ export interface TrainingRecord {
 }
 const ITEMS_PER_PAGE = 5;
 const columns = [
-  { label: "S.No", key: "id" },
+  { label: "S.No", key: "" },
   { label: "Dog Name", key: "dog.dogName" },
   { label: "Trainer", key: "trainerName" },
   { label: "Category", key: "trainingCategory" },

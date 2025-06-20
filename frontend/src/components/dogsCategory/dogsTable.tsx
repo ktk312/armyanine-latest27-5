@@ -17,6 +17,7 @@ import { useFetchDogs } from "./hooks/useFetchDogs";
 import { useSoldDog } from "./hooks/useSoldDog";
 import { useLoanDogs } from "./hooks/useLoanDogs";
 import { useTransferredDog } from "./hooks/useTransferredDog";
+import { useDeadDog } from "./hooks/useDeadDogs";
 import { TransferDogsListModal } from "../ui/modal/dogModals/transferDogModal";
 import { StandingDogListModal } from "../ui/modal/dogModals/standingDog";
 import { useStandingDog } from "./hooks/useStandingDog";
@@ -25,6 +26,7 @@ import { useBreedStore } from "../../store/breedStore";
 import { Breed, Dog } from "./types/dog";
 import { BreedModal } from "../ui/modal/dogModals/breedModal";
 import { useSiresAndDamsByBreed } from "./hooks/useSireAndDam";
+import { DeadDogsListModal } from "../ui/modal/dogModals/deadDogsModal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -40,6 +42,7 @@ export default function BasicTableOne() {
   const { totalSoldDog } = useSoldDog();
   const { totalLoanDog } = useLoanDogs();
   const { totalTransferredDog } = useTransferredDog();
+  const { totalDeadDog } = useDeadDog();
   const { totalStandingDog } = useStandingDog();
   const { breeds, getAllBreeds } = useBreedStore();
 
@@ -119,6 +122,11 @@ export default function BasicTableOne() {
       label: "Transferred Dogs",
       value: totalTransferredDog,
       modalType: "Transferred",
+    },
+    {
+      label: "Dead Dogs",
+      value: totalDeadDog,
+      modalType: "Dead",
     },
   ];
 
@@ -290,6 +298,9 @@ export default function BasicTableOne() {
               {activeModalType === "Transferred" && (
                 <TransferDogsListModal isOpen={true} onClose={handleCloseModal} />
               )}
+              {activeModalType === "Dead" && (
+                <DeadDogsListModal isOpen={true} onClose={handleCloseModal} />
+              )}
             </>
           )}
         </div>
@@ -335,7 +346,7 @@ export default function BasicTableOne() {
                     >
                       <div className="flex flex-col gap-1">
                         <span>{header}</span>
-                        {header !== "ACTIONS" && (
+                        {header !== "ACTIONS" && header != "S.No" && (
                           <input
                             type="text"
                             placeholder={`Search ${header}`}

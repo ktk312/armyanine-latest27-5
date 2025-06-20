@@ -4,13 +4,15 @@ const prisma = new PrismaClient();
 
 const dogStats = async (req, res) => {
   try {
-    const [totalDogs, cns, cnd, deadDogs] = await Promise.all([
+    const [totalDogs, cns, cnd, deadDogs, actualTotalDogs] = await Promise.all([
+
       prisma.dog.count({ where: { isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false } }),
       prisma.dog.count({ where: { CNS: true } }),
       prisma.dog.count({ where: { CDN: true } }),
-      prisma.dog.count({ where: { isDeath: true } })
+      prisma.dog.count({ where: { isDeath: true } }),
+      prisma.dog.count(),
     ]);
-    const mortalityPercentage = totalDogs > 0 ? (deadDogs / totalDogs) * 100 : 0;
+    const mortalityPercentage = totalDogs > 0 ? (deadDogs / actualTotalDogs) * 100 : 0;
 
     return res.json({
       totalDogs,

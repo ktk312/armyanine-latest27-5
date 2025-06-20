@@ -205,6 +205,8 @@ export const endpoint = {
   SOLD_DOG: `${BASE_URL}/dog/list/sold/view`,
   LOANED_DOG: `${BASE_URL}/dog/loan/view`,
   TRANSFERRED_DOGS: `${BASE_URL}/dog/transferred/view`,
+  DEAD_DOGS: `${BASE_URL}/dog/dead/view`,
+
 
   // Medical Histoy of Dog
 

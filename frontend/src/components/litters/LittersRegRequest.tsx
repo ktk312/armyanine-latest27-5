@@ -119,7 +119,7 @@ export default function LitterRegRequests() {
             <TableRow>
 
               {[
-                { label: "S.No", key: "id" },
+                { label: "S.No", key: "" },
                 { label: "DOB", key: "dob" },
                 { label: "DOG NAME", key: "name" },
                 { label: "Gender", key: "sex" },
@@ -160,7 +160,7 @@ export default function LitterRegRequests() {
           <TableBody>
             {paginatedData.map((order, index) => (
               <TableRow key={order?.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                <TableCell className="px-5 py-4 text-start">{order?.id}</TableCell>
+                <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
                 <TableCell className="px-5 py-4 text-start">{formatDate(order?.litter?.dob)}</TableCell>
                 <TableCell className="px-5 py-4 text-start">{order?.name}</TableCell>
                 <TableCell className="px-5 py-4 text-start">{order?.sex}</TableCell>

@@ -502,6 +502,16 @@ export const fetchTransferredDogList = async () => {
   }
 };
 
+export const fetchDeadDogList = async () => {
+  try {
+    const response = await axios.get(endpoint.DEAD_DOGS);
+    return response.data; // This should return the data in the required format
+  } catch (error) {
+    console.error("Error fetching Loan Dogs:", error);
+    throw new Error("Failed to fetch Loan Dogs");
+  }
+};
+
 export const fetchStandingDogList = async () => {
   try {
     const response = await axios.get(endpoint.STANDING_DOG);
@@ -537,13 +547,13 @@ export const updateVaccination = async (
   data: Partial<VaccinationInput>
 ): Promise<VaccinationRecord> => {
   console.log("----id and data inside API test", id, data)
-try {
-const response = await axios.patch(endpoint.UPDATE_VACCINATION(id), data);
-  return response.data;
-} catch (error) {
-  console.error("Failed to update vaccination", error);
-  throw error;
-}
+  try {
+    const response = await axios.patch(endpoint.UPDATE_VACCINATION(id), data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update vaccination", error);
+    throw error;
+  }
 };
 
 // Delete Vaccination Record
