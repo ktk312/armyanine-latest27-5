@@ -5,7 +5,7 @@ export interface DeadDog {
   soldTo: string;
   KP: number;
   status: string;
-  transferDate: string;
+  deathDate: string;
   // Add other fields from your API response
 }
 

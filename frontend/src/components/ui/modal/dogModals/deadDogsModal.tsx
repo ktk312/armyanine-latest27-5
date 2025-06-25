@@ -149,7 +149,7 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "ACC NO", "TRANSFER DATE", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC NO", "Death DATE", "Status"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -175,7 +175,7 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
                                             {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
-                                            <TableCell className="px-5 py-4 text-start">{order.transferDate || ""}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.deathDate || ""}</TableCell>
 
                                             <TableCell className="px-4 py-3 text-start">
                                                 <Badge
