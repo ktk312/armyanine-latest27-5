@@ -125,7 +125,7 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
                     )}
                     <div className="p-4">
                         <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">Transferred Dogs</h4>
+                            <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">Deceased Dogs</h4>
                         </div>
 
                         {/* TABS */}
