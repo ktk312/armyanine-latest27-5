@@ -16,6 +16,10 @@ export const useAuthStore = create<AuthState>()(
       signIn: async (email: string, password: string) => {
         set({ isLoading: true, error: null });
         try {
+          set({
+            user: null,
+            token: null,
+          });
           const { user, token } = await userLogin(email, password);
           set({ user, token, isLoading: false, error: null });
         } catch (err: any) {
@@ -23,7 +27,7 @@ export const useAuthStore = create<AuthState>()(
             error: err?.response?.data?.message || "Login failed",
             isLoading: false,
           });
-          localStorage.removeItem("auth-storage");
+          // localStorage.removeItem("auth-storage");
         }
       },
 
@@ -38,7 +42,7 @@ export const useAuthStore = create<AuthState>()(
       changePassword: async (oldPassword: string, newPassword: string) => {
         set({ isLoading: true, error: null });
         const { user, token } = get();
-    if (!user?.id || !token) throw new Error("User not authenticated");
+        if (!user?.id || !token) throw new Error("User not authenticated");
         try {
           const user = get().user;
           if (!user?.id) throw new Error("User not authenticated");

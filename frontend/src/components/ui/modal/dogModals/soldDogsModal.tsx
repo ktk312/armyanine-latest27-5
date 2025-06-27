@@ -148,7 +148,7 @@ export const SoldDogsListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 ">
                                     <TableRow>
-                                        {["S.No", "DOG NAME",  "ACC NO", "SOLD DATE", "STATUS"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC NO", "SOLD DATE", "SOLD TO", "REMARKS", "STATUS"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -170,11 +170,13 @@ export const SoldDogsListModal: React.FC<ModalProps> = ({
                                             key={order.id}
                                             className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                                         >
-                                            <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
                                             {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.soldDate || ""}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.soldTo || ""}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.soldRemarks || ""}</TableCell>
                                             <TableCell className="px-4 py-3 text-start">
                                                 <Badge
                                                     size="sm"

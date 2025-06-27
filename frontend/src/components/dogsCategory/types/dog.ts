@@ -76,7 +76,15 @@ export interface Dog {
   breedingAdvice: string;
   miscellaneousComments: string;
   progenyTrainability: string;
-  microchip: Microchip
+  microchip: Microchip,
+  deathReason?: string; // Optional field for death reason
+  soldRemarks?: string; // Optional field for sold remarks
+  loanRemarks?: string; // Optional field for loan remarks
+  transferRemarks?: string; // Optional field for transfer remarks
+  soldTo?: string; // Optional field for sold to
+  loanTo?: string; // Optional field for loan to
+  transferTo?: string; // Optional field for transfer to
+
 }
 
 export interface DogStore {

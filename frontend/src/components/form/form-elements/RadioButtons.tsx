@@ -17,6 +17,13 @@ interface RadioInputsProps {
     soldDate?: string;
     loanDate?: string;
     transferDate?: string;
+    soldRemarks?: string;
+    soldTo?: string;
+    loanRemarks?: string;
+    loanTo?: string;
+    transferRemarks?: string;
+    transferTo?: string;
+    deathReason?: string;
   };
 }
 export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
@@ -64,7 +71,20 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
               value={formData.deathDate || ""}
               onChange={(e) => onChange("deathDate", e.target.value)}
             />
+
           )}
+
+          {formData.isDeath && (
+            <Input
+              type="text"
+              placeholder="Death Reason"
+              className="mt-2 border rounded p-2 text-sm"
+              value={formData.deathReason || ""}
+              onChange={(e) => onChange("deathReason", e.target.value)}
+            />
+
+          )}
+
         </div>
       </ComponentCard>
       <ComponentCard title="Was Dog Sold?">
@@ -91,6 +111,24 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
               className="mt-2 border rounded p-2 text-sm"
               value={formData?.soldDate || ""}
               onChange={(e) => onChange("soldDate", e.target.value)}
+            />
+          )}
+          {formData?.isSold && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="Sold To"
+              value={formData?.soldTo || ""}
+              onChange={(e) => onChange("soldTo", e.target.value)}
+            />
+          )}
+          {formData?.isSold && (
+            <Input
+              type="text"
+              placeholder="Sale Remarks"
+              className="mt-2 border rounded p-2 text-sm"
+              value={formData?.soldRemarks || ""}
+              onChange={(e) => onChange("soldRemarks", e.target.value)}
             />
           )}
         </div>
@@ -121,6 +159,25 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
               onChange={(e) => onChange("loanDate", e.target.value)}
             />
           )}
+          {formData.isLoan && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="Loan To"
+              value={formData.loanTo || ""}
+              onChange={(e) => onChange("loanTo", e.target.value)}
+            />
+          )}
+
+          {formData.isLoan && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="Loan Remarks"
+              value={formData.loanRemarks || ""}
+              onChange={(e) => onChange("loanRemarks", e.target.value)}
+            />
+          )}
         </div>
       </ComponentCard>
       <ComponentCard title="Has Dog been Transferred?">
@@ -149,6 +206,26 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
               onChange={(e) => onChange("transferDate", e.target.value)}
             />
           )}
+
+          {formData.isTransfer && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="Transfer To"
+              value={formData.transferTo || ""}
+              onChange={(e) => onChange("transferTo", e.target.value)}
+            />
+          )}
+          {formData.isTransfer && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="Transfer Remarks"
+              value={formData.transferRemarks || ""}
+              onChange={(e) => onChange("transferRemarks", e.target.value)}
+            />
+          )}
+
         </div>
       </ComponentCard>
       <ComponentCard title="C&D">

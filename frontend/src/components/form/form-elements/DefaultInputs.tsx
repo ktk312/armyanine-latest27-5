@@ -116,7 +116,7 @@ export default function DefaultInputs({
       setBreedOptions(
         breeds.map((breed) => ({
           value: breed?.id.toString(), // Convert number to string
-          label: breed?.breed || "",
+          label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
         }))
       );
     }
@@ -133,7 +133,7 @@ export default function DefaultInputs({
       setCategoryOptions(
         categories.map((category) => ({
           value: category.id.toString(), // Convert number to string
-          label: category.name || "",
+          label: category.name.charAt(0).toUpperCase() + (category.name ?? "").slice(1) || "",
         }))
       );
     }
@@ -173,8 +173,10 @@ export default function DefaultInputs({
   }));
 
   const ListofHair = [
-    { value: "stock_hair", label: "Stock Hair" },
-    { value: "AUSTIN_of_WESTRIDGE-I", label: "AUSTIN of WESTRIDGE - I" },
+    { value: "hair", label: "Hair" },
+    { value: "long_coat", label: "Long Coat" },
+    { value: "short_coat", label: "Short Coat" }
+
   ];
   const ListofHD = [
     { value: "normal", label: "Normal" },
@@ -419,7 +421,7 @@ export default function DefaultInputs({
             name="KP"
             value={dogData?.KP || ""}
             onChange={handleChange}
-            // disabled={!!selectedDog?.KP}
+          // disabled={!!selectedDog?.KP}
           />
           {/* <Input
                 type="text"

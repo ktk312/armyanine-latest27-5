@@ -4,16 +4,16 @@ export interface Sire {
     showTitle: string;
     dogName: string;
 
-  }
-  
-  export interface Dam {
+}
+
+export interface Dam {
     id: number;
     showTitle: string;
     dogName: string;
-  }
+}
 
 
-  export interface Breed {
+export interface Breed {
     id: number;
     breed: string;
 }
@@ -33,6 +33,7 @@ export interface Litter {
     sire: Sire;
     dam: Dam;
     breed: Breed;
+    KP?: string; // Assuming this is a unique identifier for the litter
 
 }
 

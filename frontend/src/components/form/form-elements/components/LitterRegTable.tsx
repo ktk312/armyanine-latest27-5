@@ -9,6 +9,7 @@ interface Puppy {
   name: string;
   gender: string;
   color: string;
+  kp: string; // Assuming 'kp' is a unique identifier for the dog
 }
 
 interface LitterFormTableProps {
@@ -18,7 +19,7 @@ interface LitterFormTableProps {
 
 export default function LitterFormTable({ puppies, setPuppies }: LitterFormTableProps) {
   const addDog = () => {
-    setPuppies([...puppies, { name: "", gender: "", color: "" }]);
+    setPuppies([...puppies, { kp: "", name: "", gender: "", color: "" }]);
   };
 
   const updateDog = (index: number, field: string, value: string) => {
@@ -37,6 +38,17 @@ export default function LitterFormTable({ puppies, setPuppies }: LitterFormTable
           <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Dog Name */}
             <div>
+              <Label className="dark:text-white">ACC No <span className="text-red-500">*</span></Label>
+              <Input
+                type="text"
+                placeholder="Enter Dog's ACC No"
+                value={dog.kp}
+                onChange={(e) => updateDog(index, "kp", e.target.value)}
+                className="dark:bg-gray-900 dark:text-white"
+              />
+            </div>
+
+            <div>
               <Label className="dark:text-white">Dog Name <span className="text-red-500">*</span></Label>
               <Input
                 type="text"
@@ -49,19 +61,19 @@ export default function LitterFormTable({ puppies, setPuppies }: LitterFormTable
 
             {/* Gender (Select Dropdown) */}
             <div>
-  <Label className="dark:text-white">Gender <span className="text-red-500">*</span></Label>
-  <Select
-    value={dog.gender}
-    onChange={(e) => updateDog(index, "gender", e.target.value)}
-    displayEmpty
-    fullWidth
-    className="!bg-white !text-black dark:!bg-gray-800 dark:!text-white dark:!border-gray-600"
-  >
-    <MenuItem value="">- Select Gender -</MenuItem>
-    <MenuItem value="male">Male</MenuItem>
-    <MenuItem value="female">Female</MenuItem>
-  </Select>
-</div>
+              <Label className="dark:text-white">Gender <span className="text-red-500">*</span></Label>
+              <Select
+                value={dog.gender}
+                onChange={(e) => updateDog(index, "gender", e.target.value)}
+                displayEmpty
+                fullWidth
+                className="!bg-white !text-black dark:!bg-gray-800 dark:!text-white dark:!border-gray-600"
+              >
+                <MenuItem value="">- Select Gender -</MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+              </Select>
+            </div>
 
 
             {/* Color and Markings */}

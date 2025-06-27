@@ -1,16 +1,36 @@
 import { useState } from "react";
 // import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import user from "../../assets/images/user/user-21.png"
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { logout, isLoading } = useAuthStore();
+  const navigate = useNavigate();
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }
+
+
+
+  const handleLogout = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+
+    await logout();
+
+    // Check if sign-in was successful
+    const user = useAuthStore.getState().user;
+    const token = useAuthStore.getState().token;
+
+    if (user && token) {
+      navigate("/dashboard"); // ✅ redirect only after success
+    }
+  };
+
 
   function closeDropdown() {
     setIsOpen(false);
@@ -27,9 +47,8 @@ export default function UserDropdown() {
 
         <span className="block mr-1 font-medium text-theme-sm">ACC</span>
         <svg
-          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+            }`}
           width="18"
           height="20"
           viewBox="0 0 18 20"
@@ -61,7 +80,7 @@ export default function UserDropdown() {
         </div>
 
         <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">
-        <li>
+          <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
@@ -108,7 +127,7 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-            Change Password
+              Change Password
             </DropdownItem>
           </li>
           <li>
@@ -139,6 +158,7 @@ export default function UserDropdown() {
         </ul>
         <Link
           to="/signin"
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg

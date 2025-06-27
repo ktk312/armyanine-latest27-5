@@ -4,6 +4,11 @@ export interface DogStats {
   cns: number;
   deadDogs: number;
   mortalityPercentage: string; // e.g. "12.34%"
+
+  mortality3Months: string,
+  mortality6Months: string,
+  mortality12Months: string,
+
 }
 
 

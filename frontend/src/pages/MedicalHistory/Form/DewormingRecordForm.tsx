@@ -212,7 +212,7 @@ export default function DewormingRecordForm() {
           />
         </div>
 
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Sign
           </label>
@@ -225,7 +225,7 @@ export default function DewormingRecordForm() {
             placeholder="Enter vet's name"
             className="w-full rounded-md border border-gray-300 dark:border-white/[0.2] px-3 py-2 text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-800"
           />
-        </div>
+        </div> */}
 
         <div className="flex justify-end gap-3 pt-4">
           {/* <Button variant="outline" onClick={() => navigate(-1)}>

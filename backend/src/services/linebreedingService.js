@@ -24,37 +24,37 @@ async function getAncestorsMap(dogId) {
   const dog = await prisma.dog.findUnique({
     where: { id: dogId },
     include: {
-      sire: { 
-        include: { 
-          sire: { 
-            include: { 
+      sire: {
+        include: {
+          sire: {
+            include: {
               sire: { include: { sire: true, dam: true } }, // 4th gen
               dam: { include: { sire: true, dam: true } },   // 4th gen
-            } 
+            }
           }, // 3rd gen
-          dam: { 
-            include: { 
+          dam: {
+            include: {
               sire: { include: { sire: true, dam: true } }, // 4th gen
               dam: { include: { sire: true, dam: true } },  // 4th gen
-            } 
+            }
           }, // 3rd gen
-        } 
+        }
       },
-      dam: { 
-        include: { 
-          sire: { 
-            include: { 
+      dam: {
+        include: {
+          sire: {
+            include: {
               sire: { include: { sire: true, dam: true } }, // 4th gen
               dam: { include: { sire: true, dam: true } },  // 4th gen
-            } 
+            }
           }, // 3rd gen
-          dam: { 
-            include: { 
+          dam: {
+            include: {
               sire: { include: { sire: true, dam: true } }, // 4th gen
               dam: { include: { sire: true, dam: true } },  // 4th gen
-            } 
+            }
           }, // 3rd gen
-        } 
+        }
       },
     },
   });
@@ -102,17 +102,23 @@ function calculateInbreedingCoefficient(ancestors1, ancestors2) {
 
 async function getAvailableSiresForDam(damId) {
 
-  const damBreed = await prisma.dog.findUnique({where:{id: damId}});
+  const damBreed = await prisma.dog.findUnique({ where: { id: damId } });
   const [dam, allDogs] = await Promise.all([
-    prisma.dog.findUnique({ 
+    prisma.dog.findUnique({
       where: { id: damId },
-      select: { id: true, sex: true, KP: true}
+      select: { id: true, sex: true, KP: true }
     }),
-  
+
     prisma.dog.findMany({
       where: {
         NOT: { id: damId },
         breedId: damBreed?.breedId,
+        isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
       },
       select: {
         id: true,
@@ -133,7 +139,7 @@ async function getAvailableSiresForDam(damId) {
   }
 
   const damAncestors = await getAncestorsMap(damId);
-  
+
   const results = [];
   for (const sire of allSires) {
     const sireAncestors = await getAncestorsMap(sire.id);

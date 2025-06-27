@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 type Dog = {
   id: number;
+  KP: string;
   dogName: string;
   breedId: number;
   sireId: number;
@@ -53,6 +54,7 @@ const DogList: React.FC<DogSiblingsProps> = ({ dogId }) => {
             <thead>
               <tr className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300">
                 <th className="px-6 py-3 text-left text-sm font-semibold">ID</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">ACC NO</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold">Sex</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold">DOB</th>
@@ -60,12 +62,13 @@ const DogList: React.FC<DogSiblingsProps> = ({ dogId }) => {
               </tr>
             </thead>
             <tbody>
-              {dogs.map((dog) => (
+              {dogs.map((dog, index) => (
                 <tr
                   key={dog.id}
                   className="border-b border-gray-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 transition"
                 >
-                  <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{dog.id}</td>
+                  <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{index + 1}</td>
+                  <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{dog.KP}</td>
                   <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-100">
                     {dog.dogName}
                   </td>

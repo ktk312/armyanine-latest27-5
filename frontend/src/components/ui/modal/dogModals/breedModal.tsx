@@ -155,7 +155,7 @@ export const BreedModal: React.FC<BreedModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "ACC No", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC NO", "STATUS"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -182,7 +182,7 @@ export const BreedModal: React.FC<BreedModalProps> = ({
                                             key={dog.id}
                                             className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                                         >
-                                            <TableCell className="px-5 py-4 text-start">{dog.id}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{dog.dogName}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{dog.KP}</TableCell>
                                             <TableCell className="px-4 py-3 text-start">

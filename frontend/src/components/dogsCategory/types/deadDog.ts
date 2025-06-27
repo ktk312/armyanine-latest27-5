@@ -6,6 +6,7 @@ export interface DeadDog {
   KP: number;
   status: string;
   deathDate: string;
+  deathReason: string;
   // Add other fields from your API response
 }
 

@@ -49,7 +49,15 @@ const createDog = async (req, res) => {
       transferDate,
       chestDepth,
       chestCircumference,
-      weight
+      weight,
+      deathReason,
+      soldRemarks,
+      soldTo,
+      loanRemarks,
+      loanTo,
+      transferRemarks,
+      transferTo,
+
     } = req.body;
     console.log("---achiement are", chestDepth,
       chestCircumference,
@@ -124,6 +132,13 @@ const createDog = async (req, res) => {
           chestDepth,
           chestCircumference,
           weight,
+          deathReason,
+          soldRemarks,
+          soldTo,
+          loanRemarks,
+          loanTo,
+          transferRemarks,
+          transferTo,
           // Relations
           category: { connect: { id: categoryIdNumber } },
           breed: { connect: { id: breedIdNumber } },
@@ -266,6 +281,13 @@ const updateDog = async (req, res) => {
       HD,
       hair,
       ED,
+      deathReason,
+      soldRemarks,
+      soldTo,
+      loanRemarks,
+      loanTo,
+      transferRemarks,
+      transferTo,
     } = req.body;
 
     const file = req.file ? req.file.filename : null; // Get file path of the uploaded image
@@ -333,6 +355,13 @@ const updateDog = async (req, res) => {
         chestDepth,
         chestCircumference,
         weight,
+        deathReason,
+        soldRemarks,
+        soldTo,
+        loanRemarks,
+        loanTo,
+        transferRemarks,
+        transferTo,
         // microchip: microchip_id,
         category: { connect: { id: categoryIdNumber } },
         breed: { connect: { id: breedIdNumber } },
@@ -387,6 +416,11 @@ const getDogsByBreed = async (req, res) => {
       where: {
         breedId: parseInt(breedId),
         isDeath: false,
+        isLoan: false,
+        isSold: false,
+        isTransfer: false,
+        CNS: false,
+        CDN: false,
       },
       include: {
         breed: true,
@@ -774,6 +808,90 @@ const standingDogList = async (req, res) => {
   }
 };
 
+
+//Get All Standing Dog
+const cndDogList = async (req, res) => {
+  console.log("GET ALL STANDING DOG (GET");
+
+  try {
+    const List = await prisma.dog.findMany({
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isTransfer: false,
+        isSold: false,
+        CNS: false,
+        CDN: true,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+    const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
+    const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
+    const total = await prisma.dog.count({
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isTransfer: false,
+        isSold: false,
+        CNS: false,
+        CDN: true,
+      },
+    });
+    res.status(200).json({
+      sires,
+      dams,
+      total,
+    });
+  } catch (error) {
+    console.error("Error fetching dogs:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const cnsDogList = async (req, res) => {
+  console.log("GET ALL STANDING DOG (GET");
+
+  try {
+    const List = await prisma.dog.findMany({
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isTransfer: false,
+        isSold: false,
+        CNS: true,
+        CDN: false,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+    const sires = List.filter((dog) => normalizeSex(dog.sex) === "male");
+    const dams = List.filter((dog) => normalizeSex(dog.sex) === "female");
+    const total = await prisma.dog.count({
+      where: {
+        isDeath: false,
+        isLoan: false,
+        isTransfer: false,
+        isSold: false,
+        CNS: true,
+        CDN: false,
+      },
+    });
+    res.status(200).json({
+      sires,
+      dams,
+      total,
+    });
+  } catch (error) {
+    console.error("Error fetching dogs:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 //Get All Standing Dog
 const belgianDogList = async (req, res) => {
   console.log("GET ALL BELGIAN DOG (GET");
@@ -1101,6 +1219,7 @@ const getDogSiblings = async (req, res) => {
       breedId: sib.breedId,
       sireId: sib.sireId,
       damId: sib.damId,
+      KP: sib.KP,
       dob: sib.dob,
       sex: sib.sex,
       status: sib.status,
@@ -1574,4 +1693,6 @@ module.exports = {
   updateDog,
   deleteDog,
   getDogsCount,
+  cndDogList,
+  cnsDogList,
 };

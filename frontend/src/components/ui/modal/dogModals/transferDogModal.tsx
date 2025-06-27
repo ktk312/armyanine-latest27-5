@@ -30,6 +30,8 @@ export const TransferDogsListModal: React.FC<ModalProps> = ({
         soldTo: "",
         KP: "",
         transferDate: "",
+        transferTo: "",
+        transferRemarks: "",
         status: "",
     });
     const { sires, dams } = useTransferredDog();
@@ -123,7 +125,7 @@ export const TransferDogsListModal: React.FC<ModalProps> = ({
                     )}
                     <div className="p-4">
                         <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">Transferred Dogs</h4>
+                            <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">Issued Dogs</h4>
                         </div>
 
                         {/* TABS */}
@@ -147,7 +149,7 @@ export const TransferDogsListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME",  "ACC NO", "TRANSFER DATE", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC NO", "ISSUE DATE", "ISSUE TO", "REMARKS", "STATUS"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -169,11 +171,15 @@ export const TransferDogsListModal: React.FC<ModalProps> = ({
                                             key={order.id}
                                             className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                                         >
-                                            <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
                                             {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.transferDate || ""}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.transferTo || ""}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.transferRemarks || ""}</TableCell>
+
+
 
                                             <TableCell className="px-4 py-3 text-start">
                                                 <Badge

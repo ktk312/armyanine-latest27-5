@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   DogIcon
 } from "../../assets/icons";
@@ -6,6 +7,23 @@ import { useFetchDogStats } from "../dogsCategory/hooks/useDashboardState";
 export default function EcommerceMetrics() {
   const { dogStats } = useFetchDogStats()
 
+  const [mortalityRange, setMortalityRange] = useState<'3' | '6' | '12'>('12');
+
+  const getMortalityValue = () => {
+    if (!dogStats) return "N/A";
+
+    const total = Number(dogStats.totalDogs || 1); // Avoid division by zero
+
+    switch (mortalityRange) {
+      case '3':
+        return ((Number(dogStats.mortality3Months || 0) / total) * 100).toFixed(2) + '%';
+      case '6':
+        return ((Number(dogStats.mortality6Months || 0) / total) * 100).toFixed(2) + '%';
+      case '12':
+      default:
+        return ((Number(dogStats.mortality12Months || 0) / total) * 100).toFixed(2) + '%';
+    }
+  };
   return (
     <div className="grid grid-cols-1 gap-4 grid-cols-2 sm:grid-cols-3 sm:gap-25 xl:gap-5 md:grid-cols-4 md:gap-25">
       {/* <!-- Metric Item Start --> */}
@@ -124,10 +142,22 @@ export default function EcommerceMetrics() {
       {/* <!-- Metric Item End --> */}
 
       {/* <!-- Metric Item Start --> */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 h-30 w-50 text-black dark:text-white">
-        <div className="flex items-center justify-center w-15 h-15 bg-gray-100 rounded-xl dark:bg-gray-800 -mt-5">
-          <DogIcon />
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-2 h-30 w-50 text-black dark:text-white">
+
+
+        {/* Selector */}
+        <div className=" flex justify-center">
+          <select
+            className="text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-2 py-1"
+            value={mortalityRange}
+            onChange={(e) => setMortalityRange(e.target.value as '3' | '6' | '12')}
+          >
+            <option value="3">Last 3 Months</option>
+            <option value="6">Last 6 Months</option>
+            <option value="12">Last 12 Months</option>
+          </select>
         </div>
+
 
         <div className="w-5 h-10 flex items-end justify-between mt-3">
           <div>
@@ -135,7 +165,7 @@ export default function EcommerceMetrics() {
               Mortality Percentage
             </span>
             <h4 className="mt-2 font-bold text-gray-800 te-title-sm:18pxxt dark:text-white/90 ml-30 ">
-              {dogStats?.mortalityPercentage}
+              {getMortalityValue()}
             </h4>
           </div>
         </div>

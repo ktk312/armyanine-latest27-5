@@ -1,9 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../table";
-import { GermanShepherd } from "../../../dogsCategory/types/GermanShepherd";
-import { useStandingDog } from "../../../dogsCategory/hooks/useStandingDog";
+
 import Badge from "../../badge/Badge";
-import { StandingDog } from "../../../dogsCategory/types/standingDog";
+import { useCnsDogs } from "../../../dogsCategory/hooks/useCnsDogs";
+import { Cns } from "../../../dogsCategory/types/cns";
+// import { useDeadDog } from "../../../dogsCategory/hooks/useDeadDogs";
+// import { DeadDog } from "../../../dogsCategory/types/deadDog";
+
 
 interface ModalProps {
     isOpen: boolean;
@@ -15,7 +18,7 @@ interface ModalProps {
 
 
 
-export const StandingDogListModal: React.FC<ModalProps> = ({
+export const CNSDogsListModal: React.FC<ModalProps> = ({
     isOpen,
     className,
     onClose,
@@ -30,17 +33,10 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
         dogName: "",
         soldTo: "",
         KP: "",
+        deathDate: "",
         status: "",
     });
-
-    const headerToFilterKey: Record<string, keyof typeof filters> = {
-        "S.No": "id",
-        "DOG NAME": "dogName",
-        "ACC No": "KP",
-        "Status": "status",
-    };
-
-    const { sires, dams } = useStandingDog();
+    const { sires, dams } = useCnsDogs();
 
     const ITEMS_PER_PAGE = 5;
 
@@ -53,7 +49,7 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
         .filter(dog =>
             Object.entries(filters).every(([key, value]) => {
                 if (!value) return true;
-                const dogValue = String(dog[key as keyof StandingDog]).toLowerCase();
+                const dogValue = String(dog[key as keyof Cns]).toLowerCase();
                 return dogValue.includes(value.toLowerCase());
             })
         );
@@ -131,7 +127,7 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
                     )}
                     <div className="p-4">
                         <div className="flex justify-between items-center mb-6">
-                            <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">Standing Dogs</h4>
+                            <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">C&S Dogs</h4>
                         </div>
 
                         {/* TABS */}
@@ -151,23 +147,18 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
                         </div>
 
                         {/* TABLE */}
-                        <div className="max-w-full overflow-x-auto text-gray-800 dark:text-white/90">
+                        <div className="max-w-full overflow-x-auto  text-gray-800 dark:text-white/90">
                             <Table>
-                                <TableHeader className="border-b border-gray-100 text-gray-800 dark:text-white/90">
+                                <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "ACC No", "Status"].map((header, idx) => (
-                                            <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-black-50 text-start">
+                                        {["S.No", "DOG NAME", "ACC NO", "C&S DATE", "STATUS"].map((header, idx) => (
+                                            <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
                                                     <input
                                                         type="text"
                                                         placeholder={`Search ${header}`}
-                                                        onChange={(e) => {
-                                                            const filterKey = headerToFilterKey[header];
-                                                            if (filterKey) {
-                                                                handleFilterChange(filterKey, e.target.value);
-                                                            }
-                                                        }}
+                                                        onChange={(e) => handleFilterChange(header.replace(" ", "").toLowerCase(), e.target.value)}
                                                         className="mt-1 w-full border rounded-md p-1 text-sm"
                                                     />
                                                 )}
@@ -186,6 +177,8 @@ export const StandingDogListModal: React.FC<ModalProps> = ({
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
                                             {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.cnsDate || ""}</TableCell>
+
                                             <TableCell className="px-4 py-3 text-start">
                                                 <Badge
                                                     size="sm"

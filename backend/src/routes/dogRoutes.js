@@ -56,6 +56,9 @@ router.get("/labrador-retriever/view", dogController.labradorRetreiverList);
 // Get All standing dogs List
 router.get("/standing/view", dogController.standingDogList);
 
+router.get("/cnd/view", dogController.cndDogList);
+router.get("/cns/view", dogController.cnsDogList);
+
 // Get All belgian dogs List
 router.get("/belgian/view", dogController.belgianDogList);
 

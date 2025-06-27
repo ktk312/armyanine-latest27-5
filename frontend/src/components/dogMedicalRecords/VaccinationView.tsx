@@ -14,13 +14,14 @@ const getNestedValue = (obj: any, path: string): any => {
 
 const columns = [
   { label: "S.No", key: "" },
+  { label: "Acc No", key: "dog.KP" },
+
   { label: "Dog Name", key: "dog.dogName" },
   { label: "Age", key: "age" },
   { label: "Vaccine", key: "vaccine" },
   { label: "Date Due", key: "dueDate" },
   { label: "Date Given", key: "givenDate" },
   { label: "Batch No", key: "batchNo" },
-  { label: "Vet Sign", key: "vetSign" },
   { label: "ACTIONS", key: "" },
 ];
 
@@ -135,13 +136,15 @@ const VaccinationView = () => {
                   className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                 >
                   <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
+                  <TableCell className="px-5 py-4 text-start">{item.dog?.KP || ""}</TableCell>
+
                   <TableCell className="px-5 py-4 text-start">{item.dog?.dogName || ""}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.age.toLocaleString()}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.vaccine ?? ""}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{formattedDueDate}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{formattedGivenDate}</TableCell>
                   <TableCell className="px-5 py-4 text-start">{item.batchNo.toLocaleString()}</TableCell>
-                  <TableCell className="px-5 py-4 text-start">{item.vetSign ?? ""}</TableCell>
+
                   <TableCell className="px-4 py-3 text-start flex gap-2">
                     <Tooltip title="Edit">
                       <button className="text-blue-500" onClick={() => handleEditClick(item)}>

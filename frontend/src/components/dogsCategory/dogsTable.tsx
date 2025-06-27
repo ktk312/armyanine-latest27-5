@@ -21,12 +21,19 @@ import { useDeadDog } from "./hooks/useDeadDogs";
 import { TransferDogsListModal } from "../ui/modal/dogModals/transferDogModal";
 import { StandingDogListModal } from "../ui/modal/dogModals/standingDog";
 import { useStandingDog } from "./hooks/useStandingDog";
+
+import { useCndDogs } from "./hooks/useCndDogs";
+import { useCnsDogs } from "./hooks/useCnsDogs";
+
+
 import { DogDetailsModal } from "../ui/modal/dogModals/dogProfileModal";
 import { useBreedStore } from "../../store/breedStore";
 import { Breed, Dog } from "./types/dog";
 import { BreedModal } from "../ui/modal/dogModals/breedModal";
 import { useSiresAndDamsByBreed } from "./hooks/useSireAndDam";
 import { DeadDogsListModal } from "../ui/modal/dogModals/deadDogsModal";
+import { CNDDogsListModal } from "../ui/modal/dogModals/cndDogsModal";
+import { CNSDogsListModal } from "../ui/modal/dogModals/cnsDogModal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -44,6 +51,8 @@ export default function BasicTableOne() {
   const { totalTransferredDog } = useTransferredDog();
   const { totalDeadDog } = useDeadDog();
   const { totalStandingDog } = useStandingDog();
+  const { totalCnd } = useCndDogs();
+  const { totalCns } = useCnsDogs();
   const { breeds, getAllBreeds } = useBreedStore();
 
 
@@ -119,14 +128,23 @@ export default function BasicTableOne() {
     { label: "Sold Dogs", value: totalSoldDog, modalType: "Sold" },
     { label: "Loaned Dogs", value: totalLoanDog, modalType: "Loaned" },
     {
-      label: "Transferred Dogs",
+      label: "Issued Dogs",
       value: totalTransferredDog,
       modalType: "Transferred",
     },
     {
-      label: "Dead Dogs",
+      label: "Deaths",
       value: totalDeadDog,
       modalType: "Dead",
+    },
+    {
+      label: "C&D",
+      value: totalCnd,
+      modalType: "C&D",
+    }, {
+      label: "C&S",
+      value: totalCns,
+      modalType: "C&S",
     },
   ];
 
@@ -300,6 +318,12 @@ export default function BasicTableOne() {
               )}
               {activeModalType === "Dead" && (
                 <DeadDogsListModal isOpen={true} onClose={handleCloseModal} />
+              )}
+              {activeModalType === "C&D" && (
+                <CNDDogsListModal isOpen={true} onClose={handleCloseModal} />
+              )}
+              {activeModalType === "C&S" && (
+                <CNSDogsListModal isOpen={true} onClose={handleCloseModal} />
               )}
             </>
           )}

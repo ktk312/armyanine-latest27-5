@@ -18,7 +18,7 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import DogCategory from "./pages/Dogs/DogsCategory";
-import LittersRegRequest from "./pages/Litters/LittersRegRequest";
+// import LittersRegRequest from "./pages/Litters/LittersRegRequest";
 import LittersInspectionRequest from "./pages/Litters/LittersInspectionReqList";
 import Medication from "./pages/Pharmacy/Medication";
 import StudCertificateList from "./pages/Dogs/StudCertificateList";
@@ -124,11 +124,11 @@ export default function App() {
                 element={<CreateStudCertificate />}
               />
 
-              {/* Litters */}
+              {/* Litters
               <Route
                 path="/litters-reigstration-request"
                 element={<LittersRegRequest />}
-              />
+              /> */}
               <Route
                 path="/litters-inspection-request-list"
                 element={<LittersInspectionRequest />}

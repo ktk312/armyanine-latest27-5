@@ -185,12 +185,31 @@ const VaccinationRecordForm = () => {
   };
 
   const fields = [
-    { key: "age", label: "Age", type: "text", placeholder: "e.g. 3 months" },
+    {
+      key: "age",
+      label: "Age",
+      type: "select", // <-- use 'select' to switch rendering logic
+      placeholder: "Select age",
+      options: [
+        "6 weeks",
+        "9 weeks",
+        "12 weeks",
+        "1 year",
+        "2 years",
+        "3 years",
+        "4 years",
+        "5 years",
+        "6 years",
+        "7 years",
+        "8 years",
+
+      ],
+    },
     { key: "vaccine", label: "Vaccine", type: "text", placeholder: "e.g. Rabies" },
     { key: "dueDate", label: "Due Date", type: "date" },
     { key: "givenDate", label: "Given Date", type: "date" },
     { key: "batchNo", label: "Batch No", type: "text", placeholder: "e.g. RB-203" },
-    { key: "vetSign", label: "Vet Sign", type: "text", placeholder: "e.g. Dr. Khan" },
+
   ];
   console.log("selcted breed and dog are", selectedDog, selectedBreed)
   return (
@@ -244,7 +263,7 @@ const VaccinationRecordForm = () => {
         )}
 
 
-        {fields.map(({ key, label, type, placeholder }) => (
+        {fields.map(({ key, label, type, placeholder, options }) => (
           <div key={key} className="flex flex-col gap-1">
             <label
               htmlFor={key}
@@ -252,16 +271,37 @@ const VaccinationRecordForm = () => {
             >
               {label}
             </label>
-            <input
-              id={key}
-              name={key}
-              type={type}
-              value={formData[key as keyof typeof formData]}
-              placeholder={placeholder}
-              onChange={(e) => handleChange(key, e.target.value)}
-              className="rounded-md border border-gray-300 dark:border-white/[0.2] bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-              required
-            />
+
+            {type === "select" && options ? (
+              <select
+                id={key}
+                name={key}
+                value={formData[key as keyof typeof formData]}
+                onChange={(e) => handleChange(key, e.target.value)}
+                className="rounded-md border border-gray-300 dark:border-white/[0.2] bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                required
+              >
+                <option value="" disabled>
+                  {placeholder}
+                </option>
+                {options.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={key}
+                name={key}
+                type={type}
+                value={formData[key as keyof typeof formData]}
+                placeholder={placeholder}
+                onChange={(e) => handleChange(key, e.target.value)}
+                className="rounded-md border border-gray-300 dark:border-white/[0.2] bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                required
+              />
+            )}
           </div>
         ))}
 

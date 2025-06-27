@@ -2,30 +2,65 @@ const { startOfYear, endOfYear } = require('date-fns');
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const { subMonths } = require('date-fns');
+
 const dogStats = async (req, res) => {
   try {
-    const [totalDogs, cns, cnd, deadDogs, actualTotalDogs] = await Promise.all([
+    const now = new Date();
 
-      prisma.dog.count({ where: { isDeath: false, isLoan: false, isSold: false, isTransfer: false, CNS: false, CDN: false } }),
-      prisma.dog.count({ where: { CNS: true } }),
-      prisma.dog.count({ where: { CDN: true } }),
+    const [totalDogs, cns, cnd, deadDogs, actualTotalDogs, deaths3m, deaths6m, deaths12m] = await Promise.all([
+      prisma.dog.count({
+        where: {
+          isDeath: false,
+          isLoan: false,
+          isSold: false,
+          isTransfer: false,
+          CNS: false,
+          CDN: false,
+        },
+      }),
+      prisma.dog.count({
+        where: {
+          CNS: true,
+          isDeath: false,
+          isLoan: false,
+          isSold: false,
+          isTransfer: false,
+        },
+      }),
+      prisma.dog.count({
+        where: {
+          CDN: true,
+          isDeath: false,
+          isLoan: false,
+          isSold: false,
+          isTransfer: false,
+        },
+      }),
       prisma.dog.count({ where: { isDeath: true } }),
-      prisma.dog.count(),
+      prisma.dog.count(), // Total dogs ever
+
+      // Mortality in different periods
+      prisma.dog.count({ where: { isDeath: true, deathDate: { gte: subMonths(now, 3).toISOString() } } }),
+      prisma.dog.count({ where: { isDeath: true, deathDate: { gte: subMonths(now, 6).toISOString() } } }),
+      prisma.dog.count({ where: { isDeath: true, deathDate: { gte: subMonths(now, 12).toISOString() } } }),
     ]);
-    const mortalityPercentage = totalDogs > 0 ? (deadDogs / actualTotalDogs) * 100 : 0;
 
     return res.json({
       totalDogs,
       cns,
       cnd,
       deadDogs,
-      mortalityPercentage: mortalityPercentage.toFixed(2) + "%"
+      mortalityPercentage: ((deadDogs / actualTotalDogs) * 100).toFixed(2) + "%",
+      mortality3Months: deaths3m,
+      mortality6Months: deaths6m,
+      mortality12Months: deaths12m,
     });
   } catch (error) {
     console.error("Error fetching dog stats:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Helper function to get month name from date
 const getMonthName = (date) => date.toLocaleString('default', { month: 'short' });

@@ -9,16 +9,17 @@ import Select from "../form/Select";
 import { useBreedStore } from "../../store/breedStore";
 import { useSiresAndDamsByBreed } from "../dogsCategory/hooks/useSireAndDam";
 import { useNavigate } from "react-router";
-import { useCreateLitterRegistration } from "../dogsCategory/hooks/useLitterRegistration";
+import { useCreateLitterRegistration, useUpdateLitterregistration } from "../dogsCategory/hooks/useLitterRegistration";
 import Input from "../form/input/InputField";
 
 export default function LitterRegistrationForm() {
     const [date, setDate] = useState("");
-    const [puppies, setPuppies] = useState([{ name: "", gender: "", color: "" }]);
+    const [puppies, setPuppies] = useState([{ kp: "", name: "", gender: "", color: "" }]);
     const [selectedSire, setSelectedSire] = useState<{ value: string; label: string } | null>(null);
     const [selectedDam, setSelectedDam] = useState<{ value: string; label: string } | null>(null);
     const [breedOptions, setBreedOptions] = useState<{ value: string; label: string }[]>([]);
     const [Location, setLocation] = useState("");
+    const { updateExistingLitterregistration } = useUpdateLitterregistration();
 
 
     const [dateMating, setMatingDate] = useState("");
@@ -89,6 +90,7 @@ export default function LitterRegistrationForm() {
     const handleSubmit = async () => {
         try {
             const formattedPuppies = puppies.map(pup => ({
+                KP: pup.kp, // Assuming 'kp' is a unique identifier for the dog
                 name: pup.name,
                 color: pup.color,
                 sex: pup.gender, // backend expects 'sex'
@@ -105,15 +107,21 @@ export default function LitterRegistrationForm() {
                     dob: date,
                     name: pup.name,
                     sex: pup.sex,
-                    color: pup.color
+                    color: pup.color,
+                    KP: pup.KP,
                 };
 
                 // Submit each puppy individually
-                await createLitterRegistration(payload);
+                const response = await createLitterRegistration(payload);
+                console.log(response);
+                await updateExistingLitterregistration(Number(response?.id), payload);
+
             }
             // alert(response.message);
-            navigate("/litters-reigstration-request")
-            setError("Litter registered successsfully");
+            // navigate("/litters-reigstration-request")
+            alert("Dog Created successfully");
+            navigate("/basic-tables")
+
             console.log(error)
         } catch (error: any) {
 

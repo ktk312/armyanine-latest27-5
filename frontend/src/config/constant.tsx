@@ -206,6 +206,9 @@ export const endpoint = {
   LOANED_DOG: `${BASE_URL}/dog/loan/view`,
   TRANSFERRED_DOGS: `${BASE_URL}/dog/transferred/view`,
   DEAD_DOGS: `${BASE_URL}/dog/dead/view`,
+  CND_DOG: `${BASE_URL}/dog/cnd/view`,
+  CNS_DOG: `${BASE_URL}/dog/cns/view`,
+
 
 
   // Medical Histoy of Dog

@@ -48,7 +48,14 @@ export interface DogFormData {
   breedingAdvice: string,
   miscellaneousComments: string,
   progenyTrainability: string,
-  friendlyUrl: string
+  friendlyUrl: string,
+  deathReason?: string;
+  soldRemarks?: string;
+  soldTo?: string;
+  loanRemarks?: string;
+  loanTo?: string;
+  transferRemarks?: string;
+  transferTo?: string;
 }
 export default function FormElements() {
   const { createNewDog, loading, updateNewDog } = useCreateDog();
@@ -96,7 +103,14 @@ export default function FormElements() {
     breedingAdvice: "",
     miscellaneousComments: "",
     progenyTrainability: "",
-    friendlyUrl: ""
+    friendlyUrl: "",
+    deathReason: "",
+    soldRemarks: "",
+    soldTo: "",
+    loanRemarks: "",
+    loanTo: "",
+    transferRemarks: "",
+    transferTo: ""
   });
 
 
@@ -141,7 +155,14 @@ export default function FormElements() {
       breedingAdvice: "",
       miscellaneousComments: "",
       progenyTrainability: "",
-      friendlyUrl: ""
+      friendlyUrl: "",
+      deathReason: "",
+      soldRemarks: "",
+      soldTo: "",
+      loanRemarks: "",
+      loanTo: "",
+      transferRemarks: "",
+      transferTo: ""
     });
 
     // Notify parent component
@@ -196,7 +217,15 @@ export default function FormElements() {
         breedingAdvice: selectedDog.breedingAdvice || "",
         miscellaneousComments: selectedDog.miscellaneousComments || "",
         progenyTrainability: selectedDog.progenyTrainability || "",
-        friendlyUrl: selectedDog.friendlyUrl || ""
+        friendlyUrl: selectedDog.friendlyUrl || "",
+        deathReason: selectedDog.deathReason || "",
+        soldRemarks: selectedDog.soldRemarks || "",
+        soldTo: selectedDog.soldTo || "",
+        loanRemarks: selectedDog.loanRemarks || "",
+        loanTo: selectedDog.loanTo || "",
+        transferRemarks: selectedDog.transferRemarks || "",
+        transferTo: selectedDog.transferTo || "",
+
       });
     } else {
       // reset to blank
@@ -240,6 +269,14 @@ export default function FormElements() {
         miscellaneousComments: "",
         progenyTrainability: "",
         friendlyUrl: "",
+        deathReason: "",
+        soldRemarks: "",
+        soldTo: "",
+        loanRemarks: "",
+        loanTo: "",
+        transferRemarks: "",
+        transferTo: ""
+
       });
     }
   }, [selectedDog]);
@@ -305,6 +342,13 @@ export default function FormElements() {
     formDataToSend.append("isTransfer", String(formData.isTransfer));
     formDataToSend.append("CDN", String(formData.CDN));
     formDataToSend.append("CNS", String(formData.CNS));
+    formDataToSend.append("deathReason", formData.deathReason || "");
+    formDataToSend.append("soldRemarks", formData.soldRemarks || "");
+    formDataToSend.append("soldTo", formData.soldTo || "");
+    formDataToSend.append("loanRemarks", formData.loanRemarks || "");
+    formDataToSend.append("loanTo", formData.loanTo || "");
+    formDataToSend.append("transferRemarks", formData.transferRemarks || "");
+    formDataToSend.append("transferTo", formData.transferTo || "");
 
     try {
       const requiredFields = [

@@ -32,6 +32,7 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
         soldTo: "",
         KP: "",
         deathDate: "",
+        deathReason: "",
         status: "",
     });
     const { sires, dams } = useDeadDog();
@@ -149,7 +150,7 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                     <TableRow>
-                                        {["S.No", "DOG NAME", "ACC NO", "Death DATE", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC NO", "DEATH DATE", "REASON", "STATUS"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium  text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (
@@ -171,11 +172,12 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
                                             key={order.id}
                                             className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                                         >
-                                            <TableCell className="px-5 py-4 text-start">{order.id}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
                                             {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.deathDate || ""}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{order.deathReason || ""}</TableCell>
 
                                             <TableCell className="px-4 py-3 text-start">
                                                 <Badge

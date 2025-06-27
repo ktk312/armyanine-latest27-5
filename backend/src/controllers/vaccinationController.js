@@ -14,7 +14,7 @@ const createVaccinationRecord = async (req, res) => {
 
         const record = await prisma.vaccinationRecord.create({
             data: {
-                age: parseInt(age), // Convert string to Int
+                age: age, // Convert string to Int
                 vaccine: vaccine,
                 dueDate: new Date(dueDate),  // Just create Date object
                 givenDate: new Date(givenDate),

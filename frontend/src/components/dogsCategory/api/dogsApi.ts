@@ -522,6 +522,25 @@ export const fetchStandingDogList = async () => {
   }
 };
 
+export const fetchCnsDogList = async () => {
+  try {
+    const response = await axios.get(endpoint.CNS_DOG);
+    return response.data; // This should return the data in the required format
+  } catch (error) {
+    console.error("Error fetching Loan Dogs:", error);
+    throw new Error("Failed to fetch Loan Dogs");
+  }
+};
+
+export const fetchCndDogList = async () => {
+  try {
+    const response = await axios.get(endpoint.CND_DOG);
+    return response.data; // This should return the data in the required format
+  } catch (error) {
+    console.error("Error fetching Loan Dogs:", error);
+    throw new Error("Failed to fetch Loan Dogs");
+  }
+};
 // Medical History API
 
 // VACCINATION
