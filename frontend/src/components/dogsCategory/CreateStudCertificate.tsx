@@ -199,7 +199,21 @@ export default function CreateStudCertificate() {
                             <Select
                                 options={breedOptions}
                                 placeholder={breedLoading ? "Loading breeds..." : "Select Breed"}
-                                onChange={(val) => setSelectedBreed({ value: val, label: val })}
+                                onChange={(val) => {
+                                    const selected = { value: val, label: val };
+                                    setSelectedBreed(selected);
+
+                                    // ✅ Clear dependent selections
+                                    setSelectedSire(null);
+                                    setSelectedDam(null);
+                                    setSelectedCoefficient(null);
+
+                                    // ✅ Optionally reset options (if options depend on breed)
+
+
+                                    // Optionally refetch based on selected breed:
+                                    // fetchSireAndDamOptions(val); // if using async fetch logic
+                                }}
                                 className="dark:bg-dark-900"
                                 defaultValue={selectedStufCert?.breed?.id.toString()}
                             />
