@@ -18,7 +18,7 @@ export default function VirtualBreeding() {
     const [reasons, setReasons] = useState<string[]>([]);
 
     console.log(matingDate)
-    const {loading } = useCreateStudCertificate();
+    const { loading } = useCreateStudCertificate();
     const { selectedStufCert } = useStudCertificateStore();
 
     useEffect(() => {
@@ -51,7 +51,7 @@ export default function VirtualBreeding() {
             setBreedOptions(
                 breeds.map((breed) => ({
                     value: breed.id.toString(), // Convert number to string
-                    label: breed.breed || "",
+                    label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
                 }))
             );
         }
@@ -59,12 +59,13 @@ export default function VirtualBreeding() {
 
 
 
-//  Getting Sire and Dam using Breed ID
+    //  Getting Sire and Dam using Breed ID
     const { sires, dams } = useSiresAndDamsByBreed(selectedBreed?.value ?? "");
 
     const sireOptions = sires.map((sire) => ({
         value: String(sire.id),
-        label: sire.KP ? `${sire.dogName} (${sire.KP})` : sire.dogName,    }));
+        label: sire.KP ? `${sire.dogName} (${sire.KP})` : sire.dogName,
+    }));
 
     const damOptions = dams.map((dam) => ({
         value: String(dam.id),
@@ -86,16 +87,16 @@ export default function VirtualBreeding() {
 
             // Log the created data for confirmation
             alert(response.message)
-           
+
             if (response.reasons && Array.isArray(response.reasons)) {
                 setReasons(response?.reasons);
             } else {
                 setReasons([]);
             }
-           
+
             // Show success alert
             // setError(undefined);
-          
+
 
         } catch (error: any) {
             console.error("Mating submission error:", error);
@@ -160,7 +161,7 @@ export default function VirtualBreeding() {
                             defaultValue={selectedStufCert?.dam?.id.toString()}
                         />
                     </div>
-      
+
 
                     <div className="flex gap-4 mt-4">
                         <Button
@@ -173,17 +174,17 @@ export default function VirtualBreeding() {
                     </div>
                 </div>
                 {/* Show error message if any */}
-                {error && <div className="text-red-500 mt-4">{error}</div>} 
+                {error && <div className="text-red-500 mt-4">{error}</div>}
                 {reasons.length > 0 && (
-    <div className="mt-4 bg-red-50 border border-red-200 p-4 rounded text-red-800">
-        <p className="font-semibold">Reasons:</p>
-        <ul className="list-disc list-inside">
-            {reasons.map((reason, index) => (
-                <li key={index}>{reason}</li>
-            ))}
-        </ul>
-    </div>
-)}
+                    <div className="mt-4 bg-red-50 border border-red-200 p-4 rounded text-red-800">
+                        <p className="font-semibold">Reasons:</p>
+                        <ul className="list-disc list-inside">
+                            {reasons.map((reason, index) => (
+                                <li key={index}>{reason}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </ComponentCard>
         </div>
     );

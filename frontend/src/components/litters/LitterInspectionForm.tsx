@@ -76,7 +76,7 @@ export default function LitterInspectionForm() {
             setBreedOptions(
                 breeds.map((breed) => ({
                     value: breed.id.toString(),
-                    label: breed.breed || "",
+                    label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
                 }))
             );
         }
@@ -180,7 +180,7 @@ export default function LitterInspectionForm() {
                                 disabled={!!selectedStufCert?.sireId}
                             />
                         </div>
-                        <DatePicker title="Whelping Date" value={date} onChange={setDate} label="Select whelping Date"/>
+                        <DatePicker title="Whelping Date" value={date} onChange={setDate} label="Select whelping Date" />
                     </div>
                     <div className="space-y-6">
                         <div>

@@ -73,7 +73,7 @@ export default function CreateStudCertificate() {
             setBreedOptions(
                 breeds.map((breed) => ({
                     value: breed.id.toString(), // Convert number to string
-                    label: breed.breed || "",
+                    label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
                 }))
             );
         }

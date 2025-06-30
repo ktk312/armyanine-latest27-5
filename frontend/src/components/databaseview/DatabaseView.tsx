@@ -270,7 +270,8 @@ const DatabaseView = () => {
         new Set(breeds.map((b) => b.id.toString()))
       ).map((id) => ({
         value: id,
-        label: breeds.find((b) => b.id.toString() === id)?.breed || "",
+        label: (breeds.find((b) => b.id.toString() === id)?.breed ?? "")
+          .replace(/^./, (c) => c.toUpperCase())
       }));
       setBreedOptions(uniqueBreeds);
     }

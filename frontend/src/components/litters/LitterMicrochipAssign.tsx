@@ -50,7 +50,7 @@ export default function AssignMicrochip() {
             setBreedOptions(
                 breeds.map((breed) => ({
                     value: breed.id.toString(),
-                    label: breed.breed || "",
+                    label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
                 }))
             );
         }
@@ -71,12 +71,12 @@ export default function AssignMicrochip() {
         console.log("---inside handle --->>", e.target.value)
         setLocation(e.target.value);
     };
-useEffect(() => {
-  if (selectedLitterRegistration) {
-    setLocation(selectedLitterRegistration?.location || "");
-    // other setup...
-  }
-}, [selectedLitterRegistration]);
+    useEffect(() => {
+        if (selectedLitterRegistration) {
+            setLocation(selectedLitterRegistration?.location || "");
+            // other setup...
+        }
+    }, [selectedLitterRegistration]);
     useEffect(() => {
         if (selectedLitterRegistration) {
 
@@ -194,14 +194,14 @@ useEffect(() => {
                 <div>
                     <Label>Location</Label>
                     {/* <Input type="text" id="input" name="location" placeholder="Enter location" value={selectedLitterRegistration?.location || ""} onChange={handleChange} /> */}
-                <Input
-  type="text"
-  id="input"
-  name="location"
-  placeholder="Enter location"
-  value={Location}
-  onChange={handleChange}
-/>
+                    <Input
+                        type="text"
+                        id="input"
+                        name="location"
+                        placeholder="Enter location"
+                        value={Location}
+                        onChange={handleChange}
+                    />
                 </div>
             </div>
 

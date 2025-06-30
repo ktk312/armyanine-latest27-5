@@ -55,7 +55,7 @@ const VaccinationRecordForm = () => {
       setBreedOptions(
         breeds.map((breed) => ({
           value: breed.id.toString(),
-          label: breed.breed || "",
+          label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
         }))
       );
     }
