@@ -1,17 +1,19 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useState } from "react";
-import useWhelping from "../dogsCategory/hooks/usewhelpingState";
 import YearPicker from "../form/form-elements/components/year-picker";
+import useDeaths from "../dogsCategory/hooks/useDeathsState";
 
-export default function MonthlySalesChart() {
+// import useDeaths from '../dogsCategory/hooks/useDeathsData';
+
+export default function MonthlyDeathChart() {
   var today = new Date();
   var year = today.getFullYear();
   const [date, setDate] = useState<string>(year.toString()); // Default year
 
-  const { monthlyData } = useWhelping(date);
+  const { monthlyDeathsData } = useDeaths(date);
 
-  const counts = monthlyData?.map((data) => data.count) || [];
+  const counts = monthlyDeathsData?.map((data) => data.count) || [];
 
   const options: ApexOptions = {
     colors: ["#465fff"],
@@ -94,7 +96,7 @@ export default function MonthlySalesChart() {
   };
   const series = [
     {
-      name: "Whelping",
+      name: "Deaths",
       data: counts,
     },
   ];
@@ -103,15 +105,15 @@ export default function MonthlySalesChart() {
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Monthly Whelping
+          Monthly Deaths
         </h3>
 
         <div className="relative inline-block">
           <YearPicker
-            title="Mating Date"
+            title="Death Date"
             value={date}
             onChange={setDate}
-            label="Select Mating Year"
+            label="Select Year"
             placeholder="Select Year"
           />
         </div>

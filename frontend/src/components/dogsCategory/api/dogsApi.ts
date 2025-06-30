@@ -431,6 +431,20 @@ export const fetchMonthlyWhelpingStats = async (year: string) => {
   }
 };
 
+
+// Get the Monthly Whelping Graph API
+export const fetchMonthlyDeathsStats = async (year: string) => {
+  try {
+    const response = await axios.get(endpoint.DASHBOARD_DEATH_STATE(year));
+    return response.data; // This should return the data in the required format
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
+    throw new Error("Failed to fetch dashboard stats");
+  }
+};
+
+
+
 //Dog module all breed dogs
 export const fetchGermanShepherdList = async () => {
   try {

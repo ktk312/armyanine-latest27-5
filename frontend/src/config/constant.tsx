@@ -196,6 +196,10 @@ export const endpoint = {
   VIRTUAL_BREEDING_CHECKED: `${BASE_URL}/stud-certificates/virtual/breeding`,
   DASHBOARD_WHELPING_STATE: (selectedYear: string) => `${BASE_URL}/dashboard/monthly/whelping/?year=${selectedYear}`,
 
+
+  DASHBOARD_DEATH_STATE: (selectedYear: string) => `${BASE_URL}/dashboard/monthly/deaths/?year=${selectedYear}`,
+
+
   // Dog List by Breed
   GERMANSHEPHERD_LIST: `${BASE_URL}/dog/germanshepherd/view`,
   BULLDOGS: `${BASE_URL}/dog/bulldogs/view`,

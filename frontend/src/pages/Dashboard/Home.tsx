@@ -2,6 +2,7 @@ import EcommerceMetrics from "../../components/dashboard/EcommerceMetrics";
 import MonthlySalesChart from "../../components/dashboard/MonthlySalesChart";
 import AllDogs from "../../components/dashboard/AllDogs";
 import PageMeta from "../../components/common/PageMeta";
+import MonthlyDeathsChart from "../../components/dashboard/MonthlyDeathsChart";
 // import StatisticsChart from "../../components/dashboard/StatisticsChart";
 // import MonthlyTarget from "../../components/dashboard/MonthlyTarget";
 // import DemographicCard from "../../components/ecommerce/DemographicCard";
@@ -9,7 +10,7 @@ import PageMeta from "../../components/common/PageMeta";
 export default function Home() {
   return (
     <>
-    <PageMeta
+      <PageMeta
         title="ACC - Dashboard"
         description="Army Dog Centre Pakistan."
       />
@@ -17,8 +18,9 @@ export default function Home() {
         <div className="col-span-12 space-y-6 xl:col-span-12">
           <EcommerceMetrics />
           <MonthlySalesChart />
+          <MonthlyDeathsChart />
         </div>
-     
+
 
         <div className="col-span-12 xl:col-span-12">
           <AllDogs />

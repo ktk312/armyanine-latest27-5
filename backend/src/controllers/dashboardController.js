@@ -2,6 +2,9 @@ const { startOfYear, endOfYear } = require('date-fns');
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const { parseISO, format } = require('date-fns');
+
+
 const { subMonths } = require('date-fns');
 
 const dogStats = async (req, res) => {
@@ -143,7 +146,85 @@ const monthlyWhelpingState = async (req, res) => {
   }
 };
 
+
+
+const monthlyDeathState = async (req, res) => {
+  try {
+    // Get the year from query parameter
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+
+    // Validate the year (between 1900 and the current year + 1)
+    const currentYear = new Date().getFullYear();
+    if (year < 1900 || year > currentYear + 1) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid year parameter',
+      });
+    }
+
+    // Use YYYY-MM-DD string format for filtering
+    const startDate = format(startOfYear(new Date(year, 0, 1)), 'yyyy-MM-dd');
+    const endDate = format(endOfYear(new Date(year, 11, 31)), 'yyyy-MM-dd');
+
+    // Fetch all dogs with deathDate within the year
+    const dogs = await prisma.dog.findMany({
+      where: {
+        deathDate: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      select: {
+        deathDate: true,
+      },
+      orderBy: {
+        deathDate: 'asc',
+      },
+    });
+
+    // Initialize data for all 12 months
+    const monthlyData = Array.from({ length: 12 }, (_, index) => {
+      const date = new Date(year, index, 1);
+      return {
+        month: getMonthName(date),
+        year: year,
+        count: 0,
+      };
+    });
+
+    // Count deaths by month
+    dogs.forEach(dog => {
+      if (!dog.deathDate) return;
+      const dob = parseISO(dog.deathDate); // convert "YYYY-MM-DD" to Date
+      const monthIndex = dob.getMonth(); // 0–11
+      const monthData = monthlyData[monthIndex];
+      if (monthData) {
+        monthData.count++;
+      }
+    });
+
+    // Prepare counts for charting
+    const counts = monthlyData.map(month => month.count);
+
+    // Send result
+    res.json({
+      success: true,
+      data: {
+        monthlyData,
+        counts,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching monthly death data:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch monthly death data',
+    });
+  }
+};
+
 module.exports = {
   dogStats,
-  monthlyWhelpingState
+  monthlyWhelpingState,
+  monthlyDeathState,
 }
