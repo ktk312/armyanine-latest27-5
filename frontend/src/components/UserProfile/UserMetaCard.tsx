@@ -206,7 +206,7 @@ export default function UserMetaCard() {
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Email Address</Label>
-                    <Input type="text" value="admin@acc.com" />
+                    <Input type="text" value="admin@example.com" />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">

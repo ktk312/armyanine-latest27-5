@@ -10,6 +10,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       token: null,
+      message: null,
       isLoading: false,
       error: null,
 
@@ -19,7 +20,9 @@ export const useAuthStore = create<AuthState>()(
           set({
             user: null,
             token: null,
+            message: null,
           });
+          localStorage.removeItem("auth-storage");
           const { user, token } = await userLogin(email, password);
           set({ user, token, isLoading: false, error: null });
         } catch (err: any) {
@@ -27,7 +30,7 @@ export const useAuthStore = create<AuthState>()(
             error: err?.response?.data?.message || "Login failed",
             isLoading: false,
           });
-          // localStorage.removeItem("auth-storage");
+          localStorage.removeItem("auth-storage");
         }
       },
 
@@ -35,6 +38,7 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           token: null,
+          message: null,
         });
         localStorage.removeItem("auth-storage");
       },

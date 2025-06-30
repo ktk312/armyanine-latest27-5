@@ -33,6 +33,8 @@ export default function SignInForm() {
 
     if (user && token) {
       navigate("/dashboard"); // ✅ redirect only after success
+    } else {
+      alert("Login Failed | Email or Password is incorrect.")
     }
   };
 
@@ -80,7 +82,7 @@ export default function SignInForm() {
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      // required
+                    // required
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
