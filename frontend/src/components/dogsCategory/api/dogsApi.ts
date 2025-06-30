@@ -32,7 +32,7 @@ import { SicknessInput, SicknessRecord } from "../types/sickness";
 export const userLogin = async (
   email: string,
   password: string
-): Promise<{ user: User; token: string }> => {
+): Promise<{ user: User; token: string, message: string }> => {
   const response = await axios.post(endpoint.USER_LOGIN, {
     email,
     password,

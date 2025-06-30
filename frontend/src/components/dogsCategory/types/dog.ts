@@ -84,6 +84,8 @@ export interface Dog {
   soldTo?: string; // Optional field for sold to
   loanTo?: string; // Optional field for loan to
   transferTo?: string; // Optional field for transfer to
+  cnsTo?: string; // Optional field for CNS to
+  cnsRemarks?: string; // Optional field for CNS remarks
 
 }
 

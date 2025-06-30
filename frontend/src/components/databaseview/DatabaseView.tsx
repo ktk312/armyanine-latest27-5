@@ -366,8 +366,8 @@ const DatabaseView = () => {
                 sx={{ flex: 1, position: "relative" }}
                 className="dark:text-white/90"
               >
-                <h3>Search Dogs by Name, Location Microchip</h3>
-                <SearchIcon
+                <h3>Search Dogs by Name, Location, Microchip</h3>
+                {/* <SearchIcon
                   sx={{
                     position: "absolute",
                     left: 10,
@@ -375,7 +375,7 @@ const DatabaseView = () => {
                     transform: "translateY(-50%)",
                     color: "text.secondary",
                   }}
-                />
+                /> */}
                 <Input
                   type="text"
                   placeholder="Search dogs..."

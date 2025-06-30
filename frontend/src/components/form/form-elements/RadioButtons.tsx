@@ -24,6 +24,8 @@ interface RadioInputsProps {
     transferRemarks?: string;
     transferTo?: string;
     deathReason?: string;
+    cnsTo?: string;
+    cnsRemarks?: string;
   };
 }
 export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
@@ -280,6 +282,25 @@ export default function RadioButtons({ onChange, formData }: RadioInputsProps) {
               className="mt-2 border rounded p-2 text-sm"
               value={formData.cnsDate || ""}
               onChange={(e) => onChange("cnsDate", e.target.value)}
+            />
+          )}
+          {formData.CNS && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="Sold To"
+              value={formData.cnsTo || ""}
+              onChange={(e) => onChange("cnsTo", e.target.value)}
+            />
+          )}
+
+          {formData.CNS && (
+            <Input
+              type="text"
+              className="mt-2 border rounded p-2 text-sm"
+              placeholder="C & S Remarks"
+              value={formData.cnsRemarks || ""}
+              onChange={(e) => onChange("cnsRemarks", e.target.value)}
             />
           )}
         </div>

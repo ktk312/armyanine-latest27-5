@@ -174,7 +174,7 @@ export const RegistrationViewModal: React.FC<ModalProps> = ({
                                 )}
                                 {/* No of male */}
                                 <div className="flex items-center gap-2 mt-4">
-                                    <span className="text-gray-500 dark:text-gray-400">Puppy Acc no:</span>
+                                    <span className="text-gray-500 dark:text-gray-400">Puppy ACC no:</span>
                                     <span className="text-gray-800 dark:text-white">{dog?.KP || "N/A"}</span>
                                 </div>
 

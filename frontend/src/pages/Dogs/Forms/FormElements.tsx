@@ -56,6 +56,8 @@ export interface DogFormData {
   loanTo?: string;
   transferRemarks?: string;
   transferTo?: string;
+  cnsTo?: string; // Optional field for CNS to
+  cnsRemarks?: string; // Optional field for CNS remarks
 }
 export default function FormElements() {
   const { createNewDog, loading, updateNewDog } = useCreateDog();
@@ -110,7 +112,9 @@ export default function FormElements() {
     loanRemarks: "",
     loanTo: "",
     transferRemarks: "",
-    transferTo: ""
+    transferTo: "",
+    cnsTo: "", // Optional field for CNS to
+    cnsRemarks: "", // Optional field for CNS remarks
   });
 
 
@@ -162,7 +166,9 @@ export default function FormElements() {
       loanRemarks: "",
       loanTo: "",
       transferRemarks: "",
-      transferTo: ""
+      transferTo: "",
+      cnsTo: "", // Optional field for CNS to
+      cnsRemarks: "", // Optional field for CNS remarks
     });
 
     // Notify parent component
@@ -225,6 +231,8 @@ export default function FormElements() {
         loanTo: selectedDog.loanTo || "",
         transferRemarks: selectedDog.transferRemarks || "",
         transferTo: selectedDog.transferTo || "",
+        cnsTo: selectedDog.cnsTo || "", // Optional field for CNS to
+        cnsRemarks: selectedDog.cnsRemarks || "", // Optional field for CNS remarks
 
       });
     } else {
@@ -275,7 +283,9 @@ export default function FormElements() {
         loanRemarks: "",
         loanTo: "",
         transferRemarks: "",
-        transferTo: ""
+        transferTo: "",
+        cnsTo: "", // Optional field for CNS to
+        cnsRemarks: "", // Optional field for CNS remarks
 
       });
     }
@@ -349,6 +359,10 @@ export default function FormElements() {
     formDataToSend.append("loanTo", formData.loanTo || "");
     formDataToSend.append("transferRemarks", formData.transferRemarks || "");
     formDataToSend.append("transferTo", formData.transferTo || "");
+    formDataToSend.append("cnsTo", formData.cnsTo || ""); // Optional field for CNS to
+
+    formDataToSend.append("cnsRemarks", formData.cnsRemarks || ""); // Optional field for CNS remarks
+
 
     try {
       const requiredFields = [

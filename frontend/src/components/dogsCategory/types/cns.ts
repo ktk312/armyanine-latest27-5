@@ -6,6 +6,8 @@ export interface Cns {
   KP: number;
   status: string;
   cnsDate: string; // Assuming this is the date of C&S status
+  cnsTo?: string; // Optional field for CNS to
+  cnsRemarks?: string; // Optional field for CNS remarks
   // Add other fields from your API response
 }
 

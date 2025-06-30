@@ -57,6 +57,8 @@ const createDog = async (req, res) => {
       loanTo,
       transferRemarks,
       transferTo,
+      cnsTo,
+      cnsRemarks,
 
     } = req.body;
     console.log("---achiement are", chestDepth,
@@ -139,6 +141,8 @@ const createDog = async (req, res) => {
           loanTo,
           transferRemarks,
           transferTo,
+          cnsTo,
+          cnsRemarks,
           // Relations
           category: { connect: { id: categoryIdNumber } },
           breed: { connect: { id: breedIdNumber } },
@@ -192,6 +196,8 @@ const getAllDogs = async (req, res) => {
         isLoan: false,
         isSold: false,
         isTransfer: false,
+        CDN: false,
+        CNS: false,
 
       }
     });
@@ -288,6 +294,8 @@ const updateDog = async (req, res) => {
       loanTo,
       transferRemarks,
       transferTo,
+      cnsTo,
+      cnsRemarks,
     } = req.body;
 
     const file = req.file ? req.file.filename : null; // Get file path of the uploaded image
@@ -341,6 +349,8 @@ const updateDog = async (req, res) => {
         isTransfer: parsedIsTransfer,
         CDN: parsedCDN,
         CNS: parsedCNS,
+        cnsTo,
+        cnsRemarks,
 
         cdnDate,
 

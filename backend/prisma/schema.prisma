@@ -105,6 +105,8 @@ model Dog {
   cdnDate            String?
   CNS                Boolean? @default(false)
   cnsDate            String?
+  cnsTo              String?
+  cnsRemarks         String?
   sex                String
   achievements       String?
   createdAt          DateTime @default(now())

@@ -14,7 +14,7 @@ const getNestedValue = (obj: any, path: string): any => {
 
 const columns = [
   { label: "S.No", key: "" },
-  { label: "Acc No", key: "dog.KP" },
+  { label: "ACC No", key: "dog.KP" },
 
   { label: "Dog Name", key: "dog.dogName" },
   { label: "Age", key: "age" },
