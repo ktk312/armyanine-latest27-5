@@ -67,6 +67,7 @@ export default function DefaultInputs({
     setDogData((prev: any) => ({ ...prev, [name]: value }));
     onChange(name, value);
   };
+  console.log(selectedDog, "SSSSSSSSSSSSSSS");
 
   const parseDate = (dateString?: string | null) => {
     if (!dateString) return undefined;
@@ -116,7 +117,9 @@ export default function DefaultInputs({
       setBreedOptions(
         breeds.map((breed) => ({
           value: breed?.id.toString(), // Convert number to string
-          label: breed?.breed?.charAt(0).toUpperCase() + (breed?.breed ?? "").slice(1) || "",
+          label:
+            breed?.breed?.charAt(0).toUpperCase() +
+              (breed?.breed ?? "").slice(1) || "",
         }))
       );
     }
@@ -133,7 +136,9 @@ export default function DefaultInputs({
       setCategoryOptions(
         categories.map((category) => ({
           value: category.id.toString(), // Convert number to string
-          label: category.name.charAt(0).toUpperCase() + (category.name ?? "").slice(1) || "",
+          label:
+            category.name.charAt(0).toUpperCase() +
+              (category.name ?? "").slice(1) || "",
         }))
       );
     }
@@ -175,8 +180,7 @@ export default function DefaultInputs({
   const ListofHair = [
     { value: "hair", label: "Hair" },
     { value: "long_coat", label: "Long Coat" },
-    { value: "short_coat", label: "Short Coat" }
-
+    { value: "short_coat", label: "Short Coat" },
   ];
   const ListofHD = [
     { value: "normal", label: "Normal" },
@@ -236,6 +240,13 @@ export default function DefaultInputs({
     selectedDog?.microchip?.chipId.toString(),
     microchipOption
   );
+  const defaultBreedOption = breedOptions.find(
+    (option) => option.value === dogData?.breedId?.toString()
+  );
+
+  const defaultCategoryOption = categoryOptions.find(
+    (option) => option.value === dogData?.categoryId?.toString()
+  );
 
   return (
     <ComponentCard title="Default Inputs">
@@ -246,10 +257,14 @@ export default function DefaultInputs({
           </Label>
           <Select
             options={breedOptions}
-            placeholder={loading ? "Loading breeds..." : "Select Option"}
+            placeholder={
+              loading
+                ? "Loading breeds..."
+                : defaultBreedOption?.label || "Select Option"
+            }
             onChange={handleBreedChange}
             className="dark:bg-dark-900"
-            defaultValue={selectedDog?.breed?.id?.toString()}
+            defaultValue={selectedDog?.breed.id?.toString()}
           />
         </div>
         <div>
@@ -271,7 +286,11 @@ export default function DefaultInputs({
           </Label>
           <Select
             options={categoryOptions}
-            placeholder={dogLoading ? "Loading category..." : "Select Option"}
+            placeholder={
+              dogLoading
+                ? "Loading categories..."
+                : defaultCategoryOption?.label || "Select Option"
+            }
             onChange={handleCategoryChange}
             className="dark:bg-dark-900"
             defaultValue={selectedDog?.category?.name}
@@ -421,7 +440,7 @@ export default function DefaultInputs({
             name="KP"
             value={dogData?.KP || ""}
             onChange={handleChange}
-          // disabled={!!selectedDog?.KP}
+            // disabled={!!selectedDog?.KP}
           />
           {/* <Input
                 type="text"
