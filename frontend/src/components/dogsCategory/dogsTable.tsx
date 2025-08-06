@@ -28,7 +28,7 @@ import { useCnsDogs } from "./hooks/useCnsDogs";
 
 import { DogDetailsModal } from "../ui/modal/dogModals/dogProfileModal";
 import { useBreedStore } from "../../store/breedStore";
-import { Breed, Dog } from "./types/dog";
+import { Dog } from "./types/dog";
 import { BreedModal } from "../ui/modal/dogModals/breedModal";
 import { useSiresAndDamsByBreed } from "./hooks/useSireAndDam";
 import { DeadDogsListModal } from "../ui/modal/dogModals/deadDogsModal";
@@ -57,7 +57,7 @@ export default function BasicTableOne() {
 
 
 
-  const [activeBreedModal, setActiveBreedModal] = useState<{
+  const [activeBreedModal] = useState<{
     isOpen: boolean;
     breedName: string;
     breedId: number;
@@ -403,7 +403,7 @@ export default function BasicTableOne() {
                     }
                   >
                     <TableCell className="px-5 py-4 text-left text-gray-900 dark:text-gray-100">
-                      {index + 1}
+                      {index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}
                     </TableCell>
                     <TableCell className="px-5 py-4 text-left text-gray-900 dark:text-gray-100">
                       {dog?.dogName}

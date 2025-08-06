@@ -4,7 +4,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { groupBy } from "lodash";
 
 interface ParentDog {
   name: string;
@@ -101,7 +100,7 @@ const Progeny: React.FC<DogPedigreeProps> = ({ dogId }) => {
       {groupedByParents.map(([key, children], i) => {
         const sire = children[0].sire!;
         const dam = children[0].dam!;
-
+        console.log(key);
         return (
           <div
             key={i}

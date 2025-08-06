@@ -1,5 +1,5 @@
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   useTheme,
   createTheme,
   ThemeProvider,
-  TextField,
+
 } from "@mui/material";
 import SelectInputs from "../form/form-elements/components/SelectInputs";
 import Input from "../form/input/InputField";
@@ -29,7 +29,7 @@ import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 import {
   Pets as PetsIcon,
-  Search as SearchIcon,
+
   ArrowBack as ArrowBackIcon,
   Male as MaleIcon,
   Female as FemaleIcon,
@@ -121,7 +121,7 @@ const DetailItem = ({
   icon,
   label,
   value,
-  bgColor,
+
 }: {
   icon?: React.ReactNode;
   label: string;
@@ -229,7 +229,7 @@ const DatabaseView = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
 
 
   const handleBack = () => {
@@ -367,15 +367,7 @@ const DatabaseView = () => {
                 className="dark:text-white/90"
               >
                 <h3>Search Dogs by Name, Location, Microchip</h3>
-                {/* <SearchIcon
-                  sx={{
-                    position: "absolute",
-                    left: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "text.secondary",
-                  }}
-                /> */}
+
                 <Input
                   type="text"
                   placeholder="Search dogs..."

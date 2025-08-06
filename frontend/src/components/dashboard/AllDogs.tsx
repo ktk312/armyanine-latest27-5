@@ -135,7 +135,7 @@ export default function AllDogs() {
               {paginatedData.map((order, index) => (
                 <TableRow key={order?.id} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
                   <TableCell className="px-5 py-4 text-start ">
-                    {index + 1}
+                    {index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
                     {order?.dogName}

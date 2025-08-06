@@ -25,7 +25,7 @@ export default function UserDropdown() {
     // Check if sign-in was successful
     const user = useAuthStore.getState().user;
     const token = useAuthStore.getState().token;
-
+    console.log("User:", isLoading);
     if (user && token) {
       navigate("/dashboard"); // ✅ redirect only after success
     }

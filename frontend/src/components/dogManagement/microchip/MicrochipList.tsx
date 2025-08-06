@@ -137,7 +137,7 @@ export default function Microchip() {
               <TableBody>
                 {paginatedData.map((order, index) => (
                   <TableRow key={index + 1} className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}>
-                    <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
+                    <TableCell className="px-5 py-4 text-start">{index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}</TableCell>
                     <TableCell className="px-5 py-4 text-start"> {typeof order?.chipId === 'string' ? order.chipId : JSON.stringify(order?.chipId)}</TableCell>
                     <TableCell className="px-4 py-3 text-start">
                       {/* <button className="text-blue-500 mx-1">

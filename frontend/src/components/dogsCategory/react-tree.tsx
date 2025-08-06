@@ -232,6 +232,7 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
         const { data } = await axios.get(`${BASE_URL}/dog/${IdDog}`);
         console.log("Fetched dog data:", data);
         setSelectedDog(data);
+        console.log("Setting viewDog with data:", selectedDog);
         // Open modal after data is fetched
         setViewDog(data);
         setIsViewModalOpen(true);
@@ -261,12 +262,12 @@ const PedigreeTree: React.FC<{ dogId: number }> = ({ dogId }) => {
       <g
         className={`custom-node group ${customNode.sex?.toLowerCase() || 'unknown'} ${customNode.hasPlaceholder ? 'placeholder' : ''}`}
         style={{ cursor: "default" }}
-      onClick={() => {
-        console.log("Node clicked:", customNode); // 👈 Console log here
-        if (customNode.id) {
-          setDogId(customNode.id); // this triggers modal via useEffect
-        }
-      }}
+        onClick={() => {
+          console.log("Node clicked:", customNode); // 👈 Console log here
+          if (customNode.id) {
+            setDogId(customNode.id); // this triggers modal via useEffect
+          }
+        }}
         tabIndex={0}
         aria-label={`${customNode.name || "Unknown"} ${customNode.accNumber ? `ACC number ${customNode.accNumber}` : ""
           }`}

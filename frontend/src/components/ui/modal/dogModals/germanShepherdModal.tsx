@@ -146,7 +146,7 @@ export const GermanSheperdListModal: React.FC<ModalProps> = ({
                             <Table>
                                 <TableHeader className="border-b border-gray-100 ">
                                     <TableRow>
-                                        {["S.No", "DOG NAME","ACC No", "Status"].map((header, idx) => (
+                                        {["S.No", "DOG NAME", "ACC No", "Status"].map((header, idx) => (
                                             <TableCell key={idx} isHeader className="px-5 py-3 font-medium text-gray-800 dark:text-white/90 text-start">
                                                 {header}
                                                 {header !== "ACTIONS" && (

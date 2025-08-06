@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../table";
-import { GermanShepherd } from "../../../dogsCategory/types/GermanShepherd";
 import { useStandingDog } from "../../../dogsCategory/hooks/useStandingDog";
 import Badge from "../../badge/Badge";
 import { StandingDog } from "../../../dogsCategory/types/standingDog";
