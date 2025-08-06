@@ -1,74 +1,118 @@
+
+
+
 // const { app, BrowserWindow } = require('electron');
 // const path = require('path');
 // const fs = require('fs');
-// const { exec } = require('child_process');
+// const { fork } = require('child_process');
+
 // let backendProcess = null;
-// // Create the Electron window
+
+// // ============================
+// // Logging helper
+// // ============================
+// const logDir = path.join(app.getPath('userData'), 'logs');
+// if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+// const logFile = path.join(logDir, 'main.log');
+
+// function log(...args) {
+//     const message = `[${new Date().toISOString()}] ${args.join(' ')}\n`;
+//     fs.appendFileSync(logFile, message);
+//     console.log(...args);
+// }
+
+// // ============================
+// // Create Electron window
+// // ============================
 // function createWindow() {
 //     const mainWindow = new BrowserWindow({
 //         width: 1200,
 //         height: 800,
 //         webPreferences: {
-//             nodeIntegration: true, // for dev use only
-//             contextIsolation: false // for dev use only
-//         },
+//             nodeIntegration: true,
+//             contextIsolation: false
+//         }
 //     });
 
-
-
-
-//     // Adjust the index path for dev vs packaged mode
 //     const indexPath = app.isPackaged
-//         ? path.join(process.resourcesPath, 'frontend', 'dist', 'index.html')  // Path for packaged app
-//         : path.join(__dirname, 'frontend', 'dist', 'index.html'); // Path for development
+//         ? path.join(process.resourcesPath, 'frontend', 'dist', 'index.html')
+//         : path.join(__dirname, 'frontend', 'dist', 'index.html');
+
 //     if (!fs.existsSync(indexPath)) {
-//         console.error('❌ index.html not found at:', indexPath);
+//         log('❌ index.html not found:', indexPath);
 //     } else {
 //         mainWindow.loadFile(indexPath);
 //     }
-//     mainWindow.loadFile(indexPath);
+
+//     mainWindow.on('closed', () => {
+//         log('Main window closed');
+//     });
 // }
 
-// // Start backend process
+// // ============================
+// // Start backend process safely
+// // ============================
 // function startBackend() {
-//     // Ensure correct path for backend files when packaged
 //     const backendPath = app.isPackaged
-//         ? path.join(process.resourcesPath, 'backend', 'index.js') // Path for packaged app
-//         : path.join(__dirname, 'backend', 'index.js'); // Path for development
+//         ? path.join(process.resourcesPath, 'backend', 'index.js')
+//         : path.join(__dirname, 'backend', 'index.js');
 
-//     const command = app.isPackaged
-//         ? `node "${backendPath}"` // Run backend using Node
-//         : `"${process.execPath}" "${backendPath}"`; // Dev mode
+//     if (!fs.existsSync(backendPath)) {
+//         log('❌ Backend file not found:', backendPath);
+//         return;
+//     }
 
-//     backendProcess = exec(command, (err, stdout, stderr) => {
-//         if (err) console.error('❌ Backend error:', err);
-//         if (stderr) console.error('⚠️ Backend stderr:', stderr);
-//         if (stdout) console.log('✅ Backend stdout:', stdout);
+//     log('🚀 Starting backend at', backendPath);
+
+//     backendProcess = fork(backendPath, [], {
+//         cwd: path.dirname(backendPath),
+//         env: {
+//             ...process.env, // keep current environment variables
+//             NODE_ENV: app.isPackaged ? 'production' : 'development'
+//         }
 //     });
 
-//     return backendProcess;
+//     backendProcess.on('message', (msg) => {
+//         log('📩 Backend message:', JSON.stringify(msg));
+//     });
+
+//     backendProcess.on('exit', (code) => {
+//         log(`🛑 Backend exited with code ${code}`);
+//     });
+
+//     backendProcess.on('error', (err) => {
+//         log('❌ Backend process error:', err);
+//     });
 // }
 
-// // Handle app ready event
+// // ============================
+// // App lifecycle
+// // ============================
 // app.whenReady().then(() => {
-//     console.log('Starting backend...');
-//     startBackend(); // Start the backend
-//     createWindow(); // Open the main window
+//     log('Starting backend...');
+//     startBackend();
+//     createWindow();
+
+//     app.on('activate', () => {
+//         if (BrowserWindow.getAllWindows().length === 0) {
+//             createWindow();
+//         }
+//     });
 // });
 
-// // Quit when all windows are closed (except macOS)
 // app.on('window-all-closed', () => {
-//     if (process.platform !== 'darwin') app.quit();
+//     if (process.platform !== 'darwin') {
+//         app.quit();
+//     }
 // });
-
-// // App quit cleanup
 
 // app.on('before-quit', () => {
 //     if (backendProcess) {
-//         console.log('🛑 Killing backend process...');
+//         log('🛑 Killing backend process...');
 //         backendProcess.kill();
 //     }
 // });
+
 
 
 
@@ -101,16 +145,21 @@ function createWindow() {
         height: 800,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            webSecurity: false
         }
     });
+mainWindow.webContents.openDevTools();
 
     const indexPath = app.isPackaged
         ? path.join(process.resourcesPath, 'frontend', 'dist', 'index.html')
         : path.join(__dirname, 'frontend', 'dist', 'index.html');
 
+    log('🧭 indexPath:', indexPath);
+
     if (!fs.existsSync(indexPath)) {
         log('❌ index.html not found:', indexPath);
+        mainWindow.loadURL('about:blank'); // fallback if file doesn't exist
     } else {
         mainWindow.loadFile(indexPath);
     }
@@ -124,9 +173,23 @@ function createWindow() {
 // Start backend process safely
 // ============================
 function startBackend() {
-    const backendPath = app.isPackaged
+    let backendPath = app.isPackaged
         ? path.join(process.resourcesPath, 'backend', 'index.js')
         : path.join(__dirname, 'backend', 'index.js');
+
+    // Fix path if somehow becomes file:// URI (happens in some packaging cases)
+    if (backendPath.startsWith('file://')) {
+        backendPath = new URL(backendPath).pathname;
+        if (process.platform === 'win32' && backendPath.startsWith('/')) {
+            backendPath = backendPath.slice(1); // Remove leading slash (e.g. /C:/path → C:/path)
+        }
+        backendPath = decodeURIComponent(backendPath);
+    }
+
+    log('🧪 backendPath:', backendPath);
+    log('🧪 fs.existsSync:', fs.existsSync(backendPath));
+    log('🧪 CWD:', process.cwd());
+    log('🧪 Platform:', process.platform);
 
     if (!fs.existsSync(backendPath)) {
         log('❌ Backend file not found:', backendPath);
@@ -135,32 +198,44 @@ function startBackend() {
 
     log('🚀 Starting backend at', backendPath);
 
-    backendProcess = fork(backendPath, [], {
-        cwd: path.dirname(backendPath),
-        env: {
-            ...process.env, // keep current environment variables
-            NODE_ENV: app.isPackaged ? 'production' : 'development'
-        }
-    });
+    try {
+        backendProcess = fork(backendPath, [], {
+            cwd: path.dirname(backendPath),
+            env: {
+                ...process.env,
+                NODE_ENV: app.isPackaged ? 'production' : 'development'
+            }
+        });
 
-    backendProcess.on('message', (msg) => {
-        log('📩 Backend message:', JSON.stringify(msg));
-    });
+        backendProcess.on('message', (msg) => {
+            log('📩 Backend message:', JSON.stringify(msg));
+        });
 
-    backendProcess.on('exit', (code) => {
-        log(`🛑 Backend exited with code ${code}`);
-    });
+        backendProcess.on('exit', (code) => {
+            log(`🛑 Backend exited with code ${code}`);
+        });
 
-    backendProcess.on('error', (err) => {
-        log('❌ Backend process error:', err);
-    });
+        backendProcess.on('error', (err) => {
+            log('❌ Backend process error:', err);
+        });
+
+        backendProcess.stderr?.on('data', (data) => {
+            log('⚠️ Backend stderr:', data.toString());
+        });
+
+        backendProcess.stdout?.on('data', (data) => {
+            log('✅ Backend stdout:', data.toString());
+        });
+    } catch (e) {
+        log('❌ Failed to fork backend:', e);
+    }
 }
 
 // ============================
 // App lifecycle
 // ============================
 app.whenReady().then(() => {
-    log('Starting backend...');
+    log('⚡ App ready - starting backend...');
     startBackend();
     createWindow();
 
