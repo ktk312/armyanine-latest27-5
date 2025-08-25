@@ -35,7 +35,7 @@ export interface TrainingRecord {
   sensitivity: string;
   ratings: Ratings;
 }
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 const columns = [
   { label: "S.No", key: "" },
   { label: "ACC No", key: "dog.KP" },

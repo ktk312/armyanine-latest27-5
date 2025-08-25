@@ -7,7 +7,7 @@ import { Tooltip } from "@mui/material";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 const getNestedValue = (obj: any, path: string): any => {
   return path.split(".").reduce((acc, part) => acc && acc[part], obj);
 };

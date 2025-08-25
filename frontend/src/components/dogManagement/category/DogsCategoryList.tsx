@@ -20,7 +20,7 @@ interface Order {
   name: string;
 }
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function DogsCategoryList() {
   const [filters, setFilters] = useState({

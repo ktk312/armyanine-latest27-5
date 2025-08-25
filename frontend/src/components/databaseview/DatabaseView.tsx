@@ -171,7 +171,7 @@ const DatabaseView = () => {
   const [selectedSection, setSelectedSection] = useState("Basic Data");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 20;
 
   const navItems = [
     { name: "Basic Data", icon: <PetsIcon /> },

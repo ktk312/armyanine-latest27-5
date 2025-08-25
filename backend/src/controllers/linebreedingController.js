@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { getAvailableSires } = require("../services/linebreedingService");
+const { getAvailableSiresForDam } = require("../services/linebreedingService");
 const lineBreeding = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
@@ -8,15 +8,15 @@ const lineBreeding = async (req, res) => {
     }
 
     try {
-        const availableSires = await getAvailableSires(id);
+        const availableSires = await getAvailableSiresForDam(id);
         res.json({
             damId: id,
             availableSires: availableSires
         });
     } catch (err) {
         console.error('Error in lineBreeding:', err);
-        res.status(500).json({ 
-            error: err.message || 'Internal Server Error' 
+        res.status(500).json({
+            error: err.message || 'Internal Server Error'
         });
     } finally {
         await prisma.$disconnect(); // Properly close Prisma connection

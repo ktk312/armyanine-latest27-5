@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import { Table, TableBody, TableHeader, TableRow, TableCell } from "../ui/table";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 const getNestedValue = (obj: any, path: string): any => {
   return path.split(".").reduce((acc, part) => acc?.[part], obj);

@@ -37,7 +37,7 @@ export const DeadDogsListModal: React.FC<ModalProps> = ({
     });
     const { sires, dams } = useDeadDog();
 
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 20;
 
     const handleFilterChange = (key: string, value: string) => {
         setFilters(prev => ({ ...prev, [key]: value }));

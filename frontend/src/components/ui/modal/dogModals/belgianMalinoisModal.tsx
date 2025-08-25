@@ -30,7 +30,7 @@ export const BelgianMalinoisListModal: React.FC<ModalProps> = ({
         KP: "",
         status: "",
     });
-      const headerToFilterKey: Record<string, keyof typeof filters> = {
+    const headerToFilterKey: Record<string, keyof typeof filters> = {
         "S.No": "id",
         "DOG NAME": "dogName",
         "ACC No": "KP",
@@ -38,7 +38,7 @@ export const BelgianMalinoisListModal: React.FC<ModalProps> = ({
     };
     const { sires, dams } = useBelgianMalinois();
     console.log("----this is sire and dam", sires, dams)
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 20;
 
     const handleFilterChange = (key: string, value: string) => {
         setFilters(prev => ({ ...prev, [key]: value }));

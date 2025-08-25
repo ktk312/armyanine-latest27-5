@@ -16,7 +16,7 @@ import { useFetchMicrochips } from "../../dogsCategory/hooks/useMicrochip";
 //   chipId: string;
 // }
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function Microchip() {
   // const [filters, setFilters] = useState({ id: "", name: "" });

@@ -35,7 +35,7 @@ import { DeadDogsListModal } from "../ui/modal/dogModals/deadDogsModal";
 import { CNDDogsListModal } from "../ui/modal/dogModals/cndDogsModal";
 import { CNSDogsListModal } from "../ui/modal/dogModals/cnsDogModal";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function BasicTableOne() {
   // const [activeIndex, setActiveIndex] = useState<null | number>(null);

@@ -25,7 +25,7 @@ import { Tooltip } from "@mui/material";
 import { StudViewModal } from "../ui/modal/dogModals/studViewModal";
 import { useStudCertificateStore } from "../../store/stud-certificate-store";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function StudCertificate() {
   const [filters, setFilters] = useState({

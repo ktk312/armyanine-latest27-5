@@ -34,7 +34,7 @@ export const SoldDogsListModal: React.FC<ModalProps> = ({
     });
     const { sires, dams } = useSoldDog();
     console.log("sold sire", sires)
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 20;
 
     const handleFilterChange = (key: string, value: string) => {
         setFilters(prev => ({ ...prev, [key]: value }));

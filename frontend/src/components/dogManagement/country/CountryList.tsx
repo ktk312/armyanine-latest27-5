@@ -11,27 +11,27 @@ import Button from "../../ui/button/Button";
 import { useNavigate } from "react-router";
 import { useFetchCountries } from "../../dogsCategory/hooks/useCountry"; // Your country fetching hook
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function CountryList() {
   const [filters, setFilters] = useState({ id: "", countryName: "" });
   const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
-  const { country, countryLoading, Countryerror, setSelectedCountry} = useFetchCountries();
+  const { country, countryLoading, Countryerror, setSelectedCountry } = useFetchCountries();
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   };
 
-    const handleEditClick = (selectedCountry: any) => {
-        // Set the selected stud certificate in the store
-        setSelectedCountry(selectedCountry);
+  const handleEditClick = (selectedCountry: any) => {
+    // Set the selected stud certificate in the store
+    setSelectedCountry(selectedCountry);
 
-        // Navigate to the inspection form page
-        navigate("/create-country", { state: { mode: "edit" } });
-    };
+    // Navigate to the inspection form page
+    navigate("/create-country", { state: { mode: "edit" } });
+  };
 
   // Filter countries by ID and name
   const filteredData = country.filter((item: any) =>
@@ -95,7 +95,7 @@ export default function CountryList() {
                           placeholder={`Search ${header}`}
                           onChange={(e) =>
                             handleFilterChange(
-                                  idx === 0 ? "id" : "countryName",
+                              idx === 0 ? "id" : "countryName",
                               e.target.value
                             )
                           }
@@ -122,7 +122,7 @@ export default function CountryList() {
                     <TableCell className="px-4 py-3 text-start">
                       <button
                         className="text-blue-500 mx-1"
-                       onClick={() => handleEditClick(country)}
+                        onClick={() => handleEditClick(country)}
                       >
                         <PencilIcon />
                       </button>

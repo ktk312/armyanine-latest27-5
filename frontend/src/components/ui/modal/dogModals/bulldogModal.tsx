@@ -31,7 +31,7 @@ export const BulldogListModal: React.FC<ModalProps> = ({
         status: "",
     });
     const { sires, dams } = useBulldog();
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 20;
 
     const handleFilterChange = (key: string, value: string) => {
         setFilters(prev => ({ ...prev, [key]: value }));

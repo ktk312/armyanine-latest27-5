@@ -29,7 +29,7 @@ export default function AllDogs() {
     setIsViewModalOpen(false);
     setViewDog(null);
   };
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 20;
   const [filters, setFilters] = useState({
     id: "",
     name: "",

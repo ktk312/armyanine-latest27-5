@@ -20,7 +20,7 @@ import { useFetchLitterInspection } from "../dogsCategory/hooks/litterInspection
 import { formatDate } from "../../utils/utils";
 import { InspectionViewModal } from "../ui/modal/dogModals/InspectionViewModal";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function LittersInspectionReqList() {
   const [filters, setFilters] = useState({

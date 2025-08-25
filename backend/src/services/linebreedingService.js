@@ -1,173 +1,144 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+/**
+ * Gets ancestors map for a dog using tabular method
+ */
 async function getAncestorsMap(dogId) {
-  const ancestorsMap = new Map();
-
-  // const dog = await prisma.dog.findUnique({
-  //   where: { id: dogId },
-  //   include: {
-  //     sire: { 
-  //       include: { 
-  //         sire: true, 
-  //         dam: true 
-  //       } 
-  //     },
-  //     dam: { 
-  //       include: { 
-  //         sire: true, 
-  //         dam: true 
-  //       } 
-  //     },
-  //   },
-  // });
+  const ancestorsTable = new Map();
   const dog = await prisma.dog.findUnique({
     where: { id: dogId },
     include: {
       sire: {
         include: {
-          sire: {
-            include: {
-              sire: { include: { sire: true, dam: true } }, // 4th gen
-              dam: { include: { sire: true, dam: true } },   // 4th gen
-            }
-          }, // 3rd gen
-          dam: {
-            include: {
-              sire: { include: { sire: true, dam: true } }, // 4th gen
-              dam: { include: { sire: true, dam: true } },  // 4th gen
-            }
-          }, // 3rd gen
+          sire: { include: { sire: true, dam: true } },
+          dam: { include: { sire: true, dam: true } }
         }
       },
       dam: {
         include: {
-          sire: {
-            include: {
-              sire: { include: { sire: true, dam: true } }, // 4th gen
-              dam: { include: { sire: true, dam: true } },  // 4th gen
-            }
-          }, // 3rd gen
-          dam: {
-            include: {
-              sire: { include: { sire: true, dam: true } }, // 4th gen
-              dam: { include: { sire: true, dam: true } },  // 4th gen
-            }
-          }, // 3rd gen
-        }
-      },
-    },
-  });
-  if (!dog) {
-    throw new Error(`Dog with ID ${dogId} not found`);
-  }
-
-  const traverseAncestors = (dog, pathLength) => {
-    if (!dog || pathLength > 5) return;
-
-    const existing = ancestorsMap.get(dog.id);
-    if (existing) {
-      existing.paths.push(pathLength);
-    } else {
-      ancestorsMap.set(dog.id, { paths: [pathLength] });
-    }
-
-    if (dog.sire) traverseAncestors(dog.sire, pathLength + 1);
-    if (dog.dam) traverseAncestors(dog.dam, pathLength + 1);
-  };
-
-  traverseAncestors(dog, 0);
-  return ancestorsMap;
-}
-
-function calculateInbreedingCoefficient(ancestors1, ancestors2) {
-  let coefficient = 0;
-
-  for (const [ancestorId, data1] of ancestors1.entries()) {
-    if (ancestors2.has(ancestorId)) {
-      const data2 = ancestors2.get(ancestorId);
-      for (const path1 of data1.paths) {
-        for (const path2 of data2.paths) {
-          // if (path1 === 1 && path2 === 1) { // Both mother and child share this common ancestor (sire)
-          //   coefficient += Math.pow(0.5, path1 + path2 + 1); // Direct relationship
-          // }
-          coefficient += Math.pow(0.5, path1 + path2 + 1);
+          sire: { include: { sire: true, dam: true } },
+          dam: { include: { sire: true, dam: true } }
         }
       }
     }
+  });
+
+  if (!dog) return ancestorsTable;
+
+  // Helper to add ancestor with generation number
+  function addAncestor(ancestor, generation) {
+    if (!ancestor) return;
+    const existing = ancestorsTable.get(ancestor.id);
+    if (existing) {
+      if (!existing.generations.includes(generation)) {
+        existing.generations.push(generation);
+      }
+    } else {
+      ancestorsTable.set(ancestor.id, {
+        id: ancestor.id,
+        name: ancestor.dogName,
+        generations: [generation],
+        sireId: ancestor.sireId,
+        damId: ancestor.damId
+      });
+    }
   }
 
-  return (coefficient * 100);
+  // Add ancestors by generation
+  function processAncestors(current, generation = 0) {
+    if (!current) return;
+    addAncestor(current, generation);
+    if (current.sire) {
+      processAncestors(current.sire, generation + 1);
+    }
+    if (current.dam) {
+      processAncestors(current.dam, generation + 1);
+    }
+  }
+
+  processAncestors(dog);
+  return ancestorsTable;
 }
 
+function calculateInbreedingCoefficient(sireAncestors, damAncestors) {
+  let F = 0;
+
+  // Step 1: Find all common ancestors
+  const commonAncestorIds = [...sireAncestors.keys()].filter(id =>
+    damAncestors.has(id)
+  );
+
+  // Step 2: Calculate contribution of each common ancestor
+  for (const ancestorId of commonAncestorIds) {
+    const sireGen = Math.min(...sireAncestors.get(ancestorId).generations);
+    const damGen = Math.min(...damAncestors.get(ancestorId).generations);
+    const FA = sireAncestors.get(ancestorId).inbreedingCoefficient || 0;
+
+    const contribution = Math.pow(0.5, sireGen + damGen + 1) * (1 + FA);
+    F += contribution;
+  }
+
+  return +(F * 100).toFixed(2); // Return as percentage
+}
+
+/**
+ * Get available sires for dam with inbreeding coefficients
+ */
 async function getAvailableSiresForDam(damId) {
+  const dam = await prisma.dog.findUnique({
+    where: { id: damId },
+    select: { id: true, sex: true, breedId: true }
+  });
 
-  const damBreed = await prisma.dog.findUnique({ where: { id: damId } });
-  const [dam, allDogs] = await Promise.all([
-    prisma.dog.findUnique({
-      where: { id: damId },
-      select: { id: true, sex: true, KP: true }
-    }),
+  console.log('Dam:', dam);
 
-    prisma.dog.findMany({
-      where: {
-        NOT: { id: damId },
-        breedId: damBreed?.breedId,
-        isDeath: false,
-        isLoan: false,
-        isSold: false,
-        isTransfer: false,
-        CNS: false,
-        CDN: false,
-      },
-      select: {
-        id: true,
-        dogName: true,
-        sex: true, // include sex for filtering
-        KP: true
-      },
-    }),
-  ]);
-  // Filter only male dogs (case-insensitive)
-  const allSires = allDogs.filter(dog => dog.sex.toLowerCase() === 'male');
+  if (!dam) throw new Error('Dam not found');
+  if (dam.sex.toLowerCase() !== 'female') throw new Error('Not a female dog');
 
-  if (!dam) {
-    throw new Error('Dam not found');
-  }
-  if (dam.sex.toLowerCase() !== 'female') {
-    throw new Error('Specified dog is not female');
-  }
+  const allSires = await prisma.dog.findMany({
+    where: {
+      breedId: dam.breedId,
+      sex: 'male',
+      isDeath: false,
+      isLoan: false,
+      isSold: false,
+      isTransfer: false,
+      CNS: false,
+      CDN: false,
+      NOT: { id: damId }
+    }
+  });
+
 
   const damAncestors = await getAncestorsMap(damId);
-
   const results = [];
+
   for (const sire of allSires) {
     const sireAncestors = await getAncestorsMap(sire.id);
+    // const coeff = await calculateInbreedingCoefficient(allSires, damAncestors);
+    const coeff = await calculateInbreedingCoefficient(sireAncestors, damAncestors);
+    if (sire.dogName.toLowerCase() === 'tara') {
+      console.log(`Sire: ${sire.dogName}, Coefficient: ${coeff}`);
+      console.log(`Sire Ancestors:`, sireAncestors);
+      console.log(`Dam Ancestors:`, damAncestors);
+
+    }
+
+
     results.push({
       id: sire.id,
       dogName: sire.dogName,
-      KP: sire?.KP,
-      inbreedingCoefficient: calculateInbreedingCoefficient(sireAncestors, damAncestors)
+      KP: sire.KP,
+      inbreedingCoefficient: coeff
     });
   }
 
   return results.sort((a, b) => a.inbreedingCoefficient - b.inbreedingCoefficient);
 }
 
-// Modified to only return data, not handle response
-async function getAvailableSires(damId) {
-  try {
-    const availableSires = await getAvailableSiresForDam(damId);
-    return availableSires;
-  } catch (error) {
-    console.error('Error in getAvailableSires:', error);
-    throw error; // Let controller handle the response
-  }
-}
-
 module.exports = {
   getAncestorsMap,
   calculateInbreedingCoefficient,
-  getAvailableSiresForDam,
-  getAvailableSires,
+  getAvailableSiresForDam
 };

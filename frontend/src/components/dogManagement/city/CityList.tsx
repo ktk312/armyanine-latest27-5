@@ -11,7 +11,7 @@ import Button from "../../ui/button/Button";
 import { useNavigate } from "react-router";
 import { useFetchCities } from "../../dogsCategory/hooks/useCities";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function CityList() {
   const [filters, setFilters] = useState({ id: "", name: "", country: "" });

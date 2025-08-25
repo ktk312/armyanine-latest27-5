@@ -43,7 +43,7 @@ const tableData: Medication[] = [
 ];
 
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 export default function MedicationForm() {
     const [filters, setFilters] = useState({
