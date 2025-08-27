@@ -1,8 +1,16 @@
 import { create } from "zustand";
-import { createCountry, fetchAllCountry, updateCountry } from "../components/dogsCategory/api/dogsApi";
-import { CountryState, CountryType } from "../components/dogsCategory/types/country";
+import {
+  createCountry,
+  fetchAllCountry,
+  updateCountry,
+} from "../components/dogsCategory/api/dogsApi";
+import {
+  CountryState,
+  CountryType,
+} from "../components/dogsCategory/types/country";
+import countries from "world-countries";
 
-export const useCountryStore = create<CountryState>((set) => ({
+export const useCountryStore = create<CountryState>((set, get) => ({
   country: [],
   selectedCountry: null,
   countryLoading: false,
@@ -73,8 +81,40 @@ export const useCountryStore = create<CountryState>((set) => ({
       });
     }
   },
-}));
+  createCountries: async () => {
+    try {
+      const existing = await get().getAllCountry();
 
+      const formatted = countries
+        .filter((c) => c.unMember === true)
+        .map((c) => ({
+          countryCode: c.cca2,
+          countryName: c.name.common,
+          currencyCode: c.currencies ? Object.keys(c.currencies)[0] : null,
+          continent: c.region,
+        }));
+
+      for (const country of formatted) {
+        const alreadyExists = existing.some(
+          (ex) =>
+            ex.countryName.trim().toLowerCase() ===
+            country.countryName.trim().toLowerCase()
+        );
+
+        if (!alreadyExists) {
+          await get().addCountry(country);
+        }
+      }
+
+      // refresh after adding
+      await get().getAllCountry();
+
+      console.log("✅ All countries added (skipped duplicates).");
+    } catch (error) {
+      console.error("Error creating countries:", error);
+    }
+  },
+}));
 
 // import { create } from "zustand";
 // import { Country } from "../components/dogsCategory/types/country";

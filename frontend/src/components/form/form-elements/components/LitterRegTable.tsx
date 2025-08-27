@@ -1,15 +1,17 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import Label from "../../Label";
 import Input from "../../input/InputField";
 import { Card, CardContent } from "@mui/material";
 import Button from "../../../ui/button/Button";
 import { MenuItem, Select } from "@mui/material";
+import { useMicrochipStore } from "../../../../store/microchipstore";
 
 interface Puppy {
   name: string;
   gender: string;
   color: string;
-  kp: string; // Assuming 'kp' is a unique identifier for the dog
+  kp: string;
+  microchip: any;
 }
 
 interface LitterFormTableProps {
@@ -17,9 +19,21 @@ interface LitterFormTableProps {
   setPuppies: Dispatch<SetStateAction<Puppy[]>>;
 }
 
-export default function LitterFormTable({ puppies, setPuppies }: LitterFormTableProps) {
+export default function LitterFormTable({
+  puppies,
+  setPuppies,
+}: LitterFormTableProps) {
+  const { microchips, fetchUnassignMicrochips } = useMicrochipStore();
+
+  useEffect(() => {
+    fetchUnassignMicrochips();
+  }, []);
+
   const addDog = () => {
-    setPuppies([...puppies, { kp: "", name: "", gender: "", color: "" }]);
+    setPuppies([
+      ...puppies,
+      { kp: "", name: "", gender: "", color: "", microchip: "" },
+    ]);
   };
 
   const updateDog = (index: number, field: string, value: string) => {
@@ -38,7 +52,9 @@ export default function LitterFormTable({ puppies, setPuppies }: LitterFormTable
           <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Dog Name */}
             <div>
-              <Label className="dark:text-white">ACC No <span className="text-red-500">*</span></Label>
+              <Label className="dark:text-white">
+                ACC No <span className="text-red-500">*</span>
+              </Label>
               <Input
                 type="text"
                 placeholder="Enter Dog's ACC No"
@@ -49,7 +65,9 @@ export default function LitterFormTable({ puppies, setPuppies }: LitterFormTable
             </div>
 
             <div>
-              <Label className="dark:text-white">Dog Name <span className="text-red-500">*</span></Label>
+              <Label className="dark:text-white">
+                Dog Name <span className="text-red-500">*</span>
+              </Label>
               <Input
                 type="text"
                 placeholder="Enter Dog's Name"
@@ -58,10 +76,40 @@ export default function LitterFormTable({ puppies, setPuppies }: LitterFormTable
                 className="dark:bg-gray-900 dark:text-white"
               />
             </div>
+            {/* Microchip (Select Dropdown) */}
+            <div>
+              <Label className="dark:text-white">
+                Microchip <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={dog.microchip}
+                onChange={(e) =>
+                  updateDog(index, "microchip", String(e.target.value))
+                }
+                displayEmpty
+                fullWidth
+                className="!bg-white !text-black dark:!bg-gray-800 dark:!text-white dark:!border-gray-600"
+              >
+                <MenuItem value="">- Select Microchip -</MenuItem>
+                {microchips.map((chip) => (
+                  <MenuItem
+                    key={chip.id}
+                    value={chip.id} // ✅ save the microchip.id in puppy.microchip
+                    disabled={puppies.some(
+                      (p, i) => i !== index && p.microchip === String(chip.id)
+                    )}
+                  >
+                    {chip.chipId} {/* ✅ show the chipId string */}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
 
             {/* Gender (Select Dropdown) */}
             <div>
-              <Label className="dark:text-white">Gender <span className="text-red-500">*</span></Label>
+              <Label className="dark:text-white">
+                Gender <span className="text-red-500">*</span>
+              </Label>
               <Select
                 value={dog.gender}
                 onChange={(e) => updateDog(index, "gender", e.target.value)}
@@ -74,7 +122,6 @@ export default function LitterFormTable({ puppies, setPuppies }: LitterFormTable
                 <MenuItem value="female">Female</MenuItem>
               </Select>
             </div>
-
 
             {/* Color and Markings */}
             <div>

@@ -54,8 +54,11 @@ import ProphylaxisList from "./pages/MedicalHistory/Form/ProphylaxisForm";
 import TrainingRecordForm from "./pages/MedicalHistory/Form/TrainingRecordForm";
 import SicknessRecord from "./pages/MedicalHistory/SicknessRecord";
 import SicknessRecordForm from "./pages/MedicalHistory/Form/SicknessRecordForm";
+import { useCreateCountries } from "./components/dogsCategory/hooks/useCountry";
+import DataManagementPage from "./pages/DataMangement/DataManagementPage";
 
 export default function App() {
+  // useCreateCountries();
   return (
     <>
       <Router>
@@ -65,6 +68,7 @@ export default function App() {
           <Route path="/" element={<SignIn />} />
           {/* Public Routes */}
           <Route path="/signin" element={<SignIn />} />
+
           {/* <Route path="/signup" element={<SignUp />} /> */}
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
@@ -74,6 +78,11 @@ export default function App() {
               {/*Adminstration */}
               <Route path="/activity-logs" element={<ActivityLog />} />
               <Route path="/recycle-bin" element={<RecycleBin />} />
+
+              {/*Data import/export routes*/}
+              <Route path="/data" element={<DataManagementPage />} />
+
+              {/************************/}
 
               {/* Others Page */}
               {/* <Route path="/profile" element={<UserProfiles />} /> */}

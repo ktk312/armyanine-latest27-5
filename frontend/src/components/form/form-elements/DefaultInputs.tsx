@@ -136,9 +136,7 @@ export default function DefaultInputs({
       setCategoryOptions(
         categories.map((category) => ({
           value: category.id.toString(), // Convert number to string
-          label:
-            category.name.charAt(0).toUpperCase() +
-              (category.name ?? "").slice(1) || "",
+          label: category.name.toUpperCase(),
         }))
       );
     }
@@ -319,7 +317,7 @@ export default function DefaultInputs({
             defaultValue={selectedDog?.country?.countryName}
           />
         </div>
-        <div>
+        {/* <div>
           <Label>City of Origin</Label>
           <Select
             options={cityOptions}
@@ -328,7 +326,7 @@ export default function DefaultInputs({
             className="dark:bg-dark-900"
             defaultValue={selectedDog?.city?.city}
           />
-        </div>
+        </div> */}
         <div>
           <Label>Breeder</Label>
           <Input
@@ -515,7 +513,7 @@ export default function DefaultInputs({
             className="dark:bg-dark-900"
           />
         </div>
-        <div>
+        {/* <div>
           <Label>HD</Label>
           <Select
             defaultValue={selectedDog?.HD || ""}
@@ -534,7 +532,7 @@ export default function DefaultInputs({
             onChange={(value) => handleSelectChange("ED", value)}
             className="dark:bg-dark-900"
           />
-        </div>
+        </div> */}
       </div>
     </ComponentCard>
   );

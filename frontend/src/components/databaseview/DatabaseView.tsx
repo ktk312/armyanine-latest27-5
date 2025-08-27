@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -16,7 +15,6 @@ import {
   useTheme,
   createTheme,
   ThemeProvider,
-
 } from "@mui/material";
 import SelectInputs from "../form/form-elements/components/SelectInputs";
 import Input from "../form/input/InputField";
@@ -29,7 +27,6 @@ import { useBreedStore } from "../../store/breedStore";
 import { useFetchCities } from "../dogsCategory/hooks/useCities";
 import {
   Pets as PetsIcon,
-
   ArrowBack as ArrowBackIcon,
   Male as MaleIcon,
   Female as FemaleIcon,
@@ -121,7 +118,6 @@ const DetailItem = ({
   icon,
   label,
   value,
-
 }: {
   icon?: React.ReactNode;
   label: string;
@@ -184,8 +180,9 @@ const DatabaseView = () => {
 
   const mappedDogs: MappedDog[] = dogs.map((dog) => ({
     id: dog.id || 0,
-    title: `${dog.showTitle ? dog.showTitle + " " : ""}${dog.dogName || "Unknown"
-      }`,
+    title: `${dog.showTitle ? dog.showTitle + " " : ""}${
+      dog.dogName || "Unknown"
+    }`,
     registrationNumber: dog.KP || "N/A",
     imageUrl: dog.friendlyUrl ? `http://localhost:3000${dog.friendlyUrl}` : "",
     breed: dog.breed?.breed || "Unknown",
@@ -199,7 +196,7 @@ const DatabaseView = () => {
     dam: dog.dam?.dogName || "Unknown",
     isDeath: dog.isDeath || false,
     deathDate: dog.deathDate || "",
-    category: dog.category?.name || "",
+    category: dog.category?.name.toUpperCase() || "",
     chestDepth: dog.chestDepth || "",
     chestCircumference: dog.chestCircumference || "",
     achievements: dog.achievements || "",
@@ -215,7 +212,8 @@ const DatabaseView = () => {
     return (
       dog.title.toLowerCase().includes(query) ||
       dog.registrationNumber.toLowerCase().includes(query) ||
-      (dog.microchip && dog.microchip.toLowerCase().includes(query)) || (dog.location && dog.location.toLowerCase().includes(query))
+      (dog.microchip && dog.microchip.toLowerCase().includes(query)) ||
+      (dog.location && dog.location.toLowerCase().includes(query))
     );
   });
 
@@ -230,7 +228,6 @@ const DatabaseView = () => {
   };
 
   // const [searchTerm, setSearchTerm] = useState("");
-
 
   const handleBack = () => {
     setSelectedDog(null);
@@ -270,8 +267,9 @@ const DatabaseView = () => {
         new Set(breeds.map((b) => b.id.toString()))
       ).map((id) => ({
         value: id,
-        label: (breeds.find((b) => b.id.toString() === id)?.breed ?? "")
-          .replace(/^./, (c) => c.toUpperCase())
+        label: (
+          breeds.find((b) => b.id.toString() === id)?.breed ?? ""
+        ).replace(/^./, (c) => c.toUpperCase()),
       }));
       setBreedOptions(uniqueBreeds);
     }
@@ -550,8 +548,9 @@ const DatabaseView = () => {
                     return (
                       <Button
                         key={page}
-                        className={`pagination-button ${isCurrent ? "active" : ""
-                          }`}
+                        className={`pagination-button ${
+                          isCurrent ? "active" : ""
+                        }`}
                         onClick={() => handlePageChange(page)}
                         aria-label={`Page ${page}`}
                         aria-current={isCurrent ? "page" : undefined}
@@ -595,10 +594,11 @@ const DatabaseView = () => {
                         label={name}
                         value={name}
                         icon={icon}
-                        className={`justify-start ${selectedSection === name
-                          ? "text-primary-main dark:!text-white"
-                          : "text-gray-500 dark:!text-white/70"
-                          }`}
+                        className={`justify-start ${
+                          selectedSection === name
+                            ? "text-primary-main dark:!text-white"
+                            : "text-gray-500 dark:!text-white/70"
+                        }`}
                         iconPosition="start"
                         sx={{ fontWeight: 500, alignItems: "flex-start" }}
                       />
@@ -611,10 +611,11 @@ const DatabaseView = () => {
                         key={name}
                         startIcon={icon}
                         onClick={() => setSelectedSection(name)}
-                        className={`justify-start ${selectedSection === name
-                          ? "text-primary-main dark:!text-white"
-                          : "text-gray-500 dark:!text-white/70"
-                          }`}
+                        className={`justify-start ${
+                          selectedSection === name
+                            ? "text-primary-main dark:!text-white"
+                            : "text-gray-500 dark:!text-white/70"
+                        }`}
                         sx={{
                           textTransform: "none",
                           fontWeight: 500,
@@ -717,12 +718,12 @@ const DatabaseView = () => {
                           value={
                             selectedDog.birthDate
                               ? new Date(
-                                selectedDog.birthDate
-                              ).toLocaleDateString(undefined, {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })
+                                  selectedDog.birthDate
+                                ).toLocaleDateString(undefined, {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                })
                               : "N/A"
                           }
                         />
@@ -768,12 +769,12 @@ const DatabaseView = () => {
                             value={
                               selectedDog.deathDate
                                 ? new Date(
-                                  selectedDog.deathDate
-                                ).toLocaleDateString(undefined, {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                })
+                                    selectedDog.deathDate
+                                  ).toLocaleDateString(undefined, {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })
                                 : "N/A"
                             }
                           />

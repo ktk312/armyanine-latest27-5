@@ -25,7 +25,6 @@ import { useStandingDog } from "./hooks/useStandingDog";
 import { useCndDogs } from "./hooks/useCndDogs";
 import { useCnsDogs } from "./hooks/useCnsDogs";
 
-
 import { DogDetailsModal } from "../ui/modal/dogModals/dogProfileModal";
 import { useBreedStore } from "../../store/breedStore";
 import { Dog } from "./types/dog";
@@ -55,8 +54,6 @@ export default function BasicTableOne() {
   const { totalCns } = useCnsDogs();
   const { breeds, getAllBreeds } = useBreedStore();
 
-
-
   const [activeBreedModal] = useState<{
     isOpen: boolean;
     breedName: string;
@@ -73,13 +70,13 @@ export default function BasicTableOne() {
   // };
 
   // Fetch sires and dams for the specific breed
-  const { sires, dams } = useSiresAndDamsByBreed(activeModalType?.split('-')[1] ?? '');
+  const { sires, dams } = useSiresAndDamsByBreed(
+    activeModalType?.split("-")[1] ?? ""
+  );
   console.log("Active Breed Modal id :", activeBreedModal.breedId);
 
   console.log("Sires:", sires);
   console.log("Dams:", dams);
-
-
 
   useEffect(() => {
     const fetchBreeds = async () => {
@@ -93,11 +90,11 @@ export default function BasicTableOne() {
   }, [getAllBreeds]);
 
   const calculateBreedCount = (breedId: number, dogs: Dog[]): number => {
-    return dogs.reduce((count, dog) =>
-      dog.breedId === breedId ? count + 1 : count,
-      0);
+    return dogs.reduce(
+      (count, dog) => (dog.breedId === breedId ? count + 1 : count),
+      0
+    );
   };
-
 
   console.log("Breeds:", breeds);
   const [viewDog, setViewDog] = useState(null);
@@ -113,22 +110,20 @@ export default function BasicTableOne() {
     setViewDog(null);
   };
 
-  const breedStatistics = breeds.map(breed => ({
+  const breedStatistics = breeds.map((breed) => ({
     label: breed.breed, // Using the 'breed' property from your response
     value: calculateBreedCount(breed.id, dogs), // You'll need to get the count from your backend or calculate it
     modalType: `breed-${breed.id}`, // Create unique modal type based on breed ID
-    type: 'breed' as const,
-    id: breed.id
+    type: "breed" as const,
+    id: breed.id,
   }));
 
-
   const specialStatistics = [
-
     { label: "Standing Dogs", value: totalStandingDog, modalType: "Standing" },
     { label: "Sold Dogs", value: totalSoldDog, modalType: "Sold" },
     { label: "Loaned Dogs", value: totalLoanDog, modalType: "Loaned" },
     {
-      label: "Issued Dogs",
+      label: "Transferred Dogs",
       value: totalTransferredDog,
       modalType: "Transferred",
     },
@@ -141,15 +136,13 @@ export default function BasicTableOne() {
       label: "C&D",
       value: totalCnd,
       modalType: "C&D",
-    }, {
+    },
+    {
       label: "C&S",
       value: totalCns,
       modalType: "C&S",
     },
   ];
-
-
-
 
   const dogStatistics = [
     // ...breeds.map(breed => ({
@@ -160,7 +153,7 @@ export default function BasicTableOne() {
     //   id: breed.id
     // })),
     ...breedStatistics,
-    ...specialStatistics // Your existing special categories
+    ...specialStatistics, // Your existing special categories
   ];
   //   {
   //     label: "Labrador Retriever",
@@ -177,10 +170,6 @@ export default function BasicTableOne() {
   //     value: totalTransferredDog,
   //     modalType: "Transferred",
   //   },
-
-
-
-
 
   const [filters, setFilters] = useState({
     id: "",
@@ -239,8 +228,6 @@ export default function BasicTableOne() {
     navigate("/form-elements");
   };
 
-
-
   return (
     <>
       <div className="overflow-hidden rounded-xl border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900 transition-colors duration-300">
@@ -263,11 +250,11 @@ export default function BasicTableOne() {
           {activeModalType && (
             <>
               {/* Dynamic Breed Modal */}
-              {activeModalType.startsWith('breed-') && (
+              {activeModalType.startsWith("breed-") &&
                 (() => {
                   // Debugging logs - keep these temporarily
-                  const breedId = parseInt(activeModalType.split('-')[1]);
-                  const currentBreed = breeds.find(b => b.id === breedId);
+                  const breedId = parseInt(activeModalType.split("-")[1]);
+                  const currentBreed = breeds.find((b) => b.id === breedId);
                   // const sires = useSiresAndDamsByBreed(breedId.toString()).sires;
                   // const dams = useSiresAndDamsByBreed(breedId.toString()).dams;
 
@@ -284,28 +271,44 @@ export default function BasicTableOne() {
                       isOpen={true}
                       onClose={handleCloseModal}
                       breedName={currentBreed?.breed || `Breed ${breedId}`}
-                      sires={sires.filter(sire => {
+                      sires={sires.filter((sire) => {
                         const match = sire.breedId === breedId;
                         if (!match) {
-                          console.log('Sire excluded:', sire, 'BreedId:', sire.breedId, 'Expected:', breedId);
+                          console.log(
+                            "Sire excluded:",
+                            sire,
+                            "BreedId:",
+                            sire.breedId,
+                            "Expected:",
+                            breedId
+                          );
                         }
                         return match;
                       })}
-                      dams={dams.filter(dam => {
+                      dams={dams.filter((dam) => {
                         const match = dam.breedId === breedId;
                         if (!match) {
-                          console.log('Dam excluded:', dam, 'BreedId:', dam.breedId, 'Expected:', breedId);
+                          console.log(
+                            "Dam excluded:",
+                            dam,
+                            "BreedId:",
+                            dam.breedId,
+                            "Expected:",
+                            breedId
+                          );
                         }
                         return match;
                       })}
                     />
                   );
-                })()
-              )}
+                })()}
 
               {/* Special Category Modals */}
               {activeModalType === "Standing" && (
-                <StandingDogListModal isOpen={true} onClose={handleCloseModal} />
+                <StandingDogListModal
+                  isOpen={true}
+                  onClose={handleCloseModal}
+                />
               )}
               {activeModalType === "Sold" && (
                 <SoldDogsListModal isOpen={true} onClose={handleCloseModal} />
@@ -314,7 +317,10 @@ export default function BasicTableOne() {
                 <LoanDogListModal isOpen={true} onClose={handleCloseModal} />
               )}
               {activeModalType === "Transferred" && (
-                <TransferDogsListModal isOpen={true} onClose={handleCloseModal} />
+                <TransferDogsListModal
+                  isOpen={true}
+                  onClose={handleCloseModal}
+                />
               )}
               {activeModalType === "Dead" && (
                 <DeadDogsListModal isOpen={true} onClose={handleCloseModal} />
@@ -377,7 +383,7 @@ export default function BasicTableOne() {
                             onChange={(e) => {
                               const key =
                                 headerToKeyMap[
-                                header as keyof typeof headerToKeyMap
+                                  header as keyof typeof headerToKeyMap
                                 ];
                               if (key) {
                                 handleFilterChange(key, e.target.value);
@@ -412,7 +418,8 @@ export default function BasicTableOne() {
                       {dog?.KP}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-left text-gray-900 dark:text-gray-100">
-                      {(dog?.sex ?? "").charAt(0).toUpperCase() + (dog?.sex ?? "").slice(1)}
+                      {(dog?.sex ?? "").charAt(0).toUpperCase() +
+                        (dog?.sex ?? "").slice(1)}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-left text-gray-900 dark:text-gray-100">
                       {dog?.microchip?.chipId}
@@ -424,8 +431,8 @@ export default function BasicTableOne() {
                           dog?.status === "Active"
                             ? "success"
                             : dog?.status === "Pending"
-                              ? "warning"
-                              : "error"
+                            ? "warning"
+                            : "error"
                         }
                       >
                         {dog?.status}
