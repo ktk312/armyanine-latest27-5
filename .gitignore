@@ -15,6 +15,10 @@ frontend/dist/
 *.rpm
 *.snap
 
+#uploads and exports directories
+/backend/uploads/*.zip
+/backend/src/exports
+
 # Mac system files
 .DS_Store
 
