@@ -381,7 +381,7 @@ export default function DefaultInputs({
             placeholder="Select an option"
             onChange={handleSireChange}
             className="dark:bg-dark-900"
-            defaultValue={selectedDog?.sire?.id.toString() || ""}
+            value={String(dogData?.sireId) || ""}
           />
         </div>
         <div>
@@ -392,7 +392,7 @@ export default function DefaultInputs({
             placeholder="Select an option"
             onChange={handleDamChange}
             className="dark:bg-dark-900"
-            defaultValue={selectedDog?.dam?.id.toString() || ""}
+            value={String(dogData?.damId) || ""}
           />
         </div>
         {/* <div>

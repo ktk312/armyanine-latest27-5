@@ -12,6 +12,7 @@ interface SelectProps {
   onChange: (value: string) => void;
   className?: string;
   defaultValue?: string;
+  value?: string; // New optional value prop
   disabled?: boolean;
 }
 
@@ -21,12 +22,21 @@ const Select: React.FC<SelectProps> = ({
   onChange,
   className = "",
   defaultValue = "",
+  value, // New prop
   disabled = false,
 }) => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+
+  // Determine the selected value - prioritize 'value' prop over 'defaultValue'
+  const selectedValue = value !== undefined ? value : defaultValue;
+
+  // Find the label for the selected value
+  const selectedOption = options.find(
+    (o) => o.value.toString() === selectedValue
+  );
   const [selectedLabel, setSelectedLabel] = useState(
-    options.find((o) => o.value.toString() === defaultValue)?.label || ""
+    selectedOption?.label || ""
   );
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -40,6 +50,16 @@ const Select: React.FC<SelectProps> = ({
     onChange(option.value.toString());
     setOpen(false);
   };
+
+  // Sync selectedLabel when value prop changes
+  useEffect(() => {
+    if (value !== undefined) {
+      const newSelectedOption = options.find(
+        (o) => o.value.toString() === value
+      );
+      setSelectedLabel(newSelectedOption?.label || "");
+    }
+  }, [value, options]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -59,8 +79,9 @@ const Select: React.FC<SelectProps> = ({
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         disabled={disabled}
-        className={`h-11 w-full text-left rounded-lg border border-gray-300 px-4 py-2.5 text-sm shadow-theme-xs dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 ${disabled ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+        className={`h-11 w-full text-left rounded-lg border border-gray-300 px-4 py-2.5 text-sm shadow-theme-xs dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 ${
+          disabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         onClick={() => setOpen(!open)}
       >
         {selectedLabel || placeholder}
@@ -83,7 +104,9 @@ const Select: React.FC<SelectProps> = ({
                   key={opt.value}
                   onClick={() => handleSelect(opt)}
                   className="cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                  title={`Inbreeding Coefficient: ${opt.coefficient?.toFixed(4) || "N/A"}`}
+                  title={`Inbreeding Coefficient: ${
+                    opt.coefficient?.toFixed(4) || "N/A"
+                  }`}
                 >
                   {opt.label}
                 </li>
