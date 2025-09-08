@@ -69,18 +69,24 @@ function calculateInbreedingCoefficient(sireAncestors, damAncestors) {
     damAncestors.has(id)
   );
 
-  // Step 2: Calculate contribution of each common ancestor
+  // Step 2: Calculate contribution of each independent path
   for (const ancestorId of commonAncestorIds) {
-    const sireGen = Math.min(...sireAncestors.get(ancestorId).generations);
-    const damGen = Math.min(...damAncestors.get(ancestorId).generations);
+    const sireGens = sireAncestors.get(ancestorId).generations;
+    const damGens = damAncestors.get(ancestorId).generations;
     const FA = sireAncestors.get(ancestorId).inbreedingCoefficient || 0;
 
-    const contribution = Math.pow(0.5, sireGen + damGen + 1) * (1 + FA);
-    F += contribution;
+    // For every possible path pair (independent contributions)
+    for (const n1 of sireGens) {
+      for (const n2 of damGens) {
+        const contribution = Math.pow(0.5, n1 + n2 + 1) * (1 + FA);
+        F += contribution;
+      }
+    }
   }
 
-  return +(F * 100).toFixed(2); // Return as percentage
+  return +(F * 100).toFixed(2); // percentage
 }
+
 
 /**
  * Get available sires for dam with inbreeding coefficients
@@ -118,7 +124,7 @@ async function getAvailableSiresForDam(damId) {
     const sireAncestors = await getAncestorsMap(sire.id);
     // const coeff = await calculateInbreedingCoefficient(allSires, damAncestors);
     const coeff = await calculateInbreedingCoefficient(sireAncestors, damAncestors);
-    if (sire.dogName.toLowerCase() === 'tara') {
+    if (sire.dogName.toLowerCase() === 'rast') {
       console.log(`Sire: ${sire.dogName}, Coefficient: ${coeff}`);
       console.log(`Sire Ancestors:`, sireAncestors);
       console.log(`Dam Ancestors:`, damAncestors);
