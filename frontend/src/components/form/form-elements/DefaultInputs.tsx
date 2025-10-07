@@ -12,7 +12,6 @@ import { useFetchDogsCategory } from "../../dogsCategory/hooks/useFetchCategory"
 import { useFetchDogs } from "../../dogsCategory/hooks/useFetchDogs";
 import { useFetchUnassignMicrochips } from "../../dogsCategory/hooks/useMicrochip";
 import { useFetchCountries } from "../../dogsCategory/hooks/useCountry";
-import { useFetchCitiesByCountry } from "../../dogsCategory/hooks/useCities";
 // Define interface for component props
 interface DefaultInputsProps {
   onChange: (name: string, value: string | number | File) => void;
@@ -166,28 +165,28 @@ export default function DefaultInputs({
     label: c.countryName,
   }));
 
-  const { city, CityLoading } = useFetchCitiesByCountry(
-    String(dogData?.countryId)
-  );
+  // const { city, CityLoading } = useFetchCitiesByCountry(
+  //   String(dogData?.countryId)
+  // );
 
-  const cityOptions = city.map((c) => ({
-    value: c.id,
-    label: c.city || "Unknown City",
-  }));
+  // const cityOptions = city.map((c) => ({
+  //   value: c.id,
+  //   label: c.city || "Unknown City",
+  // }));
 
   const ListofHair = [
     { value: "hair", label: "Hair" },
     { value: "long_coat", label: "Long Coat" },
     { value: "short_coat", label: "Short Coat" },
   ];
-  const ListofHD = [
-    { value: "normal", label: "Normal" },
-    { value: "high", label: "High" },
-  ];
-  const ListofED = [
-    { value: "normal", label: "Normal" },
-    { value: "high", label: "High" },
-  ];
+  // const ListofHD = [
+  //   { value: "normal", label: "Normal" },
+  //   { value: "high", label: "High" },
+  // ];
+  // const ListofED = [
+  //   { value: "normal", label: "Normal" },
+  //   { value: "high", label: "High" },
+  // ];
   const ListGender = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
@@ -211,11 +210,11 @@ export default function DefaultInputs({
     onChange("countryId", countryId);
   };
 
-  const handleCityChange = (value: string) => {
-    const cityId = parseInt(value);
-    setDogData((prev) => ({ ...prev, cityId }));
-    onChange("cityId", cityId);
-  };
+  // const handleCityChange = (value: string) => {
+  //   const cityId = parseInt(value);
+  //   setDogData((prev) => ({ ...prev, cityId }));
+  //   onChange("cityId", cityId);
+  // };
 
   const handleSireChange = (value: string) => {
     const sireId = parseInt(value);

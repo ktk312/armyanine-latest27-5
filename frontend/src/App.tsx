@@ -54,7 +54,6 @@ import ProphylaxisList from "./pages/MedicalHistory/Form/ProphylaxisForm";
 import TrainingRecordForm from "./pages/MedicalHistory/Form/TrainingRecordForm";
 import SicknessRecord from "./pages/MedicalHistory/SicknessRecord";
 import SicknessRecordForm from "./pages/MedicalHistory/Form/SicknessRecordForm";
-import { useCreateCountries } from "./components/dogsCategory/hooks/useCountry";
 import DataManagementPage from "./pages/DataMangement/DataManagementPage";
 
 export default function App() {
