@@ -1019,93 +1019,98 @@ const exportData = async (req, res) => {
     });
   }
 };
-
 const importData = async (req, res) => {
   let filePath = null;
+
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
+
     const { table } = req.body;
     filePath = req.file.path;
-    if (!table) {
-      throw new Error("Table name is required");
-    }
+
+    if (!table) throw new Error("Table name is required");
+
     const validTables = await getAllTableNames();
     const protectedTables = ["User", "Country", "DogCategory", "Breed"];
+
     if (protectedTables.includes(table)) {
       throw new Error(`Cannot import data to protected table: ${table}`);
     }
     if (!validTables.includes(table)) {
       throw new Error(`Invalid table name: ${table}`);
     }
-    // Clear data from the specified table
-    await prisma.$transaction(async (tx) => {
-      await clearNonProtectedTables(tx, table);
-    });
+
+    // Clear existing data for this table first (outside transaction)
+    await clearNonProtectedTables(prisma, table);
+
+    // Read and parse the uploaded CSV file
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const records = await parseCSV(fileContent);
-    if (records.length === 0) {
-      throw new Error("No data found in CSV file");
-    }
+
+    if (records.length === 0) throw new Error("No data found in CSV file");
     if (!validateCSVHeaders(records, table)) {
       throw new Error(`Invalid CSV headers for table ${table}`);
     }
+
     const convertedRecords = convertCSVTypes(records, table);
+    const batchSize = 50;
+
     let successCount = 0;
     let errorCount = 0;
     const errors = [];
-    await prisma.$transaction(async (tx) => {
-      const batchSize = 50;
-      for (let i = 0; i < convertedRecords.length; i += batchSize) {
-        const batch = convertedRecords.slice(i, i + batchSize);
-        for (const record of batch) {
-          try {
-            const cleanRecord = {};
-            Object.keys(record).forEach((key) => {
-              if (record[key] !== undefined && record[key] !== "") {
-                cleanRecord[key] = record[key];
-              }
-            });
-            switch (table) {
-              case "Dog":
-                await handleDogImport(cleanRecord, tx);
-                break;
-              case "Litter":
-                await handleLitterImport(cleanRecord, tx);
-                break;
-              case "StudCertificate":
-                await handleStudCertificateImport(cleanRecord, tx);
-                break;
-              case "Microchip":
-                await handleMicrochipImport(cleanRecord, tx);
-                break;
-              case "LitterDetail":
-                await handleLitterDetailImport(cleanRecord, tx);
-                break;
-              default:
-                await handleGenericImport(table, cleanRecord, tx);
-            }
-            successCount++;
-          } catch (error) {
-            errorCount++;
-            errors.push({
-              record: cleanRecord,
-              error: error.message,
-            });
-            console.error(`Error importing record to ${table}:`, error.stack);
+
+    // Process records in small batches (no long transactions)
+    for (let i = 0; i < convertedRecords.length; i += batchSize) {
+      const batch = convertedRecords.slice(i, i + batchSize);
+
+      for (const record of batch) {
+        const cleanRecord = {};
+        Object.keys(record).forEach((key) => {
+          if (record[key] !== undefined && record[key] !== "") {
+            cleanRecord[key] = record[key];
           }
+        });
+
+        try {
+          switch (table) {
+            case "Dog":
+              await handleDogImport(cleanRecord, prisma);
+              break;
+            case "Litter":
+              await handleLitterImport(cleanRecord, prisma);
+              break;
+            case "StudCertificate":
+              await handleStudCertificateImport(cleanRecord, prisma);
+              break;
+            case "Microchip":
+              await handleMicrochipImport(cleanRecord, prisma);
+              break;
+            case "LitterDetail":
+              await handleLitterDetailImport(cleanRecord, prisma);
+              break;
+            default:
+              await handleGenericImport(table, cleanRecord, prisma);
+          }
+
+          successCount++;
+        } catch (error) {
+          errorCount++;
+          errors.push({
+            record: cleanRecord,
+            error: error.message,
+          });
+          console.error(`Error importing record to ${table}:`, error.stack);
         }
       }
-      if (errorCount > 0) {
-        throw new Error(`Failed to import ${errorCount} records for ${table}`);
-      }
-    });
+    }
+
     res.json({
       message: `Data imported successfully to ${table} table!`,
       imported: successCount,
       errors: errorCount,
-      errorDetails: errors.slice(0, 5),
+      errorDetails: errors.slice(0, 5), // limit to first 5 errors
     });
   } catch (err) {
     console.error("Import error:", err.stack);

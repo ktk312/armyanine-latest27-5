@@ -9,6 +9,7 @@ const ImportSection: React.FC = () => {
   const { selectedTable, isLoading, setIsLoading, setTables } = useDataStore();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [importMode, setImportMode] = useState<"single" | "bulk">("single");
+  console.log(selectedFiles, "SSSSSSSS");
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
