@@ -57,7 +57,7 @@ export const RegistrationViewModal: React.FC<ModalProps> = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999">
-            <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-400 mx-auto p-6">
+            <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-lg max-h-[90vh] max-w-7xl mx-auto p-6">
                 {!isFullscreen && (
                     <div
                         className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"

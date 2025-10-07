@@ -1,7 +1,7 @@
 {
     "name": "desktopcanine",
     "version": "1.0.0",
-    "description": "Desktop Canine - A desktop application for managing canine data.",
+    "description": "Army Canine Centre - A desktop application for managing canine data.",
     "author": "Kumail",
     "main": "main.js",
     "scripts": {
@@ -30,7 +30,7 @@
     },
     "build": {
         "appId": "com.example.desktopcanine",
-        "productName": "Desktop Canine",
+        "productName": "Army Canine Centre",
         "directories": {
             "output": "dist"
         },

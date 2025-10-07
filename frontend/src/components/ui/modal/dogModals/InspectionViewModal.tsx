@@ -56,7 +56,7 @@ export const InspectionViewModal: React.FC<ModalProps> = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999">
-            <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-400 mx-auto p-6">
+            <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-lg max-h-[90vh] max-w-7xl mx-auto p-6">
                 {!isFullscreen && (
                     <div
                         className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
@@ -192,7 +192,7 @@ export const InspectionViewModal: React.FC<ModalProps> = ({
 
                             </div>
 
- <div className="mt-6">
+                            <div className="mt-6">
                                 <div className="flex justify-between items-center mb-6">
                                     <h4 className="text-2xl font-semibold text-gray-800 dark:text-white/90">Overall Condition of the Dam and Litter</h4>
                                 </div>
@@ -219,7 +219,7 @@ export const InspectionViewModal: React.FC<ModalProps> = ({
                                 )}
 
                                 {/* Remarks */}
-                              {dog?.Remarks && (
+                                {dog?.Remarks && (
                                     <div className="flex items-center gap-2 mt-4">
                                         <span className="text-gray-500 dark:text-gray-400">Remarks:</span>
                                         <span className="text-gray-800 dark:text-white">{dog?.Remarks || "N/A"}</span>

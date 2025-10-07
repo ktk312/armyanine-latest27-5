@@ -92,7 +92,7 @@ export const CNSDogsListModal: React.FC<ModalProps> = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999">
-            <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-400 mx-auto p-6">
+            <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-lg max-h-[90vh] max-w-7xl mx-auto p-6">
                 {!isFullscreen && (
                     <div
                         className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
@@ -173,7 +173,7 @@ export const CNSDogsListModal: React.FC<ModalProps> = ({
                                             key={order.id}
                                             className={index % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"}
                                         >
-                                            <TableCell className="px-5 py-4 text-start">{index + 1}</TableCell>
+                                            <TableCell className="px-5 py-4 text-start">{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</TableCell>
                                             <TableCell className="px-5 py-4 text-start">{order.dogName}</TableCell>
                                             {/* <TableCell className="px-5 py-4 text-start">{order.soldTo}</TableCell> */}
                                             <TableCell className="px-5 py-4 text-start">{order.KP}</TableCell>

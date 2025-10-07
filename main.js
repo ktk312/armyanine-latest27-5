@@ -149,7 +149,7 @@ function createWindow() {
             webSecurity: false
         }
     });
-mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     const indexPath = app.isPackaged
         ? path.join(process.resourcesPath, 'frontend', 'dist', 'index.html')
