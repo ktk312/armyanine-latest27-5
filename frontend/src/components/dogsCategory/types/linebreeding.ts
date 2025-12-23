@@ -4,6 +4,8 @@ export interface Linebreeding {
     KP: string;
     sex: string;
     inbreedingCoefficient: number;
+    // raw computed percentage (may be different from Wright-mapped value)
+    rawInbreedingCoefficient?: number;
   }
   export interface LinebreedingResponse {
     damId: number;

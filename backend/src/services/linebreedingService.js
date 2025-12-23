@@ -407,28 +407,38 @@ async function getAncestorsMap(dogId) {
 
 /**
  * Calculates raw Wright inbreeding coefficient (percentage)
+ *
+ * Implements first-cousins approximation:
+ *  - Only ancestors at generation 2 (grandparents) are considered
+ *  - Limit to at most 2 common grandparents
  */
 function calculateInbreedingCoefficient(sireAncestors, damAncestors) {
-  let F = 0;
-
-  const commonAncestorIds = [...sireAncestors.keys()].filter((id) =>
-    damAncestors.has(id)
-  );
-
-  for (const ancestorId of commonAncestorIds) {
-    const sireGens = sireAncestors.get(ancestorId).generations;
-    const damGens = damAncestors.get(ancestorId).generations;
-    const FA = sireAncestors.get(ancestorId).inbreedingCoefficient || 0;
-
-    for (const n1 of sireGens) {
-      for (const n2 of damGens) {
-        const contribution = Math.pow(0.5, n1 + n2 + 1) * (1 + FA);
-        F += contribution;
+  function getGrandparentIds(ancestors) {
+    const ids = [];
+    for (const [ancestorId, ancestorData] of ancestors.entries()) {
+      if (ancestorData.generations && ancestorData.generations.includes(2)) {
+        ids.push(ancestorId);
       }
     }
+    return ids;
   }
 
-  return +(F * 100).toFixed(2); // raw percentage
+  const sireGrandparentIds = getGrandparentIds(sireAncestors);
+  const damGrandparentIds = getGrandparentIds(damAncestors);
+
+  const commonGrandparentIds = sireGrandparentIds.filter((id) =>
+    damGrandparentIds.includes(id)
+  );
+
+  // Limit to at most 2 common grandparents (like first cousins)
+  const limitedCommon = commonGrandparentIds.slice(0, 2);
+
+  // Each common grandparent contributes (1/2)^(2+2+1) = 1/32 = 3.125%
+  const F = limitedCommon.length * (1 / 32); // decimal
+
+  // Convert to percentage with rounding similar to original implementation
+  const coefficientPercent = Math.round(F * 10000) / 100;
+  return coefficientPercent;
 }
 
 /**
@@ -475,7 +485,10 @@ async function getAvailableSiresForDam(damId) {
       id: sire.id,
       dogName: sire.dogName,
       KP: sire.KP,
+      // Wright-mapped coefficient (allowed table values)
       inbreedingCoefficient: coeff,
+      // Raw computed percentage (two-decimal precision) for this sire-dam pair
+      rawInbreedingCoefficient: rawCoeff,
     });
   }
 
