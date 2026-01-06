@@ -497,8 +497,78 @@ async function getAvailableSiresForDam(damId) {
   );
 }
 
+// Compute a dog's own inbreeding coefficients (raw and Wright-mapped)
+async function getDogInbreedingCoefficients(dogId) {
+  const dog = await prisma.dog.findUnique({
+    where: { id: dogId },
+    select: { sireId: true, damId: true },
+  });
+
+  if (!dog || !dog.sireId || !dog.damId) {
+    return { inbreedingCoefficient: 0, rawInbreedingCoefficient: 0 };
+  }
+
+  const [sireAncestors, damAncestors] = await Promise.all([
+    getAncestorsMap(dog.sireId),
+    getAncestorsMap(dog.damId),
+  ]);
+
+  const rawInbreedingCoefficient = calculateInbreedingCoefficient(
+    sireAncestors,
+    damAncestors
+  );
+  const inbreedingCoefficient = mapToWrightTable(rawInbreedingCoefficient);
+
+  return { inbreedingCoefficient, rawInbreedingCoefficient };
+}
+
+// Compute offspring inbreeding (raw % and Wright-mapped) for a sire/dam pair
+async function calculateOffspringCoefficient(sireId, damId) {
+  const [sireAncestors, damAncestors] = await Promise.all([
+    getAncestorsMap(sireId),
+    getAncestorsMap(damId),
+  ]);
+
+  // Detect direct parent-child first; Wright baseline is 25%
+  const isSireParentOfDam = damAncestors.has(sireId) &&
+    (damAncestors.get(sireId).generations || []).includes(1);
+  const isDamParentOfSire = sireAncestors.has(damId) &&
+    (sireAncestors.get(damId).generations || []).includes(1);
+
+  let rawInbreedingCoefficient;
+
+  if (isSireParentOfDam || isDamParentOfSire) {
+    rawInbreedingCoefficient = 25; // parent-offspring Wright value
+  } else {
+    // Full common-ancestor path calculation
+    let F = 0;
+    const commonAncestorIds = [...sireAncestors.keys()].filter((id) =>
+      damAncestors.has(id)
+    );
+
+    for (const ancestorId of commonAncestorIds) {
+      const sireGens = sireAncestors.get(ancestorId).generations || [];
+      const damGens = damAncestors.get(ancestorId).generations || [];
+
+      for (const n1 of sireGens) {
+        for (const n2 of damGens) {
+          F += Math.pow(0.5, n1 + n2 + 1);
+        }
+      }
+    }
+
+    rawInbreedingCoefficient = Math.round(F * 10000) / 100; // percentage
+  }
+
+  const inbreedingCoefficient = mapToWrightTable(rawInbreedingCoefficient);
+
+  return { inbreedingCoefficient, rawInbreedingCoefficient };
+}
+
 module.exports = {
   getAncestorsMap,
   calculateInbreedingCoefficient,
   getAvailableSiresForDam,
+  getDogInbreedingCoefficients,
+  calculateOffspringCoefficient,
 };

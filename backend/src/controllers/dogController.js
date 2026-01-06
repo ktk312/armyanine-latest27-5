@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { connect } = require("../routes/dogRoutes");
+const { getDogInbreedingCoefficients, calculateOffspringCoefficient } = require("../services/linebreedingService");
 // const { getPedigreeTreeRecursive, getDogPedigreeData } = require("../services/dogService");
 const prisma = new PrismaClient();
 
@@ -445,15 +446,55 @@ const getDogsByBreed = async (req, res) => {
     const sires = dogs.filter((dog) => normalizeSex(dog.sex) === "male");
     const dams = dogs.filter((dog) => normalizeSex(dog.sex) === "female");
 
+    const damsWithCoefficients = await Promise.all(
+      dams.map(async (dam) => {
+        const { inbreedingCoefficient, rawInbreedingCoefficient } =
+          await getDogInbreedingCoefficients(dam.id);
+        return {
+          ...dam,
+          inbreedingCoefficient,
+          rawInbreedingCoefficient,
+        };
+      })
+    );
+
+    // Sort dams by mapped coefficient (ascending), fallback to Infinity when missing
+    damsWithCoefficients.sort((a, b) => {
+      const aVal = a.inbreedingCoefficient ?? Infinity;
+      const bVal = b.inbreedingCoefficient ?? Infinity;
+      if (aVal === bVal) return (a.id || 0) - (b.id || 0);
+      return aVal - bVal;
+    });
+
     // Return the response with separate sire and dam lists
     res.status(200).json({
       sires,
-      dams,
+      dams: damsWithCoefficients,
     });
     // res.status(200).json(dogs);
   } catch (error) {
     console.error("Error fetching dogs by breedId:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Calculate offspring F-coefficient for a given sire/dam pair
+const getOffspringCoefficient = async (req, res) => {
+  try {
+    const { sireId, damId } = req.body;
+
+    const sireIdNum = Number(sireId);
+    const damIdNum = Number(damId);
+
+    if (!sireIdNum || !damIdNum) {
+      return res.status(400).json({ error: "sireId and damId are required" });
+    }
+
+    const result = await calculateOffspringCoefficient(sireIdNum, damIdNum);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Error calculating offspring coefficient:", error);
+    return res.status(500).json({ error: "Failed to calculate offspring coefficient" });
   }
 };
 
@@ -1697,6 +1738,7 @@ module.exports = {
   getAllParent,
   getAllDogsCategory,
   getDogsByBreed,
+  getOffspringCoefficient,
   createDog,
   getAllDogs,
   getDogById,

@@ -11,6 +11,7 @@ import ComponentCard from "../common/ComponentCard";
 import { useStudCertificateStore } from "../../store/stud-certificate-store";
 import { useSiresAndDamsByBreed } from "./hooks/useSireAndDam";
 import { useLinebreeding } from "./hooks/linbreeding";
+import { fetchOffspringCoefficient } from "./api/dogsApi";
 
 // Utility function to get background class based on coefficient
 const getPageBackgroundClass = (coefficient: number | null) => {
@@ -42,6 +43,7 @@ export default function CreateStudCertificate() {
     const [selectedCoefficient, setSelectedCoefficient] = useState<number | null>(null);
     // Child raw coefficient (percentage) for the selected sire-dam pair
     const [childRawCoefficient, setChildRawCoefficient] = useState<number | null>(null);
+    const [childCalcLoading, setChildCalcLoading] = useState(false);
     const navigate = useNavigate();
     const { createNewStudCertificate, loading } = useCreateStudCertificate();
     const { selectedStufCert } = useStudCertificateStore();
@@ -109,8 +111,39 @@ export default function CreateStudCertificate() {
 
     const damOptions = dams.map((dam) => ({
         value: String(dam.id),
-        label: dam.KP ? `${dam.dogName} (${dam.KP})` : dam.dogName,
+        label: `${dam.dogName}${dam.KP ? ` (${dam.KP})` : ''} - Coefficient: ${dam.inbreedingCoefficient ?? 'N/A'}%`,
     }));
+
+    // When both parents are selected, fetch offspring coefficient
+    useEffect(() => {
+        const sireId = selectedSire?.value ? Number(selectedSire.value) : null;
+        const damId = selectedDam?.value ? Number(selectedDam.value) : null;
+        if (!sireId || !damId) {
+            setChildRawCoefficient(null);
+            return;
+        }
+
+        let cancelled = false;
+        const compute = async () => {
+            try {
+                setChildCalcLoading(true);
+                const result = await fetchOffspringCoefficient(sireId, damId);
+                if (cancelled) return;
+                setChildRawCoefficient(result?.inbreedingCoefficient ?? null);
+            } catch (err) {
+                if (!cancelled) {
+                    setChildRawCoefficient(null);
+                }
+            } finally {
+                if (!cancelled) setChildCalcLoading(false);
+            }
+        };
+        compute();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [selectedSire, selectedDam]);
 
 
     // Handle submit 
@@ -204,17 +237,17 @@ export default function CreateStudCertificate() {
 
             <PageBreadcrumb pageTitle="Stud Certificate Form" />
             <ComponentCard title="Stud Certification">
-                <div className={`p-4 text-white ${getPageBackgroundClass(selectedCoefficient)} rounded-lg`}>
-                    {selectedCoefficient === null ? (
-                        "No Sire selected"
-                    ) : selectedCoefficient >= 12.5 ? (
-                        `High risk: Sire has a high inbreeding coefficient (${selectedCoefficient}%)`
-                    ) : selectedCoefficient >= 6.25 ? (
-                        `Medium risk: Sire has a moderate inbreeding coefficient (${selectedCoefficient}%)`
-                    ) : selectedCoefficient > 0 ? (
-                        `Low risk: Sire has a low inbreeding coefficient (${selectedCoefficient}%)`
+                <div className={`p-4 text-white ${getPageBackgroundClass(childRawCoefficient)} rounded-lg`}>
+                    {childRawCoefficient === null ? (
+                        "No parents selected"
+                    ) : childRawCoefficient >= 12.5 ? (
+                        `High risk: Child has a high inbreeding coefficient (${childRawCoefficient}%)`
+                    ) : childRawCoefficient >= 6.25 ? (
+                        `Medium risk: Child has a moderate inbreeding coefficient (${childRawCoefficient}%)`
+                    ) : childRawCoefficient > 0 ? (
+                        `Low risk: Child has a low inbreeding coefficient (${childRawCoefficient}%)`
                     ) : (
-                        `Low risk: Sire has minimal inbreeding coefficient`
+                        `Low risk: Child has minimal inbreeding coefficient`
                     )}
                 </div>
                 <div className={`min-h-screen p-6 transition-colors duration-500 `}>
@@ -282,7 +315,6 @@ export default function CreateStudCertificate() {
 
                                     setSelectedSire({ value: val, label: val });
                                     setSelectedCoefficient(selected?.coefficient ?? null);
-                                    setChildRawCoefficient(selected?.rawCoefficient ?? null);
                                 }}
                                 className="dark:bg-dark-900"
                                 defaultValue={selectedStufCert?.sire?.id.toString()}
@@ -290,7 +322,13 @@ export default function CreateStudCertificate() {
 
                             {/* Child's F-coefficient (mirrored above dam select too) */}
                             <div className="mt-2 text-sm text-gray-700">
-                                <strong> {childRawCoefficient !== null && childRawCoefficient !== undefined ? `Child's F-coefficient will be greater than or equal to : ${childRawCoefficient}%` : ''}</strong>
+                                <strong>
+                                    {childCalcLoading
+                                        ? "Calculating child's F-coefficient..."
+                                        : childRawCoefficient !== null && childRawCoefficient !== undefined
+                                            ? `Child's F-coefficient : ${childRawCoefficient}%`
+                                            : ''}
+                                </strong>
                             </div>
 
                         </div>

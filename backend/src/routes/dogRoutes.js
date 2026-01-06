@@ -8,6 +8,8 @@ router.post("/", upload.single('file'), dogController.createDog);
 
 // Get all dogs
 router.get("/", dogController.getAllDogs);
+// Offspring coefficient for sire/dam pair
+router.post("/offspring/coefficient", dogController.getOffspringCoefficient);
 //get all dogs count
 // Get all dogs count
 router.get("/totalDogs/count", dogController.getDogsCount);

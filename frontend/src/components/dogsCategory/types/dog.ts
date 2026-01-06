@@ -52,6 +52,8 @@ export interface Dog {
   cityId: number | string | null;
   categoryId: number | string | null;
   KP: string;
+  inbreedingCoefficient?: number;
+  rawInbreedingCoefficient?: number;
   sire: Dog | null;
   dam: Dog | null;
   microchipId: number | string | null;

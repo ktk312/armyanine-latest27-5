@@ -373,6 +373,18 @@ export const fetchAllLitterRegistration = async (): Promise<
   return response.data;
 };
 
+// Offspring F-coefficient for a sire/dam pair
+export const fetchOffspringCoefficient = async (
+  sireId: number,
+  damId: number
+): Promise<{ inbreedingCoefficient: number; rawInbreedingCoefficient: number }> => {
+  const response = await axios.post(endpoint.OFFSPRING_COEFFICIENT, {
+    sireId,
+    damId,
+  });
+  return response.data;
+};
+
 export const updateLitterRegistration = async (
   id: string,
   updatedData: Partial<LitterRegistration>

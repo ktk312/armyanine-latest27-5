@@ -194,6 +194,7 @@ export const endpoint = {
 
   //Virtuall Breeding
   VIRTUAL_BREEDING_CHECKED: `${BASE_URL}/stud-certificates/virtual/breeding`,
+  OFFSPRING_COEFFICIENT: `${BASE_URL}/dog/offspring/coefficient`,
   DASHBOARD_WHELPING_STATE: (selectedYear: string) => `${BASE_URL}/dashboard/monthly/whelping/?year=${selectedYear}`,
 
 

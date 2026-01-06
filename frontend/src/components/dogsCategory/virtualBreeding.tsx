@@ -69,7 +69,7 @@ export default function VirtualBreeding() {
 
     const damOptions = dams.map((dam) => ({
         value: String(dam.id),
-        label: dam.KP ? `${dam.dogName} (${dam.KP})` : dam.dogName,
+        label: `${dam.dogName}${dam.KP ? ` (${dam.KP})` : ''} - Coefficient: ${dam.inbreedingCoefficient ?? 'N/A'}%`,
     }));
 
 
