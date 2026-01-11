@@ -164,7 +164,7 @@ const Progeny: React.FC<DogPedigreeProps> = ({ dogId }) => {
                       </span>
                       <span className="text-lg px-3 py-1 bg-gray-100 dark:bg-gray-600 rounded-full">
                         <span className="inline-block mr-1 text-xl">
-                          {child.gender === "Male" ? "♂" : "♀"}
+                          {child.gender.toLowerCase() === "male" ? "♂" : "♀"}
                         </span>
                         {child.breed}
                       </span>
